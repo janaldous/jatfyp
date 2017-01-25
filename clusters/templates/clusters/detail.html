@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ cluster.name }}</h1>
+<ul>
+  <li>{{ cluster.factor1 }}</li>
+  <li>{{ cluster.factor2 }}</li>
+  <li>{{ cluster.factor3 }}</li>
+  <li>{{ cluster.factor4 }}</li>
+  <li>{{ cluster.factor5 }}</li>
+</ul>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+</script>
+{% for chart in charts %}
+  {{ chart.as_html }}
+{% endfor %}
+
+{% endblock %}

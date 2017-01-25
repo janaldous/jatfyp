@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<ul>
+{% for cluster in clusters %}
+  <li><a href="{% url 'clusters:detail' cluster.id %}">{{ cluster.name }}</a></li>
+{% endfor %}
+</ul>
+{% endblock %}

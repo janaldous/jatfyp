@@ -1,0 +1,6 @@
+$
+QAGEBND,Age from last birthday
+1,18-242,25-343,35-44
+4,45-545,55-646,65-747,75-848,85+98,Refused$
+QETH,Ethnic group
+1,English / Welsh / Scottish / Northern Irish / British2,Irish3,Portuguese4,Polish5,Gypsy or Irish Traveller6,Other White – please specify7,White and Black Caribbean8,White and Black African9,White and Asian10,Other Mixed /multiple ethnic background –please specify11,Indian12,Pakistani13,Bangladeshi14,Chinese15,Other Asian –please specify16,Caribbean17,African Somali18,Other African19,Other Black background –please specify20,Latin American21,Arab95,Other ethnic group – please specify98,Refused
