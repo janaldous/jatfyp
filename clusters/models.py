@@ -10,6 +10,7 @@ class Cluster(models.Model):
         ('2', 'Has long term illness'),
         ('3', 'Has both disability and illness'),
         ('4', 'None'),
+        ('-', 'Any of the above'),
     )
     #Q45
     BENEFITS = (
@@ -20,6 +21,7 @@ class Cluster(models.Model):
         ('E', 'Housing benefit'),
         ('F', 'Council tax benefit'),
         ('G', 'Any other state benefits'),
+        ('-', 'Any of the above'),
     )
     #Q46
     ACTIVITY = (
@@ -36,6 +38,7 @@ class Cluster(models.Model):
         ('95', 'Doing something else'),
         ('98', 'Refused'),
         ('97', 'Dont know'),
+        ('-', 'Any of the above'),
     )
     #Q47
     LLW = (
@@ -43,6 +46,7 @@ class Cluster(models.Model):
         ('2', 'I am paid less than the London Living Wage'),
         ('3', 'Dont know'),
         ('4', 'Prefer not to say'),
+        ('-', 'Any of the above'),
     )
     #Q35
     HOUSING = (
@@ -55,6 +59,7 @@ class Cluster(models.Model):
         ('7', 'A residential home'),
         ('95', 'Other'),
         ('98', 'Refused'),
+        ('-', 'Any of the above'),
     )
     name = models.CharField(max_length=200)
     factor1 = models.CharField(max_length=1, choices=DISABILITY)

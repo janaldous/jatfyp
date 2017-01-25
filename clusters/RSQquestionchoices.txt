@@ -1,5 +1,5 @@
 $
-QAGEBND|Age from last birthday
+QAGEBND|Can you tell me your age last birthday?
 SINGLE
 1;18-24
 2;25-34
@@ -11,7 +11,7 @@ SINGLE
 8;85+
 98;Refused
 $
-QETH|Ethnic group
+QETH|Please could you tell me which group on this card you consider you belong to? Please just read out the number that applies.
 SINGLE
 1;English / Welsh / Scottish / Northern Irish / British
 2;Irish
@@ -37,7 +37,7 @@ SINGLE
 95;Other ethnic group – please specify
 98;Refused
 $
-QGEN|Gender
+QGEN|Interviewer to code. IF UNSURE ASK POLITELY USING THE TERM ‘ WHAT IS YOUR GENDER IDENTITY’
 SINGLE
 1;Man (Including Trans man )
 2;Woman (Including Trans Woman)
@@ -80,7 +80,7 @@ FF;Lighting
 GG;Close proximity to work place
 HH;Close proximity to London
 $
-Q11|Benefits of Lambeth
+Q11|Which of these statements most applies to you?
 SINGLE
 1;The changes I see in my local area benefit me and my family
 2;The changes I see in my local area don’t affect me and my family

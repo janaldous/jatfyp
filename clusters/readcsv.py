@@ -39,7 +39,7 @@ def get_data(df, question_obj):
 
 def get_data2(df, question_obj):
     '''
-        Choices are soley dependent on whether it exists in questionchoices.txt
+        Choices are dependent on whether it exists in XXXquestionchoices.txt
         and data is from spss.csv
     '''
     question_base = question_obj.question_no
@@ -47,12 +47,19 @@ def get_data2(df, question_obj):
 
     data = {}
     #append data to list
-    for l in choices.keys():
-        subquestion = question_base+l
+    for key in choices.keys():
+        subquestion = question_base+key
         try:
-            data[choices[l]] = df[subquestion].value_counts()[1]
+            choice_str = choices[key]
+            data[choice_str] = df[subquestion].value_counts()[1]
         except KeyError:
-            print 'key error at readcsv.get_data2; subquestion: %s' % subquestion
+            #print 'key error at readcsv.get_data2; subquestion: %s' % subquestion
+            continue
+        except IndexError:
+            '''
+                means that all rows = 0, no rows = 1
+            '''
+            data[choice_str] = 0
             continue
 
     #sort data fron greatest to least
@@ -72,16 +79,32 @@ def get_data_for_column_chart(df, question_obj):
     choices = question_obj.choices
     for i in range(1,9):
         data_ = []
-        question = question_obj.question_no+'_R'+str(i)
+        subquestion = question_obj.question_no+'_R'+str(i)
         data_.append(choices[str(i)])
-        values = df[question].value_counts()
+        values = df[subquestion].value_counts()
         for j in range(1,7):
-            data_.append(values[j])
+            try:
+                data_.append(values[j])
+            except KeyError:
+                data_.append(0)
+                #print 'key error at readcsv.get_data_for_column_chart; subquestion: %s' % subquestion
+                continue
         data.append(data_)
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     return {'data':data, 'question':question_str}
+
+def filter_by_cluster(df, cluster):
+    if cluster.factor1 != '-':
+        df = df[(df.Q43 == float(cluster.factor1))]
+    if cluster.factor3 != '-':
+        df = df[(df.Q46 == float(cluster.factor3))]
+    if cluster.factor4 != '-':
+        df = df[(df.Q47 == float(cluster.factor4))]
+    if cluster.factor5 != '-':
+        df = df[(df.Q35 == float(cluster.factor5))]
+    return df
 
 #filter rows, according to cluster factors
 #http://stackoverflow.com/questions/11869910/pandas-filter-rows-of-dataframe-with-operator-chaining

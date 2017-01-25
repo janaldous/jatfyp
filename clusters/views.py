@@ -22,7 +22,7 @@ def detail(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
     file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    df = pd.read_csv(file_)
+    df = rc.filter_by_cluster(pd.read_csv(file_), cluster)
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     questions_txt = rt.read(file2_)
@@ -53,5 +53,6 @@ def detail(request, cluster_id):
     context = {
         'cluster': cluster,
         'charts': charts,
+        'df_size': len(df.index),#no of rows in df
     }
     return render(request, 'clusters/detail.html', context)
