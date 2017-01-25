@@ -122,6 +122,18 @@ G;For Lambeth Council news
 H;Some other purpose
 I;I never use the Council websites
 $
+Q35|Which of the following best describes how you occupy your home? Please just read out the letter that applies.
+SINGLE
+1;Owner occupier – Lambeth leaseholder
+2;Owner occupier - private
+3;Rented from Housing Association
+4;Renting from Lambeth Council (Lambeth Living, or TMO)
+5;Rent from private landlord
+6;Shared ownership
+7;A residential home
+95;Other
+98;Refused
+$
 Q39|Looking at this showcard, which, if any, of these services provided by Lambeth Council have you, or a member of your household used in Lambeth in the last twelve months? Please just read out the numbers that apply.
 MULTICODE
 A;Nursery education (under 5s)
@@ -149,6 +161,54 @@ V;Social services for adults
 CQ;Other services – please specify
 CR;None of these
 CS;Don’t know
+$
+Q43|Do you have any long-standing illness, disability or infirmity? By long-standing, I mean anything that has troubled you over a period of time or that is likely to affect you over a period of time.
+SINGLE
+1;Yes - disability
+2;Yes – illness or infirmity
+3;Yes – both (a disability and an illness/infirmity)
+4;No
+$
+Q45|Could you please tell me which of the following, if any, your household receives?
+MULTICODE
+A;Pension from a former employer
+B;State pension
+C;Child benefit
+D;Income support or Job seekers allowance
+E;Housing benefit
+F;Council tax benefit
+G;Any other state benefits
+H;Tax credits
+I;Interest from savings
+J;Universal credit
+K;Personal Independence Payment
+CQ;Other kind of regular allowance from outside the household (e.g. rent) – please specify
+CR;None of these
+CS;Don’t know
+CT;Refused
+$
+Q46|Which of these activities best describes what you are doing at present?
+SINGLE
+1;Employee in full-time job (31 hours plus per week)
+2;Employee in part-time job (under 31 hours per week)
+3;Self employed full-time
+4;Self employed part-time
+5;On a government supported training programme (e.g. Modern Apprenticeship/ Training for Work)
+6;Full-time education at school, college or university
+7;Unemployed and available for work
+8;Permanently sick/disabled
+9;Wholly retired from work
+10;Looking after the home
+95;Doing something else – please specify
+98;Refused
+97;Don’t know
+$
+Q47|Are you paid the London Living Wage or a higher amount (the London Living Wage is £9.40 per hour)?
+SINGLE
+1;Yes – I am paid the London Living Wage or a higher amount
+2;No - I am paid less than the London Living Wage
+3;Don’t know
+4;Prefer not to say
 $
 Q50|Do you access the Internet at any of the following?
 MULTICODE OK (APART FROM ‘DON’T KNOW’ OR DO NOT ACCESS).

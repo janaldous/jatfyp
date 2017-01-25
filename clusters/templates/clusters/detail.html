@@ -1,13 +1,13 @@
-{% extends "base.html" %}
+{% extends "clusters/base.html" %}
 
 {% block content %}
 <h1>{{ cluster.name }}</h1>
 <ul>
-  <li>{{ cluster.factor1 }}</li>
-  <li>{{ cluster.factor2 }}</li>
-  <li>{{ cluster.factor3 }}</li>
-  <li>{{ cluster.factor4 }}</li>
-  <li>{{ cluster.factor5 }}</li>
+  <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
+  <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
+  <li>Q46 : {{ questions_strs.2 }} <span class="badge">{{ cluster.factor3 }}</span></li>
+  <li>Q47 : {{ questions_strs.3 }} <span class="badge">{{ cluster.factor4 }}</span></li>
+  <li>Q35 : {{ questions_strs.4 }} <span class="badge">{{ cluster.factor5 }}</span></li>
 </ul>
 
 <div class="panel panel-default">

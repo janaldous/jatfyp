@@ -22,10 +22,15 @@ def detail(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
     file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    df = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    df = dic['df']
+    size_str = "%d / %d" % (len(df.index), dic['orig_size']) 
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     questions_txt = rt.read(file2_)
+
+    #get cluster questions as strings
+    questions_strs = get_questions_as_str(questions_txt)
 
     charts = []
 
@@ -53,6 +58,18 @@ def detail(request, cluster_id):
     context = {
         'cluster': cluster,
         'charts': charts,
-        'df_size': len(df.index),#no of rows in df
+        'df_size': size_str,#no of rows in df
+        'questions_strs': questions_strs,
     }
     return render(request, 'clusters/detail.html', context)
+
+def get_questions_as_str(questions_txt):
+    '''
+        not a view
+    '''
+    questions = ['Q43', 'Q45', 'Q46', 'Q47', 'Q35']
+    questions_strs = []
+    for question in questions:
+        qstr = questions_txt[question].question
+        questions_strs.append(qstr)
+    return questions_strs

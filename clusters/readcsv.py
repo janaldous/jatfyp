@@ -96,6 +96,7 @@ def get_data_for_column_chart(df, question_obj):
     return {'data':data, 'question':question_str}
 
 def filter_by_cluster(df, cluster):
+    orig_size = len(df.index)
     if cluster.factor1 != '-':
         df = df[(df.Q43 == float(cluster.factor1))]
     if cluster.factor3 != '-':
@@ -104,7 +105,7 @@ def filter_by_cluster(df, cluster):
         df = df[(df.Q47 == float(cluster.factor4))]
     if cluster.factor5 != '-':
         df = df[(df.Q35 == float(cluster.factor5))]
-    return df
+    return {'orig_size': orig_size, 'df': df}
 
 #filter rows, according to cluster factors
 #http://stackoverflow.com/questions/11869910/pandas-filter-rows-of-dataframe-with-operator-chaining
