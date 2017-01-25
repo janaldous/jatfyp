@@ -2,6 +2,7 @@
 import pandas as pd
 
 import os
+import operator
 from django.conf import settings
 
 import string
@@ -14,17 +15,21 @@ def start():
 #unused
 def get_uc_list():
     uc_list = list(string.ascii_uppercase)
-    for l in uc_list:
-        uc_list.append('A'+l)
+    iters = len(uc_list)
+    for i in range(0,iters):
+        uc_list.append('A'+uc_list[i])
+    return uc_list
 
-def get_data(df, question, questions_obj):
+def get_data(df, question, question_obj):
     v_counts = df[question].value_counts()
-    choices = questions_obj.choices
+    choices = question_obj.choices
+
     indexes = ['Question']
     for i in v_counts.index.tolist():
         try:
             c = choices[str(int(i))]
         except KeyError:
+            c = str(int(i))
             print 'key error: %s' % (int(i))
         indexes.append(c)
 
@@ -32,27 +37,35 @@ def get_data(df, question, questions_obj):
     for i in v_counts.values.tolist():
         values.append(i)
 
-    question_str = "(%s) %s" % (questions_obj.question_no, questions_obj.question)
+    question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     return {'data':[indexes, values], 'question':question_str}
 
-def get_data2(df, question_base):
-    uc_list = list(string.ascii_uppercase)
+def get_data2(df, question_base, question_obj):
+    choices = question_obj.choices
 
-    data = [['question', '#rows = 1']] #'#rows = 0']]
-
-    for l in uc_list:
-        data_ = []
+    data = {} #[['question', '#rows = 1']] #'#rows = 0']]
+    #append data to list
+    for l in get_uc_list():
         subquestion = question_base+l
-        data_.append(subquestion)
         try:
-            data_.append(df[subquestion].value_counts()[1])
+            data[choices[l]] = df[subquestion].value_counts()[1]
+            #data_.append(choices[l])
+            #data_.append(df[subquestion].value_counts()[1])
             #data_.append(df[subquestion].value_counts()[0])
         except KeyError:
             break
-        data.append(data_)
 
-    return data
+
+    sorted_data = sorted(data.items(), key=operator.itemgetter(1), reverse=True)
+
+    data = [['question', '#rows = 1']]
+    for d in sorted_data:
+        data.append([d[0], d[1]])
+
+    question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
+
+    return {'data':data, 'question':question_str}
 
 def get_data_for_column_chart(df):
     data = [['question', '1', '2', '3', '4', '5', '6']]

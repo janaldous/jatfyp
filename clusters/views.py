@@ -29,7 +29,7 @@ def detail(request, cluster_id):
 
     charts = []
 
-    questions_to_show = ['QAGEBND'] #'Q11', 'QGEN', 'QETH'
+    questions_to_show = ['Q11', 'QGEN', 'QAGEBND', 'QETH']
 
     for question in questions_to_show:
         dic =  rc.get_data(df, question, questions_txt[question])
@@ -38,9 +38,11 @@ def detail(request, cluster_id):
         charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent'}))
 
 
-    questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
+    questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39']#, 'Q50']
     for question in questions_to_show:
-        data =  rc.get_data2(df, question)
+        dic =  rc.get_data2(df, question, questions_txt[question])
+        data = dic['data']
+        question = dic['question']
         charts.append(BarChart(SimpleDataSource(data=data), options={'title': question}))
 
     data = rc.get_data_for_column_chart(df)
