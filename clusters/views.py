@@ -24,7 +24,7 @@ def detail(request, cluster_id):
     file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
     df = pd.read_csv(file_)
     #load questions textfile into list
-    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/newfile.txt'))
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     questions_txt = rt.read(file2_)
 
     charts = []
@@ -32,21 +32,23 @@ def detail(request, cluster_id):
     questions_to_show = ['Q11', 'QGEN', 'QAGEBND', 'QETH']
 
     for question in questions_to_show:
-        dic =  rc.get_data(df, question, questions_txt[question])
+        dic =  rc.get_data(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
         charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent'}))
 
 
-    questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39']#, 'Q50']
+    questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
     for question in questions_to_show:
-        dic =  rc.get_data2(df, question, questions_txt[question])
+        dic =  rc.get_data2(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
         charts.append(BarChart(SimpleDataSource(data=data), options={'title': question}))
 
-    data = rc.get_data_for_column_chart(df)
-    charts.append(ColumnChart(SimpleDataSource(data=data), options={'title': "Q13"}))
+    dic =  rc.get_data_for_column_chart(df, questions_txt['Q13'])
+    data = dic['data']
+    question = dic['question']
+    charts.append(ColumnChart(SimpleDataSource(data=data), options={'title': question}))
 
     context = {
         'cluster': cluster,

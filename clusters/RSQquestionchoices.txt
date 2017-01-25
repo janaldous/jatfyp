@@ -43,7 +43,7 @@ SINGLE
 2;Woman (Including Trans Woman)
 3;Other gender identity
 $
-Q5|Thinking about living in Lambeth, what are the most important things in making it a good place to live?
+Q5|Thinking about living in Lambeth; what are the most important things in making it a good place to live?
 SINGLE; TOP3
 A;Access to nature
 B;Activities for teenagers
@@ -87,6 +87,17 @@ SINGLE
 3;The changes I see in my local area make things more difficult for me and my family
 4;I don’t really see any changes
 $
+Q13|Please say how strongly you agree or disagree with each statement.
+SINGLE
+1;I feel like I belong to this neighbourhood
+2;The friendships and associations I have with other people in my neighbourhood mean a lot to me.
+3;If I needed advice about something I could go to someone in my neighbourhood.
+4;Neighbours around here help each other
+5;I would be willing to work together with others on something to improve my neighbourhood.
+6;Community events that I would like to get involved with happen in my area
+7;I regularly stop and talk with people in my neighbourhood.
+8;I would speak highly of my neighbourhood if asked
+$
 Q26|How was your last contact with the Council made?
 MULTICODE
 A;In person
@@ -121,7 +132,7 @@ E;Playgrounds and play areas
 F;Children's centres
 G;Youth clubs/centres
 H;One 'o' clock clubs
-I;Holiday activities and programmes for children (e,g, playschemes)
+I;Holiday activities and programmes for children (e.g. playschemes)
 J;Leisure and sports facilities
 K;Libraries
 L;Parks and open spaces
@@ -137,4 +148,18 @@ U;Services for disabled people
 V;Social services for adults
 CQ;Other services – please specify
 CR;None of these
+CS;Don’t know
+$
+Q50|Do you access the Internet at any of the following?
+MULTICODE OK (APART FROM ‘DON’T KNOW’ OR DO NOT ACCESS).
+A;At home
+B;At another person’s home
+C;At work
+D;At school/college/university
+E;At a library
+F;Via my mobile phone
+G;At an internet café
+H;At a council office
+CQ;Other – please specify
+CR;I  do not access the internet
 CS;Don’t know

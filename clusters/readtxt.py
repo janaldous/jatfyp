@@ -3,9 +3,10 @@ import sys
 
 class Question(object):
     def __init__(self, question_no, question, choices):
-            self.question_no = question_no
-            self.question = question
-            self.choices = choices
+        #question_no = 'Q'+number
+        self.question_no = question_no
+        self.question = question
+        self.choices = choices
 
 def read(file_):
     questions = {}
@@ -34,7 +35,7 @@ def read(file_):
         return questions
 
 def find_and_replace():
-    newf = open('newfile.txt', 'w')
+    newf = open('RSQquestionchoices.txt', 'w')
     with open('ResidentialSurveyQuestions.txt', 'rw') as f:
         for line in f.readlines():
             line = string.replace(line,'\r','\n')
