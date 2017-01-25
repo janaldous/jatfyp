@@ -14,6 +14,8 @@
 <div class="panel panel-default">
   <div class="panel-body">
     Number of rows: {{ df_size }}
+    <br>
+    Source: {{ about }}
   </div>
 </div>
 
@@ -28,7 +30,5 @@
     {{ chart.as_html }}
   {% endfor %}
 {% endif %}
-
-
 
 {% endblock %}

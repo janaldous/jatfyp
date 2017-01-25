@@ -9,10 +9,13 @@ class Question(object):
         self.choices = choices
 
 def read(file_):
-    questions = {}
+    source = {}
     with open(file_.name) as f:
+        #get about sources
+        source['about'] = f.readline()
         #get first '$'
         line=f.readline()
+        questions = {}
         while True:
             line=f.readline()
             if not line:
@@ -32,7 +35,8 @@ def read(file_):
                 l = line.split(';')
                 choices[l[0]] = l[1][:-1]
             questions[question_no] = Question(question_no, question, choices)
-        return questions
+        source['questions'] = questions
+        return source
 
 def find_and_replace():
     newf = open('RSQquestionchoices.txt', 'w')

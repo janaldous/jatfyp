@@ -27,7 +27,9 @@ def detail(request, cluster_id):
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
-    questions_txt = rt.read(file2_)
+    dic_source = rt.read(file2_)
+    about = dic_source['about']
+    questions_txt = dic_source['questions']
 
     #get cluster questions as strings
     questions_strs = get_questions_as_str(questions_txt)
@@ -60,6 +62,7 @@ def detail(request, cluster_id):
         'charts': charts,
         'df_size': size_str,#no of rows in df
         'questions_strs': questions_strs,
+        'about': about,
     }
     return render(request, 'clusters/detail.html', context)
 
