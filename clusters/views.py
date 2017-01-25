@@ -24,7 +24,7 @@ def detail(request, cluster_id):
     file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
     dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
     df = dic['df']
-    size_str = "%d / %d" % (len(df.index), dic['orig_size']) 
+    size_str = "%d / %d" % (len(df.index), dic['orig_size'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     questions_txt = rt.read(file2_)
@@ -40,7 +40,7 @@ def detail(request, cluster_id):
         dic =  rc.get_data(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent'}))
+        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
 
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
