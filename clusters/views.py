@@ -5,6 +5,7 @@ from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import BarChart, ColumnChart
 
 import readcsv as rc
+import readtxt as rt
 import pandas as pd
 import os
 
@@ -19,15 +20,21 @@ def index(request):
 
 def detail(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
+    #load csv into pandas.DataFrame
     file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
     df = pd.read_csv(file_)
+    #load questions textfile into list
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/newfile.txt'))
+    questions_txt = rt.read(file2_)
 
     charts = []
 
-    questions_to_show = ['Q11', 'QGEN', 'QAGEBND', 'QETH']
+    questions_to_show = ['QAGEBND'] #'Q11', 'QGEN', 'QETH'
 
     for question in questions_to_show:
-        data =  rc.get_data(df, question)
+        dic =  rc.get_data(df, question, questions_txt[question])
+        data = dic['data']
+        question = dic['question']
         charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent'}))
 
 

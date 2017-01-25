@@ -11,23 +11,30 @@ def start():
     print "adfadf"
     print get_data2(df, 'Q5')
 
+#unused
 def get_uc_list():
     uc_list = list(string.ascii_uppercase)
     for l in uc_list:
         uc_list.append('A'+l)
 
-def get_data(df, question):
+def get_data(df, question, questions_obj):
     v_counts = df[question].value_counts()
-
+    choices = questions_obj.choices
     indexes = ['Question']
     for i in v_counts.index.tolist():
-        indexes.append(str(i))
+        try:
+            c = choices[str(int(i))]
+        except KeyError:
+            print 'key error: %s' % (int(i))
+        indexes.append(c)
 
     values = [question]
     for i in v_counts.values.tolist():
         values.append(i)
 
-    return [indexes, values]
+    question_str = "(%s) %s" % (questions_obj.question_no, questions_obj.question)
+
+    return {'data':[indexes, values], 'question':question_str}
 
 def get_data2(df, question_base):
     uc_list = list(string.ascii_uppercase)
