@@ -88,7 +88,7 @@ def create_cluster(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            return HttpResponseRedirect('/thanks/')
+            return HttpResponseRedirect('/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
@@ -134,7 +134,7 @@ def get_charts(df, questions_txt):
         dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 200, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
 
     #multicode questions

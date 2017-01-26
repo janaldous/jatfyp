@@ -93,16 +93,3 @@ def get_data_for_column_chart2(df, question_obj):
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     return {'data':data, 'question':question_str}
-
-def filter_by_cluster(df, cluster):
-    ''' DOES NOT INCLUDE FACTOR2 YET '''
-    orig_size = len(df.index)
-    if cluster.factor1 != '-':
-        df = df[(df.Q43 == float(cluster.factor1))]
-    if cluster.factor3 != '-':
-        df = df[(df.Q46 == float(cluster.factor3))]
-    if cluster.factor4 != '-':
-        df = df[(df.Q47 == float(cluster.factor4))]
-    if cluster.factor5 != '-':
-        df = df[(df.Q35 == float(cluster.factor5))]
-    return {'orig_size': orig_size, 'df': df}

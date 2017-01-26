@@ -105,6 +105,9 @@ def filter_by_cluster(df, cluster):
     orig_size = len(df.index)
     if cluster.factor1 != '-':
         df = df[(df.Q43 == float(cluster.factor1))]
+    if cluster.factor2 != '-':
+        question = 'Q45'+cluster.factor2
+        df = df[(df[question] == 1.0)]
     if cluster.factor3 != '-':
         df = df[(df.Q46 == float(cluster.factor3))]
     if cluster.factor4 != '-':
