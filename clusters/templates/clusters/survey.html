@@ -8,7 +8,7 @@ about: {{ about }}
 <h2>Questions:</h2>
 <ul>
   {% for question in questions %}
-    <li><b>{{ question.question_no }}</b> {{ question.question }}</li>
+    <li><b>{{ question.question_no }}</b> {{ question.question_short }}</li>
   {% endfor %}
 </ul>
 {% endblock %}

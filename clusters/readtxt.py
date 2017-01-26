@@ -2,10 +2,12 @@ import string
 import sys
 
 class Question(object):
-    def __init__(self, question_no, question, choices):
+    def __init__(self, question_no, question_short, question_long, choices):
         #question_no = 'Q'+number
         self.question_no = question_no
-        self.question = question
+        self.question_short = question_short
+        #long form of question
+        self.question = question_long
         self.choices = choices
 
 def read(file_):
@@ -23,7 +25,8 @@ def read(file_):
             #get q_no and question
             q = line.split('|')
             question_no = q[0]
-            question = q[1][:-1]
+            question_short = q[1]
+            question_long = q[2][:-1]
             #get type of coding ie MULTICODE, SINGLE
             code = f.readline()
             #get choices
@@ -34,7 +37,7 @@ def read(file_):
                     break
                 l = line.split(';')
                 choices[l[0]] = l[1][:-1]
-            questions[question_no] = Question(question_no, question, choices)
+            questions[question_no] = Question(question_no, question_short, question_long, choices)
         source['questions'] = questions
         return source
 
