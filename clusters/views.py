@@ -37,15 +37,16 @@ def detail(request, cluster_id):
 
     charts = []
 
-    questions_to_show = ['WARD','Q11', 'QGEN', 'QAGEBND', 'QETH']
+    #Single code quesitions
+    questions_to_show = ['WARD','Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34']
 
     for question in questions_to_show:
         dic =  rc.get_data(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'width': 1000, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
-
+    #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
     for question in questions_to_show:
         dic =  rc.get_data2(df, questions_txt[question])

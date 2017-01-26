@@ -6,7 +6,7 @@ class Question(object):
         #question_no = 'Q'+number
         self.question_no = question_no
         self.question_short = question_short
-        #long form of question
+        #original form of question
         self.question = question_long
         self.choices = choices
 
@@ -25,7 +25,11 @@ def read(file_):
             #get q_no and question
             q = line.split('|')
             question_no = q[0]
-            question_short = q[1]
+            print question_no
+            try:
+                question_short = q[1]
+            except IndexError:
+                print 'IndexError at readtxt.read; question_no:' + question_no
             question_long = q[2][:-1]
             #get type of coding ie MULTICODE, SINGLE
             code = f.readline()

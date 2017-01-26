@@ -1,6 +1,7 @@
 title: Residential Survey 2016 for Lambeth Council, date: August 2016, conducted by: BMG Research, link: https://www.lambeth.gov.uk/sites/default/files/Lambeth%20Council%20Residents's%20Survey%202016%20PDF_0.pdf
 $
 WARD|Ward|Ward
+SINGLE
 1;Bishops
 2;Brixton Hill
 3;Clapham Common
@@ -67,6 +68,18 @@ SINGLE
 2;Woman (Including Trans Woman)
 3;Other gender identity
 $
+Q1|Satisfaction with place to live|Overall, how satisfied or dissatisfied are you with your local area as a place to live?
+SINGLE
+$
+Q2|Satisfaction with Council services|Your local area receives services from Lambeth Council. Lambeth Council is responsible for a range of services such as refuse collection, street cleaning, planning, education, social care services and road maintenance. Overall, how satisfied or dissatisfied are you with the way Lambeth Council runs things?
+SINGLE
+$
+Q3|Council's value for money|In considering the next question, please think about the range of services Lambeth Council provides to the community as a whole, as well as the services your household uses. It does not matter if you do not know all of the services Lambeth Council provides to the community. We would like your general opinion. . To what extent do you agree or disagree that Lambeth Council provides value for money?
+SINGLE
+$
+Q4|Council communication|How well do you think Lambeth Council keeps residents informed about the services and benefits it provides
+SINGLE
+$
 Q5|Important things to have living in Lambeth|Thinking about living in Lambeth; what are the most important things in making it a good place to live?
 SINGLE; TOP3
 A;Access to nature
@@ -104,12 +117,24 @@ FF;Lighting
 GG;Close proximity to work place
 HH;Close proximity to London
 $
+Q6|What needs improving|And what are the things that most need improving? (Do not read out, choose up to three, pre-coded or write in other suggestions)
+SINGLE
+$
+Q8|What needs improving specific|At the last question you identified the things that most need improving in Lambeth. Can you describe what specifically what you would like to see improved?
+SINGLE
+$
+Q10|Improvement of local area| As the economy in Lambeth has grown this has had an impact on many things from the people who live here, to the cost of housing, and the types of shops and restaurants available. While Lambeth Council measures many of these changes, they would like your views on what it is like to live in your local area now.Would you say that compared to two years ago ...
+SINGLE
+$
 Q11|Benefits of local area to oneself|Which of these statements most applies to you?
 SINGLE
 1;The changes I see in my local area benefit me and my family
 2;The changes I see in my local area don’t affect me and my family
 3;The changes I see in my local area make things more difficult for me and my family
 4;I don’t really see any changes
+$
+Q12|Diversity getting along|To what extent do you agree or disagree that your local area is a place where people from different backgrounds get on well together?
+SINGLE
 $
 Q13|Belonging to neighbourhood|Please say how strongly you agree or disagree with each statement.
 SINGLE
@@ -121,6 +146,9 @@ SINGLE
 6;Community events that I would like to get involved with happen in my area
 7;I regularly stop and talk with people in my neighbourhood.
 8;I would speak highly of my neighbourhood if asked
+$
+Q14a|Likelihood of longterm staying|How likely are you to be living in Lambeth in two years time?
+SINGLE
 $
 Q26|Medium of contact with Council|How was your last contact with the Council made?
 MULTICODE
@@ -145,6 +173,13 @@ F;To find out about local politics and democracy
 G;For Lambeth Council news
 H;Some other purpose
 I;I never use the Council websites
+$
+Q34|Improvement of personal finances|Compared with this time last year, do you think that your personal financial circumstances have improved, stayed the same, or got worse? READ OUT, CODE ONE ONLY
+SINGLE
+1;Improved
+2;Stayed the same
+3;Got worse
+4;Don’t know
 $
 Q35|Housing tenure|Which of the following best describes how you occupy your home? Please just read out the letter that applies.
 SINGLE
