@@ -1,0 +1,14 @@
+{% extends "clusters/base.html" %}
+
+{% block content %}
+<h1>Survey: </h1>
+
+about: {{ about }}
+
+<h2>Questions:</h2>
+<ul>
+  {% for question in questions %}
+    <li><b>{{ question.question_no }}</b> {{ question.question }}</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,5 +1,28 @@
 title: Residential Survey 2016 for Lambeth Council, date: August 2016, conducted by: BMG Research, link: https://www.lambeth.gov.uk/sites/default/files/Lambeth%20Council%20Residents's%20Survey%202016%20PDF_0.pdf
 $
+WARD|Ward
+1;Bishops
+2;Brixton Hill
+3;Clapham Common
+4;Clapham Town
+5;Coldhabour
+6;Ferndale
+7;Gipsy Hill
+8;Herne Hill
+9;Knights Hill
+10;Larkhall
+11;Oval
+12;Prince’s
+13;St Leonards
+14;Stockwell
+15;Streatham Hill
+16;Streatham South
+17;Streatham Wells
+18;Thornton
+19;Thurlow Park
+20;Tulse Hill
+21;Vassall
+$
 QAGEBND|Can you tell me your age last birthday?
 SINGLE1;18-242;25-343;35-44
 4;45-545;55-646;65-747;75-848;85+98;Refused$

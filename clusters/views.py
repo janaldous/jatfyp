@@ -37,13 +37,13 @@ def detail(request, cluster_id):
 
     charts = []
 
-    questions_to_show = ['Q11', 'QGEN', 'QAGEBND', 'QETH']
+    questions_to_show = ['WARD','Q11', 'QGEN', 'QAGEBND', 'QETH']
 
     for question in questions_to_show:
         dic =  rc.get_data(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'width': 1000, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
 
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
@@ -84,6 +84,23 @@ def create_cluster(request):
         form = ClusterForm()
 
     return render(request, 'clusters/form.html', {'form': form})
+
+def survey_questions(request):
+    #load csv
+    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
+    df = pd.read_csv(file_)
+    #load questionchoices txt
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
+    dic_source = rt.read(file2_)
+    about = dic_source['about']
+    questions_txt = dic_source['questions']
+
+    context = {
+        'size_str': len(df.index),#no of rows in df
+        'questions': questions_txt.values(),
+        'about': about,
+    }
+    return render(request, 'clusters/survey.html', context)
 
 def get_questions_as_str(questions_txt):
     '''
