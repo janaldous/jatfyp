@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^(?P<cluster_id>[0-9]+)/$', views.detail, name='detail'),
     url(r'^new', views.create_cluster, name='new'),
     url(r'^survey', views.survey_questions, name='survey'),
+    url(r'^(?P<cluster_id>[0-9]+)/compare', views.compare, name='compare'),
 ]

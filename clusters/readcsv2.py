@@ -64,7 +64,6 @@ def get_data_for_bar_charts2(df, dfAll, question_obj):
         except KeyError:
             vAll = 0
         choice_str = choices[key]
-        print [key, v, vAll]
         data.append([choice_str, v, vAll])
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)

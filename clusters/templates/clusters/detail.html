@@ -19,6 +19,10 @@
   </div>
 </div>
 
+{% block button %}
+<a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
+{% endblock %}
+
 {% if df_size == 0 %}
   There are no rows for this cluster
 {% else %}

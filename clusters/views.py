@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 
 from .forms import ClusterForm
 from .models import Cluster
@@ -21,6 +21,34 @@ def index(request):
     return render(request, 'clusters/index.html', context)
 
 def detail(request, cluster_id):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    #load csv into pandas.DataFrame
+    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
+    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    df = dic['df']
+    size_str = "%d / %d" % (len(df.index), dic['orig_size'])
+    #load questions textfile into list
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
+    dic_source = rt.read(file2_)
+    about = dic_source['about']
+    questions_txt = dic_source['questions']
+
+    #get cluster questions as strings
+    questions_strs = get_questions_as_str(questions_txt)
+
+    #get charts
+    charts = get_charts(df, questions_txt)
+
+    context = {
+        'cluster': cluster,
+        'charts': charts,
+        'df_size': size_str,#no of rows in df
+        'questions_strs': questions_strs,
+        'about': about,
+    }
+    return render(request, 'clusters/detail.html', context)
+
+def compare(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     clusterAll = get_object_or_404(Cluster, pk=3)
     #load csv into pandas.DataFrame
@@ -48,8 +76,7 @@ def detail(request, cluster_id):
         'questions_strs': questions_strs,
         'about': about,
     }
-    return render(request, 'clusters/detail.html', context)
-
+    return render(request, 'clusters/compare.html', context)
 
 def create_cluster(request):
     # if this is a POST request we need to process the form data
