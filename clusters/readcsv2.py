@@ -7,12 +7,7 @@ from django.conf import settings
 
 import string
 
-def start():
-    df = pd.read_csv('spss.csv')
-    print "adfadf"
-    print get_data2(df, 'Q5')
-
-def get_data_for_stacked_bar_charts(df, question_obj):
+def get_data_for_stacked_bar_charts2(df, dfAll, question_obj):
     '''
         Creates data list in the form for stacked barcharts
         Choices are dependent on if choice exists in spss.csv
@@ -21,7 +16,7 @@ def get_data_for_stacked_bar_charts(df, question_obj):
     v_counts = df[question_base].value_counts()
     choices = question_obj.choices
 
-    indexes = ['Question']
+    indexes = ['Cluster']
     for i in v_counts.index.tolist():
         try:
             c = choices[str(int(i))]
@@ -30,15 +25,20 @@ def get_data_for_stacked_bar_charts(df, question_obj):
             print 'key error AT readcsv.get_data; subquestion: %s' % (int(i))
         indexes.append(c)
 
-    values = [question_base]
+    values = ['This cluster']
     for i in v_counts.values.tolist():
         values.append(i)
 
+    valuesAll = ['All']
+    v_countsAll = dfAll[question_base].value_counts()
+    for i in v_counts.index.tolist():
+        valuesAll.append(v_countsAll[i])
+
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
-    return {'data':[indexes, values], 'question':question_str}
+    return {'data':[indexes, values, valuesAll], 'question':question_str}
 
-def get_data_for_bar_charts(df, question_obj):
+def get_data_for_bar_charts2(df, dfAll, question_obj):
     '''
         Creates data lists in the form for bar charts
         Choices are dependent on whether it exists in XXXquestionchoices.txt
@@ -46,37 +46,32 @@ def get_data_for_bar_charts(df, question_obj):
     '''
     question_base = question_obj.question_no
     choices = question_obj.choices
+    #ratio to make proportionate dfAll
+    ratio = len(dfAll.index)/len(df.index)
 
-    data = {}
+    data = [['question', 'This cluster', 'Lambeth']]
     #append data to list
     for key in choices.keys():
         subquestion = question_base+key
         try:
-            choice_str = choices[key]
-            data[choice_str] = df[subquestion].value_counts()[1]
+            v_counts = df[subquestion].value_counts()
+            v = v_counts[1]
         except KeyError:
-            #print 'key error at readcsv.get_data2; subquestion: %s' % subquestion
-            continue
-        except IndexError:
-            '''
-                means that all rows = 0, no rows = 1
-            '''
-            data[choice_str] = 0
-            continue
-
-    #sort data fron greatest to least
-    sorted_data = sorted(data.items(), key=operator.itemgetter(1), reverse=True)
-
-    #put sorted data into list
-    data = [['question', '#rows = 1']]
-    for d in sorted_data:
-        data.append([d[0], d[1]])
+            v = 0
+        try:
+            v_countsAll = dfAll[subquestion].value_counts()
+            vAll = v_countsAll[1]/ratio
+        except KeyError:
+            vAll = 0
+        choice_str = choices[key]
+        print [key, v, vAll]
+        data.append([choice_str, v, vAll])
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     return {'data':data, 'question':question_str}
 
-def get_data_for_column_chart(df, question_obj):
+def get_data_for_column_chart2(df, question_obj):
     '''
         Creates data lists in the form for column charts
     '''
