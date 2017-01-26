@@ -1,5 +1,9 @@
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
+from django.http import HttpResponseRedirect
+
+from .forms import ClusterForm
+from .models import Cluster
 
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import BarChart, ColumnChart
@@ -8,9 +12,6 @@ import readcsv as rc
 import readtxt as rt
 import pandas as pd
 import os
-
-
-from .models import Cluster
 
 # Create your views here.
 def index(request):
@@ -65,6 +66,24 @@ def detail(request, cluster_id):
         'about': about,
     }
     return render(request, 'clusters/detail.html', context)
+
+def create_cluster(request):
+    # if this is a POST request we need to process the form data
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        form = ClusterForm(request.POST)
+        # check whether it's valid:
+        if form.is_valid():
+            # process the data in form.cleaned_data as required
+            # ...
+            # redirect to a new URL:
+            return HttpResponseRedirect('/thanks/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        form = ClusterForm()
+
+    return render(request, 'clusters/form.html', {'form': form})
 
 def get_questions_as_str(questions_txt):
     '''
