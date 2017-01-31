@@ -107,11 +107,37 @@ def survey_questions(request):
     questions_txt = dic_source['questions']
 
     context = {
-        'size_str': len(df.index),#no of rows in df
         'questions': questions_txt.values(),
         'about': about,
     }
     return render(request, 'clusters/survey.html', context)
+
+def see_question_answers(request, question):
+    #load csv
+    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
+    df = pd.read_csv(file_)
+    #load questionchoices txt
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
+    dic_source = rt.read(file2_)
+    about = dic_source['about']
+    questions_txt = dic_source['questions']
+
+    chart = get_question_chart(df, questions_txt[question])
+
+    context = {
+        'chart': chart,
+        'question': question,
+        'about': about,
+    }
+    return render(request, 'clusters/question.html', context)
+
+def get_question_chart(df, question_obj):
+    dic = rc.get_data_for_question(df, question_obj)
+    data = dic['data']
+    question = dic['question']
+    chart = BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent'})
+    return chart
+
 
 def get_questions_as_str(questions_txt):
     '''

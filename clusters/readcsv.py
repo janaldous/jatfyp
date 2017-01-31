@@ -4,13 +4,51 @@ import pandas as pd
 import os
 import operator
 from django.conf import settings
-
+from models import Cluster
 import string
 
 def start():
     df = pd.read_csv('spss.csv')
     print "adfadf"
     print get_data2(df, 'Q5')
+
+def get_data_for_question(df, question_obj):
+    question_base = question_obj.question_no
+    v_counts = df[question_base].value_counts()
+    choices = question_obj.choices
+    indexes = ['Cluster']
+    index_ = []
+
+    iterate = question_obj.choices
+    if question_obj.choices == {}:
+        iterate = v_counts.index.tolist()
+    for i in iterate:
+        index_.append(i)
+        try:
+            c = choices[str(int(i))]
+        except KeyError:
+            c = str(int(i))
+            #print 'key error AT readcsv.get_data_for_question; subquestion: %s' % (int(i))
+        except ValueError:
+            c = choices[str(i)]
+        indexes.append(c)
+
+    data = [indexes]
+
+    for cluster in Cluster.objects.all():
+        df2 = filter_by_cluster(df, cluster)['df']
+        v_counts = df2[question_base].value_counts()
+        values = [cluster.name]
+        for i in index_:
+            try:
+                values.append(v_counts[int(i)])
+            except KeyError:
+                values.append(0)
+        data.append(values)
+
+    question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
+
+    return {'data':data, 'question':question_str}
 
 def get_data_for_stacked_bar_charts(df, question_obj):
     '''
@@ -100,18 +138,18 @@ def get_data_for_column_chart(df, question_obj):
 
     return {'data':data, 'question':question_str}
 
-def filter_by_cluster(df, cluster):
+def filter_by_cluster(df3, cluster):
     ''' DOES NOT INCLUDE FACTOR2 YET '''
-    orig_size = len(df.index)
+    orig_size = len(df3.index)
     if cluster.factor1 != '-':
-        df = df[(df.Q43 == float(cluster.factor1))]
+        df3 = df3[(df3.Q43 == float(cluster.factor1))]
     if cluster.factor2 != '-':
         question = 'Q45'+cluster.factor2
-        df = df[(df[question] == 1.0)]
+        df3 = df3[(df3[question] == 1.0)]
     if cluster.factor3 != '-':
-        df = df[(df.Q46 == float(cluster.factor3))]
+        df3 = df3[(df3.Q46 == float(cluster.factor3))]
     if cluster.factor4 != '-':
-        df = df[(df.Q47 == float(cluster.factor4))]
+        df3 = df3[(df3.Q47 == float(cluster.factor4))]
     if cluster.factor5 != '-':
-        df = df[(df.Q35 == float(cluster.factor5))]
-    return {'orig_size': orig_size, 'df': df}
+        df3 = df3[(df3.Q35 == float(cluster.factor5))]
+    return {'orig_size': orig_size, 'df': df3}
