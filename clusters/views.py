@@ -20,6 +20,9 @@ def index(request):
     context = {'clusters': clusters}
     return render(request, 'clusters/index.html', context)
 
+def map(request):
+    return render(request, 'clusters/map.html')
+
 def detail(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
