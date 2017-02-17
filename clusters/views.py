@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.conf import settings
-from django.http import HttpResponseRedirect,HttpResponse
+from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
 
 from .forms import ClusterForm
 from .models import Cluster
@@ -8,11 +8,14 @@ from .models import Cluster
 from graphos.sources.simple import SimpleDataSource
 from graphos.renderers.gchart import BarChart, ColumnChart
 
+from random import randint
+
 import readcsv as rc
 import readcsv2 as rc2
 import readtxt as rt
 import pandas as pd
 import os
+
 
 # Create your views here.
 def index(request):
@@ -22,6 +25,23 @@ def index(request):
 
 def map(request):
     return render(request, 'clusters/map.html')
+
+def json(request, cluster_id):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    #load csv into pandas.DataFrame
+    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
+    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    df = dic['df']
+
+    l = []
+    l.append(["Doble", "Ward"])
+    for index in range(1, 22):
+        num = randint(80,90)
+        l.append([str(num), str(index)])
+
+    output = rc2.get_data_for_map(df, 'WARD')
+
+    return JsonResponse(output, safe=False)
 
 def detail(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)

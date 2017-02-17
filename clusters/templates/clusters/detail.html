@@ -1,4 +1,9 @@
 {% extends "clusters/base.html" %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'clusters/css/map.css' %}">
+{% endblock %}
 
 {% block content %}
 
@@ -25,6 +30,8 @@
 <a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
 {% endblock %}
 
+
+
 {% if df_size == 0 %}
   There are no rows for this cluster
 {% else %}
@@ -36,5 +43,24 @@
     {{ chart.as_html }}
   {% endfor %}
 {% endif %}
+{% endblock %}
 
+{% block map %}
+<div id="legend">
+  <div id="census-min">min</div>
+  <div class="color-key"><span id="data-caret">&#x25c6;</span></div>
+  <div id="census-max">max</div>
+</div>
+<div id="data-box" class="nicebox">
+  <label id="data-label" for="data-value"></label>
+  <span id="data-value"></span>
+</div>
+<div id="map"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>cluster_id = "{{ cluster.id }}"</script>
+<script src='{% static "clusters/map.js" %}'></script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbcM5AOjEOn5tp18yfzV2jep_1gCdtmgo&callback=initMap"></script>
 {% endblock %}

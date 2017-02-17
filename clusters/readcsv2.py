@@ -7,6 +7,21 @@ from django.conf import settings
 
 import string
 
+def get_data_for_map(df, question_base):
+    output = []
+    v_counts = df[question_base].value_counts()
+
+    output.append(["value", "Ward"])
+    for i in range(1,22):
+        try:
+            value = v_counts[i]
+        except KeyError:
+            value = 0
+        ward = str(i)
+        output.append([value, ward])
+
+    return output
+
 def get_data_for_stacked_bar_charts2(df, dfAll, question_obj):
     '''
         Creates data list in the form for stacked barcharts
