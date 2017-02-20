@@ -39,6 +39,7 @@
   <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
   </script>
+  <div id="Ward" style="width: 100%; height: 25%;"></div>
   {% for chart in charts %}
     {{ chart.as_html }}
   {% endfor %}
@@ -64,4 +65,68 @@ Showing:<div id="showing"></div>
 <script src='{% static "clusters/map.js" %}'></script>
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbcM5AOjEOn5tp18yfzV2jep_1gCdtmgo&callback=initMap"></script>
+<script>
+google.setOnLoadCallback(drawChartWard);
+var chart;
+function drawChartWard() {
+
+  var json = (function () {
+      var json = null;
+      $.ajax({
+          'async': false,
+          'global': false,
+          'url': "../json4/3/Q11/1",
+          'dataType': "json",
+          'success': function (data) {
+              json = data;
+          }
+      });
+      return json;
+  })();
+
+  var data = google.visualization.arrayToDataTable(json);
+  data.sort({column: 1, desc: false});
+
+  var options = {"title": "WArd", bar: { groupWidth: "95%" }}
+
+chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
+
+  chart.draw(data, options);
+  chartGIwoVrxfEw = chart;
+
+  google.visualization.events.addListener(chart, 'select', function() {
+    var selectedItem = chart.getSelection()[0];
+    if (selectedItem) {
+      //var value = data.getValue(selectedItem.row, selectedItem.column);
+      //var question = data.getValue(0, 0);
+      //alert('The user selected ' + selectedItem.column + " question " + question);
+
+      //loadCensusData("/clusters/json2/1/Q11/"+selectedItem.column);
+    }
+  });
+}
+
+function redrawWardChart(cluster_id, question, choice) {
+  var json = (function () {
+      var json = null;
+      $.ajax({
+          'async': false,
+          'global': false,
+          'url': "../json4/" + cluster_id + "/" + question + "/" + choice,
+          'dataType': "json",
+          'success': function (data) {
+              json = data;
+          }
+      });
+      return json;
+  })();
+
+  var data = google.visualization.arrayToDataTable(json);
+  data.sort({column: 1, desc: false});
+  var options = {"title": "WArd", bar: { groupWidth: "95%" }}
+  chart.draw(data, options);
+  console.log("redrawn");
+}
+
+</script>
 {% endblock %}

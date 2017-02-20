@@ -18,6 +18,7 @@
   <!-- Identify where the chart should be drawn. -->
   <h1 id="Q11">Q11</h1>
   <div id="GIwoVrxfEw" style="width: 100%; height: 50%;"></div>
+  <div id="Ward" style="width: 100%; height: 25%;"></div>
   <div id="legend">
     <div id="census-min">min</div>
     <div class="color-key"><span id="data-caret">&#x25c6;</span></div>
@@ -65,6 +66,46 @@
   $('#Q11').click(function() {
     loadCensusData("/clusters/json3/1/Q11");
   });
+
+  google.setOnLoadCallback(drawChartWard);
+  function drawChartWard() {
+
+    var json = (function () {
+        var json = null;
+        $.ajax({
+            'async': false,
+            'global': false,
+            'url': "json4/3/Q11/2",
+            'dataType': "json",
+            'success': function (data) {
+                json = data;
+                console.log(json);
+            }
+        });
+        return json;
+    })();
+
+    var data = google.visualization.arrayToDataTable(json);
+    data.sort({column: 1, desc: false});
+
+    var options = {"title": "WArd"}
+
+  var chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
+
+    chart.draw(data, options);
+    chartGIwoVrxfEw = chart;
+
+    google.visualization.events.addListener(chart, 'select', function() {
+      var selectedItem = chart.getSelection()[0];
+      if (selectedItem) {
+        //var value = data.getValue(selectedItem.row, selectedItem.column);
+        //var question = data.getValue(0, 0);
+        //alert('The user selected ' + selectedItem.column + " question " + question);
+
+        //loadCensusData("/clusters/json2/1/Q11/"+selectedItem.column);
+      }
+    });
+  }
 </script>
 </body>
 <html>

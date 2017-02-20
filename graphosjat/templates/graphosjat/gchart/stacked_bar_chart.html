@@ -9,9 +9,11 @@
       var value = data.getColumnLabel(selectedItem.column);
       var question = options['title'].match(/\w+/i)[0];
 
-      loadCensusData("/clusters/json2/1/"+ question +"/"+selectedItem.column);
+      loadCensusData("/clusters/json2/"+cluster_id+"/"+ question +"/"+selectedItem.column);
 
       document.getElementById("showing").innerHTML = question + "/" + value;
+
+      redrawWardChart(cluster_id, question, selectedItem.column);
     }
   });
 {% endblock %}

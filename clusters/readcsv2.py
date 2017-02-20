@@ -7,6 +7,27 @@ from django.conf import settings
 
 import string
 
+def get_data_for_map4(df, question_base, choice):
+    """ outputs opposite of get_data_for_map2 (swapped columns) for column data chart format"""
+    output = []
+    cluster_rows = df
+    output.append(["Ward", "Population"])
+    #for each ward get number of people who chose choice
+    #print cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
+    #print int(choice) == 1.0
+    for i in range(1,22): #WARD IS STATIC
+        ward_rows = cluster_rows.loc[cluster_rows['WARD'] == i]
+        v_counts = ward_rows[question_base].value_counts()
+
+        try:
+            value = v_counts[int(choice)]
+        except KeyError:
+            value = 0
+        ward = str(i)
+        output.append([ward, value])
+
+    return output
+
 def get_data_for_map3(df, question_base):
     output = []
     cluster_rows = df
