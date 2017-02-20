@@ -9,8 +9,8 @@ import string
 
 def start():
     df = pd.read_csv('spss.csv')
-    print "adfadf"
-    print get_data2(df, 'Q5')
+    #print "adfadf"
+    #print get_data2(df, 'Q5')
 
 def get_data_for_question(df, question_obj):
     question_base = question_obj.question_no

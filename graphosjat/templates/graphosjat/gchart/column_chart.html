@@ -1,0 +1,19 @@
+{% extends "graphosjat/gchart/base.html" %}
+
+{% block create_chart %}
+  var chart = new google.visualization.ColumnChart(document.getElementById('{{ chart.get_html_id }}'));
+
+  google.visualization.events.addListener(chart, 'select', function() {
+    var selectedItem = chart.getSelection()[0];
+    if (selectedItem) {
+      var value = selectedItem.column;
+
+      var question = options['title'].match(/\w+/i)[0] + "_R" + (selectedItem.row+1);
+      console.log(value);
+
+      loadCensusData("/clusters/json2/1/"+ question + "/" + value);
+
+      document.getElementById("showing").innerHTML = question + "/" + value;
+    }
+  });
+{% endblock %}

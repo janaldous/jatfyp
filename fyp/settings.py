@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'graphos',
+    'graphosjat',
     'clusters.apps.ClustersConfig',
     'django.contrib.admin',
     'django.contrib.auth',

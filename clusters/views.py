@@ -5,8 +5,8 @@ from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
 from .forms import ClusterForm
 from .models import Cluster
 
-from graphos.sources.simple import SimpleDataSource
-from graphos.renderers.gchart import BarChart, ColumnChart
+from graphosjat.sources.simple import SimpleDataSource
+from graphosjat.renderers.gchart import BarChart, ColumnChart, StackedBarChart
 
 from random import randint
 
@@ -26,6 +26,9 @@ def index(request):
 def map(request):
     return render(request, 'clusters/map.html')
 
+def test(request):
+    return render(request, 'clusters/test.html')
+
 def json(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
@@ -33,13 +36,29 @@ def json(request, cluster_id):
     dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
     df = dic['df']
 
-    l = []
-    l.append(["Doble", "Ward"])
-    for index in range(1, 22):
-        num = randint(80,90)
-        l.append([str(num), str(index)])
-
     output = rc2.get_data_for_map(df, 'WARD')
+
+    return JsonResponse(output, safe=False)
+
+def json2(request, cluster_id, question_id, choice_id):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    #load csv into pandas.DataFrame
+    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
+    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    df = dic['df']
+
+    output = rc2.get_data_for_map2(df, question_id, choice_id)
+
+    return JsonResponse(output, safe=False)
+
+def json3(request, cluster_id, question_id):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    #load csv into pandas.DataFrame
+    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
+    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    df = dic['df']
+
+    output = rc2.get_data_for_map3(df, question_id)
 
     return JsonResponse(output, safe=False)
 
@@ -183,7 +202,7 @@ def get_charts(df, questions_txt):
         dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
 
     #multicode questions
@@ -214,7 +233,7 @@ def get_charts_compare(df, dfAll, questions_txt):
         dic =  rc2.get_data_for_stacked_bar_charts2(df, dfAll, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 200, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 200, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
 
     #multicode questions
