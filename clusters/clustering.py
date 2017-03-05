@@ -1,0 +1,122 @@
+from pandas import Series, DataFrame
+import pandas as pd
+import numpy as np
+#import matplotlib.pylab as plt
+from sklearn.model_selection import train_test_split
+from sklearn import preprocessing
+from sklearn.cluster import KMeans
+
+# from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-1
+#from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-2
+
+def get_cluster_list(data):
+    """
+        Data Management
+    """
+    #data = pd.read_csv("spss.csv")
+
+    #data = data[data.QAGE >= 0]
+    #data = data[data.QETH >= 0]
+    #print data
+    #data = data.dropna()
+
+    columns = ['WARD', 'Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34']
+    for i in range(1,9):
+        columns.append('Q13_R'+str(i))
+    #append other columns
+    import string
+    uc = string.ascii_uppercase
+    for i in range(0,len(uc)):
+        try:
+            c = data['Q50'+uc[i]]
+            columns.append('Q50'+uc[i])
+        except KeyError:
+            print "breaekd"
+            break
+
+    cluster=data[columns]
+    cluster.describe()
+
+    clustervar = cluster.copy()
+    """
+    clustervar['Q11']=preprocessing.scale(clustervar['Q11'].astype('float64'))
+    clustervar['QGEN']=preprocessing.scale(clustervar['QGEN'].astype('float64'))
+    clustervar['QAGEBND']=preprocessing.scale(clustervar['QAGEBND'].astype('float64'))
+    clustervar['QETH']=preprocessing.scale(clustervar['QETH'].astype('float64'))
+    """
+
+    clus_train, clus_test = train_test_split(clustervar, test_size=.3, random_state=123)
+
+    from scipy.spatial.distance import cdist
+    clusters=range(1,10)
+    meandist=[]
+
+
+    for k in clusters:
+        model=KMeans(n_clusters=k)
+        model.fit(clus_train)
+        clusassign=model.predict(clus_train)
+        meandist.append(sum(np.min(cdist(clus_train, model.cluster_centers_, 'euclidean'), axis=1))
+        /clus_train.shape[0])
+
+    '''
+    print meandist
+    print clusters
+
+    '''
+    """
+    plt.plot(clusters, meandist)
+    plt.xlabel('Number of clusters')
+    plt.ylabel('Average distance')
+    plt.title('Selecting k with the Elbow Method')
+    plt.show()
+    """
+    model5 = KMeans(n_clusters=3)
+    model5.fit(clus_train)
+    clussassign=model5.predict(clus_train)
+
+    """
+    from sklearn.decomposition import PCA
+    pca_2 = PCA(2)
+    plot_columns = pca_2.fit_transform(clus_train)
+    plt.scatter(x=plot_columns[:,0], y=plot_columns[:,1], c=model5.labels_)
+    plt.xlabel('canonical variable 1')
+    plt.ylabel('canonical variable 2')
+    plt.title('asdf')
+    plt.show()
+    """
+    """
+    BEGIN multiple steps to merge assignment with clustering variables to examine cluster variable means by cluster
+    """
+    clus_train.reset_index(level=0, inplace=True)
+    cluslist=list(clus_train['index'])
+    labels=list(model5.labels_)
+    newlist=dict(zip(cluslist, labels))
+    newlist
+
+    newclus=DataFrame.from_dict(newlist, orient='index')
+    newclus
+
+    newclus.columns=['cluster']
+
+    newclus.reset_index(level=0, inplace=True)
+
+    merged_train=pd.merge(clus_train, newclus, on='index')
+    merged_train.head(n=100)
+
+    merged_train.cluster.value_counts()
+
+    clustergrp=merged_train.groupby('cluster').mean()
+    #print "clustering variable means by cluster"
+    #print clustergrp
+    return merged_train
+
+def get_num_of_subclusters():
+    """ only temporary, needs implementation """
+    return 3
+
+def filter_by_subcluster(data, subcluster_id):
+    df = get_cluster_list(data)
+    df = df[(df.cluster == float(subcluster_id))]
+    print df['WARD']
+    return df

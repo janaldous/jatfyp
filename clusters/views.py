@@ -15,6 +15,7 @@ import readcsv2 as rc2
 import readtxt as rt
 import pandas as pd
 import os
+import clustering
 
 
 # Create your views here.
@@ -28,6 +29,43 @@ def map(request):
 
 def test(request):
     return render(request, 'clusters/test.html')
+
+def subcluster_list(request, cluster_id):
+    num_of_clusters = clustering.get_num_of_subclusters()
+    context = {
+        'cluster_id': cluster_id,
+        'num_of_clusters': range(num_of_clusters),
+        }
+    return render(request, 'clusters/subcluster_list.html', context)
+
+def subcluster_detail(request, cluster_id, subcluster_id):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    #load csv into pandas.DataFrame
+    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
+    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    df = dic['df']
+    df = clustering.filter_by_subcluster(df, subcluster_id)
+    size_str = "%d / %d" % (len(df.index), dic['orig_size'])
+    #load questions textfile into list
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
+    dic_source = rt.read(file2_)
+    about = dic_source['about']
+    questions_txt = dic_source['questions']
+
+    #get cluster questions as strings
+    questions_strs = get_questions_as_str(questions_txt)
+
+    #get charts
+    charts = get_charts(df, questions_txt)
+
+    context = {
+        'cluster': cluster,
+        'charts': charts,
+        'df_size': size_str,#no of rows in df
+        'questions_strs': questions_strs,
+        'about': about,
+    }
+    return render(request, 'clusters/detail.html', context)
 
 def json(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
