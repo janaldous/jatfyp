@@ -23,6 +23,13 @@
     Number of rows: {{ df_size }}
     <br>
     Source: {{ about }}
+    <br>
+    Number of clusters: {{ num_of_clusters }}
+    <ul>
+    {% for population in subcluster_values %}
+      <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
+    {% endfor %}
+    </ul>
   </div>
 </div>
 

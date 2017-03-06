@@ -6,6 +6,7 @@ import operator
 from django.conf import settings
 
 import string
+import clustering
 
 def get_data_for_map4(df, question_base, choice):
     """ outputs opposite of get_data_for_map2 (swapped columns) for column data chart format"""
@@ -84,30 +85,55 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj):
         Choices are dependent on if choice exists in spss.csv
     '''
     question_base = question_obj.question_no
-    v_counts = df[question_base].value_counts()
     choices = question_obj.choices
 
-    indexes = ['Cluster']
-    for i in v_counts.index.tolist():
-        try:
-            c = choices[str(int(i))]
-        except KeyError:
-            c = str(int(i))
-            print 'key error AT readcsv.get_data; subquestion: %s' % (int(i))
-        indexes.append(c)
+    v_counts = df[question_base].value_counts()
 
-    values = ['This cluster']
+    indexes = ['Questions']
+    for i in v_counts.index.tolist():
+        indexes.append(str(int(i)))
+
+    #get this cluster
+    values = ['Cluster']
     for i in v_counts.values.tolist():
         values.append(i)
 
+    #get subclusters
+    valueslist = []
+    for i in range(clustering.get_num_of_subclusters()):
+        values2 = ['Cluster '+str(i)]
+        dfclus = clustering.filter_by_subcluster(df, i)
+
+        v_counts = dfclus[question_base].value_counts()
+        for i in indexes[1:]:
+            try:
+                values2.append(v_counts[float(i)])
+            except KeyError:
+                values2.append(0)
+        valueslist.append(values2)
+
+    #get all pop
     valuesAll = ['All']
     v_countsAll = dfAll[question_base].value_counts()
-    for i in v_counts.index.tolist():
-        valuesAll.append(v_countsAll[i])
+    for i in indexes[1:]:
+        valuesAll.append(v_countsAll[float(i)])
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
-    return {'data':[indexes, values, valuesAll], 'question':question_str}
+    #change indexes from float to string description
+    for idx,item in enumerate(indexes[1:]):
+        try:
+            c = choices[str(item)]
+        except KeyError:
+            c = item
+            print 'key error AT readcsv.get_data; subquestion: %d' % (int(float(item)))
+        indexes[idx] = c
+
+    data = [indexes, values, valuesAll]
+    for i in valueslist:
+        data.append(i)
+
+    return {'data':data, 'question':question_str}
 
 def get_data_for_bar_charts2(df, dfAll, question_obj):
     '''

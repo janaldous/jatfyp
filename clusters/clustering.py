@@ -9,6 +9,8 @@ from sklearn.cluster import KMeans
 # from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-1
 #from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-2
 
+num_of_clusters = 3
+
 def get_cluster_list(data):
     """
         Data Management
@@ -31,7 +33,6 @@ def get_cluster_list(data):
             c = data['Q50'+uc[i]]
             columns.append('Q50'+uc[i])
         except KeyError:
-            print "breaekd"
             break
 
     cluster=data[columns]
@@ -113,10 +114,16 @@ def get_cluster_list(data):
 
 def get_num_of_subclusters():
     """ only temporary, needs implementation """
-    return 3
+    return num_of_clusters
+
+def get_subclusters(data):
+    d = {}
+    for i in range(num_of_clusters):
+        d[str(i)] = len(filter_by_subcluster(data, i).index)
+    return d
+
 
 def filter_by_subcluster(data, subcluster_id):
     df = get_cluster_list(data)
     df = df[(df.cluster == float(subcluster_id))]
-    print df['WARD']
     return df

@@ -17,6 +17,7 @@ import pandas as pd
 import os
 import clustering
 
+dataframeAll = pd.read_csv(open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv')))
 
 # Create your views here.
 def index(request):
@@ -30,11 +31,13 @@ def map(request):
 def test(request):
     return render(request, 'clusters/test.html')
 
-def subcluster_list(request, cluster_id):
-    num_of_clusters = clustering.get_num_of_subclusters()
+def subclusters_list(request, cluster_id):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    dic = rc.filter_by_cluster(dataframeAll, cluster)
+    clusters_dict = clustering.get_subclusters(dic['df'])
     context = {
         'cluster_id': cluster_id,
-        'num_of_clusters': range(num_of_clusters),
+        'subcluster_values': list(clusters_dict.values()),
         }
     return render(request, 'clusters/subcluster_list.html', context)
 
@@ -46,6 +49,7 @@ def subcluster_detail(request, cluster_id, subcluster_id):
     df = dic['df']
     df = clustering.filter_by_subcluster(df, subcluster_id)
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
+    clusters_dict = clustering.get_subclusters(dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
@@ -64,6 +68,8 @@ def subcluster_detail(request, cluster_id, subcluster_id):
         'df_size': size_str,#no of rows in df
         'questions_strs': questions_strs,
         'about': about,
+        'subcluster_values': list(clusters_dict.values()),
+        'num_of_clusters': clustering.num_of_clusters,
     }
     return render(request, 'clusters/detail.html', context)
 
@@ -118,6 +124,7 @@ def detail(request, cluster_id):
     dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
     df = dic['df']
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
+    clusters_dict = clustering.get_subclusters(dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
@@ -136,6 +143,8 @@ def detail(request, cluster_id):
         'df_size': size_str,#no of rows in df
         'questions_strs': questions_strs,
         'about': about,
+        'subcluster_values': list(clusters_dict.values()),
+        'num_of_clusters': clustering.num_of_clusters,
     }
     return render(request, 'clusters/detail.html', context)
 
@@ -148,6 +157,7 @@ def compare(request, cluster_id):
     dic = rc.filter_by_cluster(dicAll['df'], cluster)
     df = dic['df']
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
+    clusters_dict = clustering.get_subclusters(dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
@@ -166,6 +176,8 @@ def compare(request, cluster_id):
         'df_size': size_str,#no of rows in df
         'questions_strs': questions_strs,
         'about': about,
+        'subcluster_values': list(clusters_dict.values()),
+        'num_of_clusters': clustering.num_of_clusters,
     }
     return render(request, 'clusters/compare.html', context)
 
