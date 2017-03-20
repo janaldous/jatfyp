@@ -29,7 +29,7 @@ def map(request):
     return render(request, 'clusters/map.html')
 
 def test(request):
-    return render(request, 'clusters/test.html')
+    return render(request, 'clusters/tests/tempdelete.html')
 
 def subclusters_list(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
@@ -80,7 +80,13 @@ def json(request, cluster_id):
     dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
     df = dic['df']
 
-    output = rc2.get_data_for_map(df, 'WARD')
+    #load questions textfile into list
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
+    dic_source = rt.read(file2_)
+    about = dic_source['about']
+    questions_txt = dic_source['questions']
+
+    output = rc2.get_data_for_map(df, questions_txt['WARD'])
 
     return JsonResponse(output, safe=False)
 
@@ -146,7 +152,7 @@ def detail(request, cluster_id):
         'subcluster_values': list(clusters_dict.values()),
         'num_of_clusters': clustering.num_of_clusters,
     }
-    return render(request, 'clusters/detail.html', context)
+    return render(request, 'clusters/tests/tempdelete.html', context)
 
 def compare(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
@@ -263,9 +269,9 @@ def get_charts(df, questions_txt):
         dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 100, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
-
+    '''
     #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
     for question in questions_to_show:
@@ -281,6 +287,7 @@ def get_charts(df, questions_txt):
     data = dic['data']
     question = dic['question']
     charts.append(ColumnChart(SimpleDataSource(data=data), options={'title': question}))
+    '''
 
     return charts
 
@@ -294,7 +301,7 @@ def get_charts_compare(df, dfAll, questions_txt):
         dic =  rc2.get_data_for_stacked_bar_charts2(df, dfAll, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 200, 'width': 1100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 200, 'width': 100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
 
     #multicode questions

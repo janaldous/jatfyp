@@ -64,7 +64,10 @@ def get_data_for_map2(df, question_base, choice):
 
     return output
 
-def get_data_for_map(df, question_base):
+def get_data_for_map(df, question_obj):
+    question_base = question_obj.question_no
+    choices = question_obj.choices
+
     output = []
     v_counts = df[question_base].value_counts()
 
@@ -74,8 +77,8 @@ def get_data_for_map(df, question_base):
             value = v_counts[i]
         except KeyError:
             value = 0
-        ward = str(i)
-        output.append([value, ward])
+        ward = choices[str(i)]
+        output.append([ward, value])
 
     return output
 
