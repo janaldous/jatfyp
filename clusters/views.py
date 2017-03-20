@@ -271,7 +271,6 @@ def get_charts(df, questions_txt):
         question = dic['question']
         charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
 
-    '''
     #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
     for question in questions_to_show:
@@ -287,7 +286,6 @@ def get_charts(df, questions_txt):
     data = dic['data']
     question = dic['question']
     charts.append(ColumnChart(SimpleDataSource(data=data), options={'title': question}))
-    '''
 
     return charts
 

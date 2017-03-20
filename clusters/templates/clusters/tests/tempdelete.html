@@ -5,37 +5,42 @@
 <link rel="stylesheet" type="text/css" href="{% static 'clusters/css/map.css' %}">
 {% endblock %}
 
+{% block group_name %}
+<h1>{{ cluster.name }}</h1>
+{% endblock %}
+
+{% block about %}
+  <h3>Group factors</h3>
+  <ul>
+    <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
+    <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
+    <li>Q46 : {{ questions_strs.2 }} <span class="badge">{{ cluster.factor3 }}</span></li>
+    <li>Q47 : {{ questions_strs.3 }} <span class="badge">{{ cluster.factor4 }}</span></li>
+    <li>Q35 : {{ questions_strs.4 }} <span class="badge">{{ cluster.factor5 }}</span></li>
+  </ul>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      Number of rows: {{ df_size }}
+      <br>
+      Source: {{ about }}
+      <br>
+      Number of clusters: {{ num_of_clusters }}
+      <ul>
+      {% for population in subcluster_values %}
+        <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  {% block button %}
+  <a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
+  {% endblock %}
+{% endblock %}
+
 {% block content %}
 
-<h1>{{ cluster.name }}</h1>
-
-<h3>Group factors</h3>
-<ul>
-  <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
-  <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
-  <li>Q46 : {{ questions_strs.2 }} <span class="badge">{{ cluster.factor3 }}</span></li>
-  <li>Q47 : {{ questions_strs.3 }} <span class="badge">{{ cluster.factor4 }}</span></li>
-  <li>Q35 : {{ questions_strs.4 }} <span class="badge">{{ cluster.factor5 }}</span></li>
-</ul>
-
-<div class="panel panel-default">
-  <div class="panel-body">
-    Number of rows: {{ df_size }}
-    <br>
-    Source: {{ about }}
-    <br>
-    Number of clusters: {{ num_of_clusters }}
-    <ul>
-    {% for population in subcluster_values %}
-      <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
-    {% endfor %}
-    </ul>
-  </div>
-</div>
-
-{% block button %}
-<a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
-{% endblock %}
 
 
 
@@ -53,7 +58,7 @@
 {% endblock %}
 
 {% block map %}
-  Showing:<div id="showing"></div>
+  Showing:<p id="showing"></p>
   <div id="legend">
     <div id="census-min">min</div>
     <div class="color-key"><span id="data-caret">&#x25c6;</span></div>

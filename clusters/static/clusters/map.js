@@ -3,11 +3,12 @@ var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
 
 function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 11,
+    zoom: 12,
     center: {lat: 51.458820, lng: -0.117174},
     scrollwheel: false,
-    zoomControl: false,
-    scaleControl: false,
+    zoomControl: true,
+    scaleControl: true,
+    draggable: true,
   });
 
   // NOTE: This uses cross-domain XHR, and may not work on older browsers.

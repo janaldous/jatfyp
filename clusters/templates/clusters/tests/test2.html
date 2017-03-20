@@ -17,34 +17,21 @@
         top: 50px;
         bottom: 0;
         left: 0;
-        width: 50%;
+        width: 40%;
       }
 
-      #right {
+      .right {
         position: fixed;
         top: 50px;
         bottom: 0;
         right: 0;
-        overflow-y: scroll;
-        width: 50%;
+        width: 60%;
       }
-    }
 
-
-    .grayarea {
-    	background-color: #FFFFFF;
-    	width: 500px;
-    	bottom: 0;
-    	position: fixed;
-    	top: 10px;
-    }
-    .midarea {
-        position: fixed;
-        width: 50%;
-        height: 100%;
-    	  left:560px;
-        //right: 0;
-        overflow: auto;
+      #scrollable {
+        top: 150px;
+        overflow-y: scroll;
+      }
     }
     </style>
 
@@ -78,6 +65,7 @@
             <li><a href="{% url 'clusters:new' %}">New cluster</a></li>
             <li><a href="/admin">Admin</a></li>
           </ul>
+          <span id="remove-button" class="navbar-right glyphicon glyphicon glyphicon-remove" aria-hidden="true"></span>
         </div>
       </div>
     </nav>
@@ -85,8 +73,16 @@
       <div id="left" style="padding:10px;">
       {% block map %}{% endblock %}
       </div>
-      <div id="right" style="padding:10px;">
-      {% block content %}{% endblock %}
+
+      <div class="right" style="padding:10px;">
+        {% block group_name %}{% endblock %}
+        <span id="about-icon" class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+        <div class="right" id="scrollable" style="padding:10px;">
+          <div id="about-group">
+            {% block about %}{% endblock %}
+          </div>
+        {% block content %}{% endblock %}
+        </div>
       </div>
     </div>
 
@@ -96,5 +92,30 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     {% block scripts %}
     {% endblock %}
+    <script>
+    (function ($) {
+      $(document).ready(function(){
+      // fade out .navbar when #remove-button is clicked
+    	$(function () {
+    		$("#remove-button").click(function () {
+            $('.navbar').fadeOut();
+            $("#left").css({ top: '0px' });
+            $(".right").css({ top: '0px' });
+            $("#scrollable").css({ top: '100px' });
+    		});
+    	});
+
+      //init state: of #about-group
+      $('#about-group').hide();
+
+      // fade in/out #about-group when # is clicked
+    	$(function () {
+    		$("#about-icon").click(function () {
+            $('#about-group').toggle();
+    		});
+    	});
+    });
+    }(jQuery));
+    </script>
 </body>
 </html>
