@@ -14,8 +14,8 @@ def get_data_for_map4(df, question_base, choice):
     cluster_rows = df
     output.append(["Ward", "Population"])
     #for each ward get number of people who chose choice
-    #print cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
-    #print int(choice) == 1.0
+    # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
+    # int(choice) == 1.0
     for i in range(1,22): #WARD IS STATIC
         ward_rows = cluster_rows.loc[cluster_rows['WARD'] == i]
         v_counts = ward_rows[question_base].value_counts()
@@ -34,8 +34,8 @@ def get_data_for_map3(df, question_base):
     cluster_rows = df
     output.append(["Max choice", "Ward"])
     #for each ward get number of people who chose choice
-    #print cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
-    #print int(choice) == 1.0
+    # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
+    # int(choice) == 1.0
     for i in range(1,22): #WARD IS STATIC
         ward_rows = cluster_rows.loc[cluster_rows['WARD'] == i]
         value = int(ward_rows[question_base].value_counts().index[0])
@@ -49,8 +49,8 @@ def get_data_for_map2(df, question_base, choice):
     cluster_rows = df
     output.append(["Population", "Ward"])
     #for each ward get number of people who chose choice
-    #print cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
-    #print int(choice) == 1.0
+    # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
+    # int(choice) == 1.0
     for i in range(1,22): #WARD IS STATIC
         ward_rows = cluster_rows.loc[cluster_rows['WARD'] == i]
         v_counts = ward_rows[question_base].value_counts()
@@ -186,7 +186,7 @@ def get_data_for_column_chart2(df, question_obj):
                 data_.append(values[j])
             except KeyError:
                 data_.append(0)
-                #print 'key error at readcsv.get_data_for_column_chart; subquestion: %s' % subquestion
+                # 'key error at readcsv.get_data_for_column_chart; subquestion: %s' % subquestion
                 continue
         data.append(data_)
 
