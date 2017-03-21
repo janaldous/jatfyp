@@ -87,7 +87,7 @@ function drawChartWard() {
       $.ajax({
           'async': false,
           'global': false,
-          'url': "../json4/1/Q11/1",
+          'url': "../json/"+cluster_id,
           'dataType': "json",
           'success': function (data) {
               json = data;
@@ -97,7 +97,7 @@ function drawChartWard() {
   })();
 
   var data = google.visualization.arrayToDataTable(json);
-  data.sort({column: 1, desc: false});
+  data.sort({column: 0, desc: false});
 
   var options = {"title": "Ward", bar: { groupWidth: "95%" }}
 

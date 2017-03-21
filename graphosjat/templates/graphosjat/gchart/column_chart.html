@@ -9,7 +9,6 @@
       var value = selectedItem.column;
 
       var question = options['title'].match(/\w+/i)[0] + "_R" + (selectedItem.row+1);
-      console.log(value);
 
       loadCensusData("/clusters/json2/"+cluster_id+"/"+ question + "/" + value, question, value);
 
