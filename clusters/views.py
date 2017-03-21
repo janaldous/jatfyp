@@ -29,7 +29,7 @@ def map(request):
     return render(request, 'clusters/map.html')
 
 def test(request):
-    return render(request, 'clusters/tests/tempdelete.html')
+    return render(request, 'clusters/test.html')
 
 def subclusters_list(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
