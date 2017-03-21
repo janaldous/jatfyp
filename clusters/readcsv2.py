@@ -78,7 +78,7 @@ def get_data_for_map(df, question_obj):
         except KeyError:
             value = 0
         ward = choices[str(i)]
-        output.append([ward, value])
+        output.append([value, i])
 
     return output
 

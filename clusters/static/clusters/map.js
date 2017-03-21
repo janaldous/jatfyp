@@ -68,7 +68,7 @@ function initMap() {
   });*/
 }
 
-function loadCensusData(variable) {
+function loadCensusData(variable, question, value) {
   // load the requested variable from the census API (using local copies)
   var xhr = new XMLHttpRequest();
   xhr.open('GET', variable);
@@ -95,7 +95,7 @@ function loadCensusData(variable) {
           .getFeatureById(stateId)
           .setProperty('census_variable', censusVariable);
       } catch(err) {
-        console.log("Error = " + stateId)
+        console.log("Error = " + variable);
       }
 
       // update and display the legend
@@ -107,6 +107,14 @@ function loadCensusData(variable) {
     });
   };
   xhr.send();
+
+  //change text of showing element
+  if (question || value) {
+    document.getElementById("showing").innerHTML = question + "/" + value;
+  } else {
+    document.getElementById("showing").innerHTML = "Showing all of group";
+  }
+
 }
 
 function styleFeature(feature) {

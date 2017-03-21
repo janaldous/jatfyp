@@ -11,10 +11,7 @@
 
       var question = options['title'].match(/\w+/i)[0] + question_letter;
 
-      loadCensusData("/clusters/json2/"+cluster_id+"/"+ question + "/1");
-
-      document.getElementById("showing").innerHTML = question + "/" + value;
-
+      loadCensusData("/clusters/json2/"+cluster_id+"/"+ question + "/1", question, value);
 
     }
   });

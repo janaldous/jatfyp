@@ -7,6 +7,8 @@
 
 {% block group_name %}
 <h1>{{ cluster.name }}</h1>
+<a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
+<a class="btn btn-primary" id="all-button" href="#" role="button">See all on map</a>
 {% endblock %}
 
 {% block about %}
@@ -34,9 +36,6 @@
     </div>
   </div>
 
-  {% block button %}
-  <a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
-  {% endblock %}
 {% endblock %}
 
 {% block content %}
@@ -140,6 +139,16 @@ function redrawWardChart(cluster_id, question, choice) {
   chart.draw(data, options);
   console.log("redrawn");
 }
+
+// fade in/out #about-group when # is clicked
+(function ($) {
+  $(function () {
+    $("#all-button").click(function () {
+        loadCensusData("/clusters/json/"+cluster_id);
+    });
+  });
+
+}(jQuery));
 
 </script>
 {% endblock %}
