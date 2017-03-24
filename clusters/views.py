@@ -269,7 +269,13 @@ def get_charts(df, questions_txt):
         dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        options={
+            'title': question,
+            'isStacked': 'percent',
+            'legend': { 'position': 'bottom', 'maxLines': '3' },
+            'height': 300,
+        }
+        charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
     #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
@@ -279,14 +285,19 @@ def get_charts(df, questions_txt):
         question = dic['question']
         options={
             'title': question,
-            }
+            'legend': { 'position': 'bottom', 'maxLines': '3' }
+        }
         charts.append(BarChart(SimpleDataSource(data=data), options=options))
 
     dic =  rc.get_data_for_column_chart(df, questions_txt['Q13'])
     data = dic['data']
     question = dic['question']
-    charts.append(ColumnChart(SimpleDataSource(data=data), options={'title': question}))
-    
+    options={
+        'title': question,
+        'legend': { 'position': 'bottom', 'maxLines': '3' }
+    }
+    charts.append(ColumnChart(SimpleDataSource(data=data), options=options))
+
     return charts
 
 def get_charts_compare(df, dfAll, questions_txt):
@@ -299,7 +310,14 @@ def get_charts_compare(df, dfAll, questions_txt):
         dic =  rc2.get_data_for_stacked_bar_charts2(df, dfAll, questions_txt[question])
         data = dic['data']
         question = dic['question']
-        charts.append(StackedBarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent', 'height': 200, 'width': 100, 'legend': { 'position': 'bottom', 'maxLines': '3' }}))
+        options = {
+            'title': question,
+            'isStacked': 'percent',
+            'height': 200,
+            'width': 100,
+            legend: { position: 'bottom', maxLines: '3' }
+        }
+        charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
 
     #multicode questions
@@ -310,7 +328,8 @@ def get_charts_compare(df, dfAll, questions_txt):
         question = dic['question']
         options={
             'title': question,
-            }
+            legend: { position: 'bottom', maxLines: '3' }
+        }
         charts.append(BarChart(SimpleDataSource(data=data), options=options))
 
     dic =  rc2.get_data_for_column_chart2(df, questions_txt['Q13'])

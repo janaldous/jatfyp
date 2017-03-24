@@ -5,6 +5,9 @@ class BaseGChart(BaseChart):
     def get_html_template(self):
         return "graphosjat/gchart/html.html"
 
+class JatGChart(BaseChart):
+    def get_html_template(self):
+        return "graphosjat/gchart/html_percent.html"
 
 class LineChart(BaseGChart):
     def get_js_template(self):
@@ -16,12 +19,12 @@ class GaugeChart(BaseGChart):
         return "graphos/gchart/gauge_chart.html"
 
 
-class ColumnChart(BaseGChart):
+class ColumnChart(JatGChart):
     def get_js_template(self):
         return "graphosjat/gchart/column_chart.html"
 
 
-class StackedBarChart(BaseGChart):
+class StackedBarChart(JatGChart):
     def get_js_template(self):
         return "graphosjat/gchart/stacked_bar_chart.html"
 
@@ -32,7 +35,7 @@ class StackedBarChart(BaseGChart):
             options['vAxis'] = {'title': vaxis}
         return options
 
-class BarChart(BaseGChart):
+class BarChart(JatGChart):
     def get_js_template(self):
         return "graphosjat/gchart/bar_chart.html"
 
