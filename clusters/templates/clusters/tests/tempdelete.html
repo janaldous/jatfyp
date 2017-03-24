@@ -81,13 +81,16 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbcM5AOjEOn5tp18yfzV2jep_
 google.setOnLoadCallback(drawChartWard);
 var chart;
 function drawChartWard() {
+  /**
+  * this function draws the Ward bar chart for the first time
+  **/
 
   var json = (function () {
       var json = null;
       $.ajax({
           'async': false,
           'global': false,
-          'url': "../json/"+cluster_id,
+          'url': "../jsonv2/"+cluster_id,
           'dataType': "json",
           'success': function (data) {
               json = data;
@@ -97,13 +100,16 @@ function drawChartWard() {
   })();
 
   var data = google.visualization.arrayToDataTable(json);
-  data.sort({column: 0, desc: false});
 
-  var options = {"title": "Ward", bar: { groupWidth: "95%" }}
+  //swaps first and second column, to show properly on bar chart
+  var view = new google.visualization.DataView(data);
+  view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
 
-chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
+  var options = {"title": "Ward breakdown", bar: { groupWidth: "95%" }}
 
-  chart.draw(data, options);
+  chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
+
+  chart.draw(view, options);
   chartGIwoVrxfEw = chart;
 
   google.visualization.events.addListener(chart, 'select', function() {

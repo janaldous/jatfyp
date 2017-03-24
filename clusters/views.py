@@ -74,6 +74,7 @@ def subcluster_detail(request, cluster_id, subcluster_id):
     return render(request, 'clusters/detail.html', context)
 
 def json(request, cluster_id):
+    """ used for map """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
     file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
@@ -87,6 +88,24 @@ def json(request, cluster_id):
     questions_txt = dic_source['questions']
 
     output = rc2.get_data_for_map(df, questions_txt['WARD'])
+
+    return JsonResponse(output, safe=False)
+
+def jsonv2(request, cluster_id):
+    """ used for Ward chart """
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    #load csv into pandas.DataFrame
+    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
+    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    df = dic['df']
+
+    #load questions textfile into list
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
+    dic_source = rt.read(file2_)
+    about = dic_source['about']
+    questions_txt = dic_source['questions']
+
+    output = rc2.get_data_for_mapv2(df, questions_txt['WARD'])
 
     return JsonResponse(output, safe=False)
 

@@ -93,13 +93,13 @@ function drawChartWard() {
   })();
 
   var data = google.visualization.arrayToDataTable(json);
-  data.sort({column: 1, desc: false});
 
-  var options = {"title": "Ward", bar: { groupWidth: "95%" }}
+  var options = {"title": "Wards breakdown", bar: { groupWidth: "100%" }}
 
-chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
+  chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
 
-  chart.draw(data, options);
+
+  chart.draw(view, options);
   chartGIwoVrxfEw = chart;
 
   google.visualization.events.addListener(chart, 'select', function() {
@@ -120,7 +120,7 @@ function redrawWardChart(cluster_id, question, choice) {
       $.ajax({
           'async': false,
           'global': false,
-          'url': "../json4/" + cluster_id + "/" + question + "/" + choice,
+          'url': "../json/"+cluster_id,//"../json4/" + cluster_id + "/" + question + "/" + choice,
           'dataType': "json",
           'success': function (data) {
               json = data;
@@ -130,6 +130,12 @@ function redrawWardChart(cluster_id, question, choice) {
   })();
 
   var data = google.visualization.arrayToDataTable(json);
+
+
+  //swaps first and second row, to show properly on bar chart
+  //var view = new google.visualization.DataView(data);
+  //view.setRows(1, 0);
+
   data.sort({column: 1, desc: false});
   var options = {"title": "Ward", bar: { groupWidth: "95%" }}
   chart.draw(data, options);

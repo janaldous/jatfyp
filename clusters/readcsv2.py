@@ -1,6 +1,8 @@
 #import csv
 import pandas as pd
 
+import utils
+
 import os
 import operator
 from django.conf import settings
@@ -65,6 +67,10 @@ def get_data_for_map2(df, question_base, choice):
     return output
 
 def get_data_for_map(df, question_obj):
+    """ used by the map
+        output sorted by value
+        Ward is in int form
+    """
     question_base = question_obj.question_no
     choices = question_obj.choices
 
@@ -72,13 +78,35 @@ def get_data_for_map(df, question_obj):
     v_counts = df[question_base].value_counts()
 
     output.append(["value", "Ward"])
-    for i in range(1,22):
+    for i in v_counts.index:
         try:
             value = v_counts[i]
         except KeyError:
             value = 0
-        ward = choices[str(i)]
+        ward = choices[str(int(i))]
         output.append([value, i])
+
+    return output
+
+def get_data_for_mapv2(df, question_obj):
+    """ used by Ward chart
+        output sorted by value
+        Ward is in String form
+    """
+    question_base = question_obj.question_no
+    choices = question_obj.choices
+
+    output = []
+    v_counts = df[question_base].value_counts()
+
+    output.append(["value", "Ward"])
+    for i in v_counts.index:
+        try:
+            value = v_counts[i]
+        except KeyError:
+            value = 0
+        ward = choices[str(int(i))]
+        output.append([value, ward])
 
     return output
 

@@ -25,7 +25,6 @@ def read(file_):
             #get q_no and question
             q = line.split('|')
             question_no = q[0]
-            print question_no
             try:
                 question_short = q[1]
             except IndexError:
