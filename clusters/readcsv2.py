@@ -10,6 +10,8 @@ from django.conf import settings
 import string
 import clustering
 
+NUM_OF_WARDS = 22
+
 def get_data_for_map4(df, question_base, choice):
     """ outputs opposite of get_data_for_map2 (swapped columns) for column data chart format"""
     output = []
@@ -78,12 +80,11 @@ def get_data_for_map(df, question_obj):
     v_counts = df[question_base].value_counts()
 
     output.append(["value", "Ward"])
-    for i in v_counts.index:
+    for i in range(1,NUM_OF_WARDS):
         try:
             value = v_counts[i]
         except KeyError:
             value = 0
-        ward = choices[str(int(i))]
         output.append([value, i])
 
     return output
@@ -100,7 +101,8 @@ def get_data_for_mapv2(df, question_obj):
     v_counts = df[question_base].value_counts()
 
     output.append(["value", "Ward"])
-    for i in v_counts.index:
+
+    for i in range(1,NUM_OF_WARDS):
         try:
             value = v_counts[i]
         except KeyError:

@@ -104,6 +104,7 @@ function drawChartWard() {
   //swaps first and second column, to show properly on bar chart
   var view = new google.visualization.DataView(data);
   view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
+  view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
 
   var options = {"title": "Ward breakdown", bar: { groupWidth: "95%" }}
 
