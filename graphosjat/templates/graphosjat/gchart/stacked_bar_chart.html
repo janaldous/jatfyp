@@ -13,6 +13,7 @@
       var url = "/clusters/json2/"+cluster_id+"/"+ question +"/"+choice;
 
       loadCensusData(url, question, choice);
+      redrawWardChart(cluster_id, question, choice);
 
     }
   });

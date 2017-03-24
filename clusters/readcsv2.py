@@ -16,7 +16,7 @@ def get_data_for_map4(df, question_base, choice):
     """ outputs opposite of get_data_for_map2 (swapped columns) for column data chart format"""
     output = []
     cluster_rows = df
-    output.append(["Ward", "Population"])
+    output.append(["value", "Ward"])
     #for each ward get number of people who chose choice
     # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
     # int(choice) == 1.0
@@ -28,8 +28,8 @@ def get_data_for_map4(df, question_base, choice):
             value = v_counts[int(choice)]
         except KeyError:
             value = 0
-        ward = str(i)
-        output.append([ward, value])
+        ward = utils.WARD[str(i)]
+        output.append([value, ward])
 
     return output
 

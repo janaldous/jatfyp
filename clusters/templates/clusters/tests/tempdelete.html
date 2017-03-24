@@ -112,17 +112,6 @@ function drawChartWard() {
 
   chart.draw(view, options);
   chartGIwoVrxfEw = chart;
-
-  google.visualization.events.addListener(chart, 'select', function() {
-    var selectedItem = chart.getSelection()[0];
-    if (selectedItem) {
-      //var value = data.getValue(selectedItem.row, selectedItem.column);
-      //var question = data.getValue(0, 0);
-      //alert('The user selected ' + selectedItem.column + " question " + question);
-
-      //loadCensusData("/clusters/json2/1/Q11/"+selectedItem.column);
-    }
-  });
 }
 
 function redrawWardChart(cluster_id, question, choice) {
@@ -141,9 +130,15 @@ function redrawWardChart(cluster_id, question, choice) {
   })();
 
   var data = google.visualization.arrayToDataTable(json);
-  data.sort({column: 1, desc: false});
-  var options = {"title": "Ward", bar: { groupWidth: "95%" }}
-  chart.draw(data, options);
+
+  //swaps first and second column, to show properly on bar chart
+  var view = new google.visualization.DataView(data);
+  view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
+  view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
+
+  var options = {"title": "Ward breakdown", bar: { groupWidth: "95%" }}
+  chart.draw(view, options);
+  
   console.log("redrawn");
 }
 
