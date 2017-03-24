@@ -59,23 +59,28 @@ def get_data_for_stacked_bar_charts(df, question_obj):
     v_counts = df[question_base].value_counts()
     choices = question_obj.choices
 
-    indexes = ['Question']
-    for i in v_counts.index.tolist():
+    indexes = [question_base]
+
+    #list in order of index
+    l = v_counts.index.tolist()
+    #l.sort()
+
+    values = ['Value']
+    #ward id
+    ward_ids = [{'role':'annotation'}]
+    for i in l:
         try:
             c = choices[str(int(i))]
         except KeyError:
             c = str(int(i))
             print 'key error AT readcsv.get_data; subquestion: %s' % (int(i))
         indexes.append(c)
-
-    values = [question_base]
-    for i in v_counts.values.tolist():
-        values.append(i)
+        values.append(v_counts[i])
+        ward_ids.append(int(i))
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
-    return {'data':[indexes, values], 'question':question_str}
-
+    return {'data':[indexes, values, ward_ids], 'question':question_str}
 def get_data_for_bar_charts(df, question_obj):
     '''
         Creates data lists in the form for bar charts

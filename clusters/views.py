@@ -286,7 +286,7 @@ def get_charts(df, questions_txt):
     data = dic['data']
     question = dic['question']
     charts.append(ColumnChart(SimpleDataSource(data=data), options={'title': question}))
-
+    
     return charts
 
 def get_charts_compare(df, dfAll, questions_txt):

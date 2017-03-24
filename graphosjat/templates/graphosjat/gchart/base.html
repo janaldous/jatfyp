@@ -3,7 +3,8 @@
   google.setOnLoadCallback(drawChart{{ chart.get_html_id }});
   function drawChart{{ chart.get_html_id }}() {
     {% block chart_specific_arraytodatatable %}
-      var data = google.visualization.arrayToDataTable({{ chart.get_data_json|safe }});
+      var data = google.visualization.arrayToDataTable({{ chart.get_data_json|safe }}, false);
+
     {% endblock %}
 
     {% if chart.get_options_json %}
@@ -14,7 +15,12 @@
 
     {% block create_chart %}
     {% endblock %}
-    chart.draw(data, options);
+
+    //hides real question choice index
+    var view = new google.visualization.DataView(data);
+    view.hideRows(1,1);
+
+    chart.draw(view, options);
     chart{{ chart.get_html_id }} = chart;
   }
 </script>

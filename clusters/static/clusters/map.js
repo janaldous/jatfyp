@@ -61,8 +61,6 @@ function loadCensusData(variable, question, value) {
         censusMax = censusVariable;
       }
 
-      //console.log(censusVariable);
-
       // update the existing row with the new data
       try {
         map.data

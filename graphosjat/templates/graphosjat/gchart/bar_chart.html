@@ -7,6 +7,8 @@
     var selectedItem = chart.getSelection()[0];
     if (selectedItem) {
       var value = data.getColumnLabel(selectedItem.column);
+      var choice = data.getValue(1, selectedItem.column);
+
       var question_letter = String.fromCharCode(97 + selectedItem.row).toUpperCase();
 
       var question = options['title'].match(/\w+/i)[0] + question_letter;

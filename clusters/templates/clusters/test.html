@@ -43,13 +43,27 @@
   google.setOnLoadCallback(drawChartGIwoVrxfEw);
   function drawChartGIwoVrxfEw() {
 
-      var data = google.visualization.arrayToDataTable([["Question", "I don\u2019t really see any changes", "The changes I see in my local area benefit me and my family", "The changes I see in my local area make things more difficult for me and my family", "The changes I see in my local area don\u2019t affect me and my family"], ["Q11", 29, 18, 10, 6]]);
+      /*var data = google.visualization.arrayToDataTable([
+        ["WARD","Bishops","Brixton Hill","Clapham Common","Clapham Town","Coldhabour","Ferndale","Gipsy Hill","Herne Hill","Knights Hill","Larkhall","Oval","Prince\u2019s","St Leonards","Stockwell","Streatham Hill","Streatham South","Streatham Wells","Thornton","Thurlow Park","Tulse Hill","Vassall"],
+        ["Value",4,3,3,7,13,7,13,6,5,4,11,9,9,7,3,7,11,5,7,3,7]]
+      );*/
+
+      var data = google.visualization.arrayToDataTable([
+        ["WARD", "Coldhabour", "Oval", "Larkhall", "Ferndale", "Clapham Town", "Tulse Hill", "Brixton Hill", "Prince\u2019s", "Streatham Wells", "Herne Hill", "St Leonards", "Knights Hill", "Streatham Hill", "Gipsy Hill", "Streatham South", "Stockwell", "Thurlow Park", "Vassall", "Clapham Common", "Thornton", "Bishops"],
+        ["Value", 62, 57, 56, 55, 53, 52, 51, 51, 50, 50, 49, 49, 49, 48, 48, 48, 47, 47, 46, 41, 33],
+        ["position", 5, 11, 10, 6, 4, 20, 2, 12, 17, 8, 13, 9, 15, 7, 16, 14, 19, 21, 3, 18, 1]],
+        false
+      );
+
+      var view = new google.visualization.DataView(data);
+      view.hideRows(1,1);
+
 
       var options = {"isStacked": "percent", "title": "(Q11) Which of these statements most applies to you?", "height": 100, "width": 1100, "vAxis": {"title": "Question"}, "legend": {"position": "bottom", "maxLines": "3"}}
 
   var chart = new google.visualization.BarChart(document.getElementById('GIwoVrxfEw'));
 
-    chart.draw(data, options);
+    chart.draw(view, options);
     chartGIwoVrxfEw = chart;
 
     google.visualization.events.addListener(chart, 'select', function() {
