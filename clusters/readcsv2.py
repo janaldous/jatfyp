@@ -13,6 +13,10 @@ from .models import Cluster
 import string
 import clustering
 
+"""
+    This class is to get data for subgroup comparison
+"""
+
 def get_data_for_group_compare(question, choice):
     """ outputs list for Group Compare view
         Group = model.Cluster
@@ -98,7 +102,7 @@ def get_data_for_map2(df, question_base, choice):
     #for each ward get number of people who chose choice
     # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
     # int(choice) == 1.0
-    for i in range(1,22): #WARD IS STATIC
+    for i in range(1,utils.NUM_OF_WARDS): #WARD IS STATIC
         ward_rows = cluster_rows.loc[cluster_rows['WARD'] == i]
         v_counts = ward_rows[question_base].value_counts()
 
@@ -222,7 +226,7 @@ def get_data_for_bar_charts2(df, dfAll, question_obj):
     #ratio to make proportionate dfAll
     ratio = len(dfAll.index)/len(df.index)
 
-    data = [['question', 'This cluster', 'Lambeth']]
+    data = [['question', 'This cluster', 'Lambeth', 'question letter']]
     #append data to list
     for key in choices.keys():
         subquestion = question_base+key
@@ -237,7 +241,7 @@ def get_data_for_bar_charts2(df, dfAll, question_obj):
         except KeyError:
             vAll = 0
         choice_str = choices[key]
-        data.append([choice_str, v, vAll])
+        data.append([choice_str, v, vAll, key])
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 

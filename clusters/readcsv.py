@@ -90,13 +90,14 @@ def get_data_for_bar_charts(df, question_obj):
     question_base = question_obj.question_no
     choices = question_obj.choices
 
-    data = {}
+    data = [['question_text', '#rows = 1', 'question_letter']]
     #append data to list
     for key in choices.keys():
         subquestion = question_base+key
+
         try:
-            choice_str = choices[key]
-            data[choice_str] = df[subquestion].value_counts()[1]
+            question_text = choices[key]
+            value = df[subquestion].value_counts()[1]
         except KeyError:
             #print 'key error at readcsv.get_data2; subquestion: %s' % subquestion
             continue
@@ -104,16 +105,17 @@ def get_data_for_bar_charts(df, question_obj):
             '''
                 means that all rows = 0, no rows = 1
             '''
-            data[choice_str] = 0
+            value = 0
             continue
+        data.append([question_text, value, key])
 
-    #sort data fron greatest to least
+    """#sort data fron greatest to least
     sorted_data = sorted(data.items(), key=operator.itemgetter(1), reverse=True)
 
     #put sorted data into list
     data = [['question', '#rows = 1']]
     for d in sorted_data:
-        data.append([d[0], d[1]])
+        data.append([d[0], d[1]])"""
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 

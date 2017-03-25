@@ -4,9 +4,10 @@
   function drawChart{{ chart.get_html_id }}() {
     {% block chart_specific_arraytodatatable %}
       var data = google.visualization.arrayToDataTable({{ chart.get_data_json|safe }}, false);
-
     {% endblock %}
 
+      var view = new google.visualization.DataView(data);
+      
     {% if chart.get_options_json %}
       var options = {{ chart.get_options_json|safe }}
     {% else %}
@@ -15,10 +16,6 @@
 
     {% block create_chart %}
     {% endblock %}
-
-    //hides real question choice index
-    var view = new google.visualization.DataView(data);
-    view.hideRows(1,1);
 
     chart.draw(view, options);
     chart{{ chart.get_html_id }} = chart;

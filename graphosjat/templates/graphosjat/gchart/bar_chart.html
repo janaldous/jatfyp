@@ -1,6 +1,12 @@
 {% extends "graphosjat/gchart/base.html" %}
 
 {% block create_chart %}
+  //hides real question choice index
+  view.hideColumns([2]);//hide question letter column
+  data.sort({column: 1, desc: true});//sort original data
+  view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
+
+
   var chart = new google.visualization.BarChart(document.getElementById('{{ chart.get_html_id }}'));
 
   google.visualization.events.addListener(chart, 'select', function() {
@@ -9,9 +15,13 @@
       var value = data.getColumnLabel(selectedItem.column);
       var choice = data.getValue(1, selectedItem.column);
 
-      var question_letter = String.fromCharCode(97 + selectedItem.row).toUpperCase();
+      var question_letter = data.getValue(selectedItem.row, 2);
+
+
 
       var question = options['title'].match(/\w+/i)[0] + question_letter;
+
+      console.log("/clusters/json2/"+cluster_id+"/"+ question + "/1");
 
       loadCensusData("/clusters/json2/"+cluster_id+"/"+ question + "/1", question, value);
       redrawWardChart(cluster_id, question, 1);

@@ -1,6 +1,9 @@
 {% extends "graphosjat/gchart/base.html" %}
 
 {% block create_chart %}
+  //hides real question choice index
+  view.hideRows(1,1);
+
   var chart = new google.visualization.BarChart(document.getElementById('{{ chart.get_html_id }}'));
 
   google.visualization.events.addListener(chart, 'select', function() {
