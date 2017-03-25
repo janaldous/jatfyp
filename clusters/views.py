@@ -170,8 +170,9 @@ def detail(request, cluster_id):
         'about': about,
         'subcluster_values': list(clusters_dict.values()),
         'num_of_clusters': clustering.num_of_clusters,
+        'compare': False,
     }
-    return render(request, 'clusters/tests/tempdelete.html', context)
+    return render(request, 'clusters/detail.html', context)
 
 def compare(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
@@ -203,8 +204,9 @@ def compare(request, cluster_id):
         'about': about,
         'subcluster_values': list(clusters_dict.values()),
         'num_of_clusters': clustering.num_of_clusters,
+        'compare': True,
     }
-    return render(request, 'clusters/compare.html', context)
+    return render(request, 'clusters/detail.html', context)
 
 def create_cluster(request):
     # if this is a POST request we need to process the form data
@@ -291,8 +293,8 @@ def get_charts(df, questions_txt):
         options={
             'title': question,
             'isStacked': 'percent',
-            'legend': { 'position': 'bottom', 'maxLines': '3' },
-            'height': 300,
+            #'legend': { 'position': 'bottom', 'maxLines': '3' },
+            #'height': 300,
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
@@ -304,7 +306,7 @@ def get_charts(df, questions_txt):
         question = dic['question']
         options={
             'title': question,
-            'legend': { 'position': 'bottom', 'maxLines': '3' }
+            #'legend': { 'position': 'bottom', 'maxLines': '3' }
         }
         charts.append(BarChart(SimpleDataSource(data=data), options=options))
 
@@ -313,7 +315,7 @@ def get_charts(df, questions_txt):
     question = dic['question']
     options={
         'title': question,
-        'legend': { 'position': 'bottom', 'maxLines': '3' }
+        #'legend': { 'position': 'bottom', 'maxLines': '3' }
     }
     charts.append(ColumnChart(SimpleDataSource(data=data), options=options))
 
@@ -332,9 +334,6 @@ def get_charts_compare(df, dfAll, questions_txt):
         options = {
             'title': question,
             'isStacked': 'percent',
-            'height': 200,
-            'width': 100,
-            legend: { position: 'bottom', maxLines: '3' }
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
@@ -347,7 +346,6 @@ def get_charts_compare(df, dfAll, questions_txt):
         question = dic['question']
         options={
             'title': question,
-            legend: { position: 'bottom', maxLines: '3' }
         }
         charts.append(BarChart(SimpleDataSource(data=data), options=options))
 

@@ -1,41 +1,49 @@
-{% extends "clusters/base.html" %}
+{% extends "clusters/base2.html" %}
 {% load static %}
 
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'clusters/css/map.css' %}">
 {% endblock %}
 
+{% block group_name %}
+<h1>{{ cluster.name }}</h1>
+{% if compare %}
+<a class="btn btn-primary" href="{% url 'clusters:detail' cluster.id %}" role="button">Don't compare</a>
+{% else %}
+<a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
+{% endif %}
+<a class="btn btn-primary" id="all-button" href="#" role="button">See all on map</a>
+{% endblock %}
+
+{% block about %}
+  <h3>Group factors</h3>
+  <ul>
+    <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
+    <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
+    <li>Q46 : {{ questions_strs.2 }} <span class="badge">{{ cluster.factor3 }}</span></li>
+    <li>Q47 : {{ questions_strs.3 }} <span class="badge">{{ cluster.factor4 }}</span></li>
+    <li>Q35 : {{ questions_strs.4 }} <span class="badge">{{ cluster.factor5 }}</span></li>
+  </ul>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      Number of rows: {{ df_size }}
+      <br>
+      Source: {{ about }}
+      <br>
+      Number of clusters: {{ num_of_clusters }}
+      <ul>
+      {% for population in subcluster_values %}
+        <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+{% endblock %}
+
 {% block content %}
 
-<h1>{{ cluster.name }}</h1>
-
-<h3>Group factors</h3>
-<ul>
-  <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
-  <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
-  <li>Q46 : {{ questions_strs.2 }} <span class="badge">{{ cluster.factor3 }}</span></li>
-  <li>Q47 : {{ questions_strs.3 }} <span class="badge">{{ cluster.factor4 }}</span></li>
-  <li>Q35 : {{ questions_strs.4 }} <span class="badge">{{ cluster.factor5 }}</span></li>
-</ul>
-
-<div class="panel panel-default">
-  <div class="panel-body">
-    Number of rows: {{ df_size }}
-    <br>
-    Source: {{ about }}
-    <br>
-    Number of clusters: {{ num_of_clusters }}
-    <ul>
-    {% for population in subcluster_values %}
-      <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
-    {% endfor %}
-    </ul>
-  </div>
-</div>
-
-{% block button %}
-<a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
-{% endblock %}
 
 
 
@@ -53,7 +61,7 @@
 {% endblock %}
 
 {% block map %}
-  Showing:<div id="showing"></div>
+  Showing:<p id="showing"></p>
   <div id="legend">
     <div id="census-min">min</div>
     <div class="color-key"><span id="data-caret">&#x25c6;</span></div>
@@ -65,7 +73,7 @@
   </div>
   <div id="map"></div>
 
-  <div id="Ward" style="width: 100%; height: 25%;"></div>
+  <div id="Ward" style="width: 100%; height: 20%;"></div>
 {% endblock %}
 
 {% block scripts %}
@@ -77,13 +85,16 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbcM5AOjEOn5tp18yfzV2jep_
 google.setOnLoadCallback(drawChartWard);
 var chart;
 function drawChartWard() {
+  /**
+  * this function draws the Ward bar chart for the first time
+  **/
 
   var json = (function () {
       var json = null;
       $.ajax({
           'async': false,
           'global': false,
-          'url': "../json/"+cluster_id,
+          'url': "../jsonv2/"+cluster_id,
           'dataType': "json",
           'success': function (data) {
               json = data;
@@ -94,24 +105,17 @@ function drawChartWard() {
 
   var data = google.visualization.arrayToDataTable(json);
 
-  var options = {"title": "Wards breakdown", bar: { groupWidth: "100%" }}
+  //swaps first and second column, to show properly on bar chart
+  var view = new google.visualization.DataView(data);
+  view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
+  view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
+
+  var options = {"title": "Ward breakdown", bar: { groupWidth: "95%" }}
 
   chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
 
-
   chart.draw(view, options);
   chartGIwoVrxfEw = chart;
-
-  google.visualization.events.addListener(chart, 'select', function() {
-    var selectedItem = chart.getSelection()[0];
-    if (selectedItem) {
-      //var value = data.getValue(selectedItem.row, selectedItem.column);
-      //var question = data.getValue(0, 0);
-      //alert('The user selected ' + selectedItem.column + " question " + question);
-
-      //loadCensusData("/clusters/json2/1/Q11/"+selectedItem.column);
-    }
-  });
 }
 
 function redrawWardChart(cluster_id, question, choice) {
@@ -120,7 +124,7 @@ function redrawWardChart(cluster_id, question, choice) {
       $.ajax({
           'async': false,
           'global': false,
-          'url': "../json/"+cluster_id,//"../json4/" + cluster_id + "/" + question + "/" + choice,
+          'url': "../json4/" + cluster_id + "/" + question + "/" + choice,
           'dataType': "json",
           'success': function (data) {
               json = data;
@@ -131,16 +135,25 @@ function redrawWardChart(cluster_id, question, choice) {
 
   var data = google.visualization.arrayToDataTable(json);
 
+  //swaps first and second column, to show properly on bar chart
+  var view = new google.visualization.DataView(data);
+  view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
+  view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
 
-  //swaps first and second row, to show properly on bar chart
-  //var view = new google.visualization.DataView(data);
-  //view.setRows(1, 0);
+  var options = {"title": "Ward breakdown", bar: { groupWidth: "95%" }}
+  chart.draw(view, options);
 
-  data.sort({column: 1, desc: false});
-  var options = {"title": "Ward", bar: { groupWidth: "95%" }}
-  chart.draw(data, options);
-  console.log("redrawn");
 }
+
+// fade in/out #about-group when # is clicked
+(function ($) {
+  $(function () {
+    $("#all-button").click(function () {
+        loadCensusData("/clusters/json/"+cluster_id);
+    });
+  });
+
+}(jQuery));
 
 </script>
 {% endblock %}
