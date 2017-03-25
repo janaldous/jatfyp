@@ -134,11 +134,14 @@ def json3(request, cluster_id, question_id):
 def json4(request, cluster_id, question_id, choice_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
-    df = dic['df']
+    df = rc.filter_by_cluster_only(utils.get_whole_survey(), cluster)
 
     output = rc2.get_data_for_map4(df, question_id, choice_id)
+
+    return JsonResponse(output, safe=False)
+
+def jsoncompare(request, question_id, choice_id):
+    output = rc2.get_data_for_group_compare(question_id, choice_id)
 
     return JsonResponse(output, safe=False)
 

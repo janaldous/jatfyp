@@ -2,15 +2,50 @@
 import pandas as pd
 
 import utils
+import readcsv as rc
 
 import os
 import operator
 from django.conf import settings
 
+from .models import Cluster
+
 import string
 import clustering
 
-NUM_OF_WARDS = 22
+def get_data_for_group_compare(question, choice):
+    """ outputs list for Group Compare view
+        Group = model.Cluster
+        Value = value of group filtered by question and choice
+        output = [[Group, Value], ...,  ...]
+    """
+
+    df = utils.get_whole_survey()
+
+    output = []
+
+    #column names
+    output.append(['Group', 'Orig Value', 'Percent', 'Diff from Avg'])
+
+    """
+    for each cluster
+        v = get value(c)
+        output.append(c, v)
+    """
+
+    cluster_all = Cluster.objects.get(pk=3)
+    value = df[question].value_counts()[int(choice)]
+    average = float(value)/df.shape[0]
+
+    cluster_models = Cluster.objects.all()
+    for cluster in cluster_models:
+        temp = rc.filter_by_cluster_only(df, cluster)
+        value = temp[question].value_counts()[int(choice)]
+        percent = float(value)/temp.shape[0]#percent
+        diff_from_avg = percent-average
+        output.append([cluster.name, value, percent, diff_from_avg])
+
+    return output
 
 def get_data_for_map4(df, question_base, choice):
     """ outputs opposite of get_data_for_map2 (swapped columns) for column data chart format"""
@@ -80,7 +115,7 @@ def get_data_for_map(df, question_obj):
     v_counts = df[question_base].value_counts()
 
     output.append(["value", "Ward"])
-    for i in range(1,NUM_OF_WARDS):
+    for i in range(1,utils.NUM_OF_WARDS):
         try:
             value = v_counts[i]
         except KeyError:
@@ -102,7 +137,7 @@ def get_data_for_mapv2(df, question_obj):
 
     output.append(["value", "Ward"])
 
-    for i in range(1,NUM_OF_WARDS):
+    for i in range(1,utils.NUM_OF_WARDS):
         try:
             value = v_counts[i]
         except KeyError:

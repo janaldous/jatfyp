@@ -61,7 +61,7 @@
 
       var options = {"isStacked": "percent", "title": "(Q11) Which of these statements most applies to you?", "height": 100, "width": 1100, "vAxis": {"title": "Question"}, "legend": {"position": "bottom", "maxLines": "3"}}
 
-  var chart = new google.visualization.BarChart(document.getElementById('GIwoVrxfEw'));
+      var chart = new google.visualization.BarChart(document.getElementById('GIwoVrxfEw'));
 
     chart.draw(view, options);
     chartGIwoVrxfEw = chart;
@@ -89,7 +89,7 @@
         $.ajax({
             'async': false,
             'global': false,
-            'url': "json4/3/Q11/2",
+            'url': "jsoncompare/Q13_R1/1",
             'dataType': "json",
             'success': function (data) {
                 json = data;
@@ -100,25 +100,17 @@
     })();
 
     var data = google.visualization.arrayToDataTable(json);
-    data.sort({column: 1, desc: false});
 
-    var options = {"title": "WArd"}
+    var view = new google.visualization.DataView(data);
+    //view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
+    //view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
+    view.setColumns([0, 3]);
+    var options = {"title": "Ward"}
 
-  var chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
+    var chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
 
-    chart.draw(data, options);
+    chart.draw(view, options);
     chartGIwoVrxfEw = chart;
-
-    google.visualization.events.addListener(chart, 'select', function() {
-      var selectedItem = chart.getSelection()[0];
-      if (selectedItem) {
-        //var value = data.getValue(selectedItem.row, selectedItem.column);
-        //var question = data.getValue(0, 0);
-        //alert('The user selected ' + selectedItem.column + " question " + question);
-
-        //loadCensusData("/clusters/json2/1/Q11/"+selectedItem.column);
-      }
-    });
   }
 </script>
 </body>

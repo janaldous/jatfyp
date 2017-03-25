@@ -158,3 +158,19 @@ def filter_by_cluster(df3, cluster):
     if cluster.factor5 != '-':
         df3 = df3[(df3.Q35 == float(cluster.factor5))]
     return {'orig_size': orig_size, 'df': df3}
+
+def filter_by_cluster_only(df3, cluster):
+    ''' DOES NOT INCLUDE FACTOR2 YET '''
+    orig_size = len(df3.index)
+    if cluster.factor1 != '-':
+        df3 = df3[(df3.Q43 == float(cluster.factor1))]
+    if cluster.factor2 != '-':
+        question = 'Q45'+cluster.factor2
+        df3 = df3[(df3[question] == 1.0)]
+    if cluster.factor3 != '-':
+        df3 = df3[(df3.Q46 == float(cluster.factor3))]
+    if cluster.factor4 != '-':
+        df3 = df3[(df3.Q47 == float(cluster.factor4))]
+    if cluster.factor5 != '-':
+        df3 = df3[(df3.Q35 == float(cluster.factor5))]
+    return df3
