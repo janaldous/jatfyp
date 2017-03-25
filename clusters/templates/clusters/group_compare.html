@@ -1,0 +1,135 @@
+{% extends "clusters/base2.html" %}
+{% load static %}
+
+{% block stylesheets %}
+<link rel="stylesheet" type="text/css" href="{% static 'clusters/css/map.css' %}">
+{% endblock %}
+
+{% block group_name %}
+<h1>{{ cluster.name }}</h1>
+{% if compare %}
+<a class="btn btn-primary" href="{% url 'clusters:detail' cluster.id %}" role="button">Don't compare</a>
+{% else %}
+<a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
+{% endif %}
+<a class="btn btn-primary" id="all-button" href="#" role="button">See all on map</a>
+{% endblock %}
+
+{% block about %}
+  <h3>Group factors</h3>
+  <ul>
+    <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
+    <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
+    <li>Q46 : {{ questions_strs.2 }} <span class="badge">{{ cluster.factor3 }}</span></li>
+    <li>Q47 : {{ questions_strs.3 }} <span class="badge">{{ cluster.factor4 }}</span></li>
+    <li>Q35 : {{ questions_strs.4 }} <span class="badge">{{ cluster.factor5 }}</span></li>
+  </ul>
+
+  <div class="panel panel-default">
+    <div class="panel-body">
+      Number of rows: {{ df_size }}
+      <br>
+      Source: {{ about }}
+      <br>
+      Number of clusters: {{ num_of_clusters }}
+      <ul>
+      {% for population in subcluster_values %}
+        <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
+      {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+{% endblock %}
+
+{% block content %}
+
+{% if df_size == 0 %}
+  There are no rows for this cluster
+{% else %}
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+  </script>
+  {% for chart in charts %}
+    {{ chart.as_html }}
+  {% endfor %}
+{% endif %}
+{% endblock %}
+
+{% block map %}
+  Showing:<p id="showing"></p>
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+        google.load("visualization", "1", {packages:["corechart"]});
+    </script>
+  <body>
+    <div id="compare-chart" style="padding:5px; height: 100%;"></div>
+    <script type="text/javascript">
+    google.setOnLoadCallback(drawChartWard);
+    function drawChartWard() {
+
+      var json = (function () {
+          var json = null;
+          $.ajax({
+              'async': false,
+              'global': false,
+              'url': "../jsoncompare/Q13_R1/1",
+              'dataType': "json",
+              'success': function (data) {
+                  json = data;
+              }
+          });
+          return json;
+      })();
+
+      var data = google.visualization.arrayToDataTable(json);
+
+      var view = new google.visualization.DataView(data);
+      //view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
+      //view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
+      view.setColumns([0, 3]);
+      var options = {"title": "Ward"}
+
+      var chart = new google.visualization.BarChart(document.getElementById('compare-chart'));
+
+      chart.draw(view, options);
+      chartGIwoVrxfEw = chart;
+    }
+    </script>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript">cluster_id = "{{ cluster.id }}"</script>
+<script src='{% static "clusters/groupcompare.js" %}'></script>
+<script type="text/javascript">
+function redrawWardChart(cluster_id, question, choice) {
+  var json = (function () {
+      var json = null;
+      $.ajax({
+          'async': false,
+          'global': false,
+          'url': "../jsoncompare/"+question+"/"+choice,
+          'dataType': "json",
+          'success': function (data) {
+              json = data;
+          }
+      });
+      return json;
+  })();
+
+  var data = google.visualization.arrayToDataTable(json);
+
+  var view = new google.visualization.DataView(data);
+  //view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
+  //view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
+  view.setColumns([0, 3]);
+  var options = {"title": "Ward"}
+
+  var chart = new google.visualization.BarChart(document.getElementById('compare-chart'));
+
+  chart.draw(view, options);
+
+}
+</script>
+{% endblock %}

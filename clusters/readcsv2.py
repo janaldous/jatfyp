@@ -32,7 +32,7 @@ def get_data_for_group_compare(question, choice):
         v = get value(c)
         output.append(c, v)
     """
-
+    #TODO need to implement general method to get cluster_all, not just from pk=3
     cluster_all = Cluster.objects.get(pk=3)
     value = df[question].value_counts()[int(choice)]
     average = float(value)/df.shape[0]
@@ -40,15 +40,22 @@ def get_data_for_group_compare(question, choice):
     cluster_models = Cluster.objects.all()
     for cluster in cluster_models:
         temp = rc.filter_by_cluster_only(df, cluster)
-        value = temp[question].value_counts()[int(choice)]
-        percent = float(value)/temp.shape[0]#percent
+        try:
+            value = temp[question].value_counts()[int(choice)]
+            percent = float(value)/temp.shape[0]#percent
+        except KeyError:
+            value = 0
+            percent = 0
         diff_from_avg = percent-average
         output.append([cluster.name, value, percent, diff_from_avg])
 
     return output
 
 def get_data_for_map4(df, question_base, choice):
-    """ outputs opposite of get_data_for_map2 (swapped columns) for column data chart format"""
+    """
+    outputs opposite of get_data_for_map2 (swapped columns) for column data chart format
+    for views.json4
+    """
     output = []
     cluster_rows = df
     output.append(["value", "Ward"])
@@ -63,7 +70,8 @@ def get_data_for_map4(df, question_base, choice):
             value = v_counts[int(choice)]
         except KeyError:
             value = 0
-        ward = utils.WARD[str(i)]
+
+        ward = utils.get_wards()[str(i)]
         output.append([value, ward])
 
     return output

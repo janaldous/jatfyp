@@ -16,6 +16,7 @@ import readtxt as rt
 import pandas as pd
 import os
 import clustering
+import utils
 
 dataframeAll = pd.read_csv(open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv')))
 
@@ -29,7 +30,7 @@ def map(request):
     return render(request, 'clusters/map.html')
 
 def test(request):
-    return render(request, 'clusters/test.html')
+    return render(request, 'clusters/tests/test.html')
 
 def subclusters_list(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
@@ -144,6 +145,40 @@ def jsoncompare(request, question_id, choice_id):
     output = rc2.get_data_for_group_compare(question_id, choice_id)
 
     return JsonResponse(output, safe=False)
+
+def group_compare(request):
+    cluster = get_object_or_404(Cluster, pk=3)
+    #load csv into pandas.DataFrame
+    dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
+    df = dic['df']
+    size_str = "%d / %d" % (len(df.index), dic['orig_size'])
+    clusters_dict = clustering.get_subclusters(dic['df'])
+    #load questions textfile into list
+    file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
+    dic_source = rt.read(file2_)
+    about = dic_source['about']
+    questions_txt = dic_source['questions']
+    file2_.close()
+
+    #get cluster questions as strings
+    questions_strs = get_questions_as_str(questions_txt)
+
+    #get charts
+    charts = get_charts(df, questions_txt)
+
+
+    context = {
+        'cluster': cluster,
+        'charts': charts,
+        #'compare_chart': compare_chart,
+        'df_size': size_str,#no of rows in df
+        'questions_strs': questions_strs,
+        'about': about,
+        'subcluster_values': list(clusters_dict.values()),
+        'num_of_clusters': clustering.num_of_clusters,
+        'compare': False,
+    }
+    return render(request, 'clusters/group_compare.html', context)
 
 def detail(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
@@ -297,7 +332,7 @@ def get_charts(df, questions_txt):
             'title': question,
             'isStacked': 'percent',
             #'legend': { 'position': 'bottom', 'maxLines': '3' },
-            #'height': 300,
+            #'width': 500,
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
@@ -321,6 +356,8 @@ def get_charts(df, questions_txt):
         #'legend': { 'position': 'bottom', 'maxLines': '3' }
     }
     charts.append(ColumnChart(SimpleDataSource(data=data), options=options))
+
+
 
     return charts
 

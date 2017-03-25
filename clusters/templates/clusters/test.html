@@ -16,10 +16,47 @@
 </head>
 <body>
   <!-- Identify where the chart should be drawn. -->
-  <h1 id="Q11">Q11</h1>
-  <div id="GIwoVrxfEw" style="width: 100%; height: 50%;"></div>
+  <!--<h1 id="Q11">Q11</h1>
+  <div id="GIwoVrxfEw" style="width: 100%; height: 50%;"></div>-->
+  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+  <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+  </script>
   <div id="Ward" style="width: 100%; height: 25%;"></div>
-  <div id="legend">
+  <script type="text/javascript">
+  google.setOnLoadCallback(drawChartWard);
+  function drawChartWard() {
+
+    var json = (function () {
+        var json = null;
+        $.ajax({
+            'async': false,
+            'global': false,
+            'url': "jsoncompare/Q13_R1/1",
+            'dataType': "json",
+            'success': function (data) {
+                json = data;
+                console.log(json);
+            }
+        });
+        return json;
+    })();
+
+    var data = google.visualization.arrayToDataTable(json);
+
+    var view = new google.visualization.DataView(data);
+    //view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
+    //view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
+    view.setColumns([0, 3]);
+    var options = {"title": "Ward"}
+
+    var chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
+
+    chart.draw(view, options);
+    chartGIwoVrxfEw = chart;
+  }
+  </script>
+  <!--<div id="legend">
     <div id="census-min">min</div>
     <div class="color-key"><span id="data-caret">&#x25c6;</span></div>
     <div id="census-max">max</div>
@@ -34,7 +71,7 @@
 
   <script async defer
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbcM5AOjEOn5tp18yfzV2jep_1gCdtmgo&callback=initMap">
-  </script>
+  </script>-->
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript">
       google.load("visualization", "1", {packages:["corechart"]});
@@ -42,6 +79,7 @@
   <script type="text/javascript">
   google.setOnLoadCallback(drawChartGIwoVrxfEw);
   function drawChartGIwoVrxfEw() {
+
 
       /*var data = google.visualization.arrayToDataTable([
         ["WARD","Bishops","Brixton Hill","Clapham Common","Clapham Town","Coldhabour","Ferndale","Gipsy Hill","Herne Hill","Knights Hill","Larkhall","Oval","Prince\u2019s","St Leonards","Stockwell","Streatham Hill","Streatham South","Streatham Wells","Thornton","Thurlow Park","Tulse Hill","Vassall"],
@@ -80,38 +118,6 @@
   $('#Q11').click(function() {
     loadCensusData("/clusters/json3/1/Q11");
   });
-
-  google.setOnLoadCallback(drawChartWard);
-  function drawChartWard() {
-
-    var json = (function () {
-        var json = null;
-        $.ajax({
-            'async': false,
-            'global': false,
-            'url': "jsoncompare/Q13_R1/1",
-            'dataType': "json",
-            'success': function (data) {
-                json = data;
-                console.log(json);
-            }
-        });
-        return json;
-    })();
-
-    var data = google.visualization.arrayToDataTable(json);
-
-    var view = new google.visualization.DataView(data);
-    //view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
-    //view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
-    view.setColumns([0, 3]);
-    var options = {"title": "Ward"}
-
-    var chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
-
-    chart.draw(view, options);
-    chartGIwoVrxfEw = chart;
-  }
 </script>
 </body>
 <html>
