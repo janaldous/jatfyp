@@ -74,6 +74,8 @@ def get_data_for_map4(df, question_base, choice):
             value = v_counts[int(choice)]
         except KeyError:
             value = 0
+        except IndexError:
+            value = 0
 
         ward = utils.get_wards()[str(i)]
         output.append([value, ward])
@@ -109,6 +111,8 @@ def get_data_for_map2(df, question_base, choice):
         try:
             value = v_counts[int(choice)]
         except KeyError:
+            value = 0
+        except IndexError:
             value = 0
         ward = str(i)
         output.append([value, ward])

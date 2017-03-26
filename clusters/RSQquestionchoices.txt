@@ -34,7 +34,7 @@ SINGLE
 6;65-74
 7;75-84
 8;85+
-98;Refused
+9;Refused
 $
 QETH|Ethnicity|Please could you tell me which group on this card you consider you belong to? Please just read out the number that applies.
 SINGLE
