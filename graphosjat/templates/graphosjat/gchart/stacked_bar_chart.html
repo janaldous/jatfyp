@@ -9,7 +9,6 @@
   google.visualization.events.addListener(chart, 'select', function() {
     var selectedItem = chart.getSelection()[0];
     if (selectedItem) {
-      //var value = data.getColumnLabel(selectedItem.column);
       var choice = data.getValue(1, selectedItem.column);
       var question = options['title'].match(/\w+/i)[0];
 

@@ -101,23 +101,23 @@ def get_data_for_stacked_bar_charts(df, question_obj):
 
     #list in order of index
     l = v_counts.index.tolist()
-    #l.sort()
 
     values = ['Value']
     #ward id
-    ward_ids = [{'role':'annotation'}]
+    ward_ids = ['choice_id']
     for idx, i in enumerate(l):
         try:
             c = choices[str(int(i))]
         except KeyError:
             c = str(int(i))
-            print 'key error AT readcsv.get_data; subquestion: %s' % (int(i))
+            print 'key error AT readcsv.get_data; quetstion %s, subquestion: %s' % (question_base, int(i))
         except ValueError:
             """ means i = #NULL """
+            print 'VALUE error AT readcsv.get_data; subquestion: %s' % (i)
             c = i
         indexes.append(c)
         values.append(v_counts[i])
-        ward_ids.append(int(idx))
+        ward_ids.append(i)
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
