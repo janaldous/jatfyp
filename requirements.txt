@@ -4,3 +4,4 @@ pandas==0.19.2
 django-graphos==0.3.23
 sklearn==0.0
 numpy==1.12.0
+scipy==0.18.1
