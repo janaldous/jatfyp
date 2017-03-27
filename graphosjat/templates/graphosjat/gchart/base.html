@@ -3,11 +3,11 @@
   google.setOnLoadCallback(drawChart{{ chart.get_html_id }});
   function drawChart{{ chart.get_html_id }}() {
     {% block chart_specific_arraytodatatable %}
-      var data = google.visualization.arrayToDataTable({{ chart.get_data_json|safe }}, false);
+      var data = google.visualization.arrayToDataTable({{ chart.get_data_json|safe }});
     {% endblock %}
 
       var view = new google.visualization.DataView(data);
-      
+
     {% if chart.get_options_json %}
       var options = {{ chart.get_options_json|safe }}
     {% else %}

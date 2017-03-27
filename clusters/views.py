@@ -6,7 +6,7 @@ from .forms import ClusterForm
 from .models import Cluster
 
 from graphosjat.sources.simple import SimpleDataSource
-from graphosjat.renderers.gchart import BarChart, ColumnChart, StackedBarChart
+from graphosjat.renderers.gchart import BarChart, ColumnChart, StackedBarChart, PieChart
 
 from random import randint
 
@@ -321,8 +321,19 @@ def get_questions_as_str(questions_txt):
 def get_charts(df, questions_txt):
     charts = []
 
+    questions_to_show = ['WARD']
+    for question in questions_to_show:
+        dic =  rc.get_data_for_pie_charts(df, questions_txt[question])
+        data = dic['data']
+        question = dic['question']
+        options={
+            'title': question,
+            'isStacked': 'percent',
+        }
+        charts.append(PieChart(SimpleDataSource(data=data), options=options))
+
     #Single code quesitions
-    questions_to_show = ['WARD','Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34']
+    questions_to_show = ['Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34', 'Q35', 'Q43', 'Q46', 'Q47']
 
     for question in questions_to_show:
         dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question])
@@ -337,7 +348,7 @@ def get_charts(df, questions_txt):
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
     #multicode questions
-    questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
+    questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q45', 'Q50']
     for question in questions_to_show:
         dic =  rc.get_data_for_bar_charts(df, questions_txt[question])
         data = dic['data']

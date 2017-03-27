@@ -50,6 +50,44 @@ def get_data_for_question(df, question_obj):
 
     return {'data':data, 'question':question_str}
 
+def get_data_for_pie_charts(df, question_obj):
+    '''
+        Creates data list in the form for stacked barcharts
+        Choices are dependent on if choice exists in spss.csv
+    '''
+    question_base = question_obj.question_no
+    v_counts = df[question_base].value_counts()
+    choices = question_obj.choices
+
+    data = [['Ward', 'Value', 'Ward id']]
+
+    indexes = [question_base]
+
+    #list in order of index
+    l = v_counts.index.tolist()
+
+    #values = ['Value']
+    #ward id
+    #ward_ids = ['Ward id']
+    for i in l:
+        try:
+            c = choices[str(int(i))]
+        except KeyError:
+            c = str(int(i))
+            print 'key error AT readcsv.get_data; subquestion: %s' % (int(i))
+        #indexes.append(c)
+        #values.append(v_counts[i])
+        #ward_ids.append()
+        data.append([c, v_counts[i], int(i)])
+
+    #data = [indexes, values, ward_ids]
+
+    #print data
+
+    question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
+
+    return {'data':data, 'question':question_str}
+
 def get_data_for_stacked_bar_charts(df, question_obj):
     '''
         Creates data list in the form for stacked barcharts
@@ -68,19 +106,23 @@ def get_data_for_stacked_bar_charts(df, question_obj):
     values = ['Value']
     #ward id
     ward_ids = [{'role':'annotation'}]
-    for i in l:
+    for idx, i in enumerate(l):
         try:
             c = choices[str(int(i))]
         except KeyError:
             c = str(int(i))
             print 'key error AT readcsv.get_data; subquestion: %s' % (int(i))
+        except ValueError:
+            """ means i = #NULL """
+            c = i
         indexes.append(c)
         values.append(v_counts[i])
-        ward_ids.append(int(i))
+        ward_ids.append(int(idx))
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     return {'data':[indexes, values, ward_ids], 'question':question_str}
+
 def get_data_for_bar_charts(df, question_obj):
     '''
         Creates data lists in the form for bar charts

@@ -1,5 +1,19 @@
- {% extends "graphos/gchart/base.html" %}
+ {% extends "graphosjat/gchart/base.html" %}
 
 {% block create_chart %}
   var chart = new google.visualization.PieChart(document.getElementById('{{ chart.get_html_id }}'));
+
+  google.visualization.events.addListener(chart, 'select', function() {
+    var selectedItem = chart.getSelection()[0];
+    if (selectedItem) {
+      var choice = data.getValue(selectedItem.row, 2);
+      var question = options['title'].match(/\w+/i)[0];
+
+      var url = "/clusters/json2/"+cluster_id+"/"+ question +"/"+choice;
+
+      loadCensusData(url, question, choice);
+      redrawWardChart(cluster_id, question, choice);
+
+    }
+  });
 {% endblock %}

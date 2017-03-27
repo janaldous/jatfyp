@@ -67,6 +67,7 @@ SINGLE
 1;Man (Including Trans man )
 2;Woman (Including Trans Woman)
 3;Other gender identity
+4;Refused
 $
 Q1|Satisfaction with place to live|Overall, how satisfied or dissatisfied are you with your local area as a place to live?
 SINGLE

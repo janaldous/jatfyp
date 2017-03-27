@@ -51,9 +51,9 @@ class CandlestickChart(BaseGChart):
         return "graphos/gchart/candlestick_chart.html"
 
 
-class PieChart(BaseGChart):
+class PieChart(JatGChart):
     def get_js_template(self):
-        return "graphos/gchart/pie_chart.html"
+        return "graphosjat/gchart/pie_chart.html"
 
 
 class TreeMapChart(BaseGChart):
