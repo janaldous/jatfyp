@@ -33,8 +33,6 @@ ALLOWED_HOSTS = ['*']
 INSTALLED_APPS = [
     'graphosjat',
     'sklearn',
-    'pandas',
-    'numpy',
     'clusters.apps.ClustersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
