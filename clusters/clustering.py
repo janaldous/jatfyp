@@ -112,6 +112,14 @@ def get_cluster_list(data):
     #print clustergrp
     return merged_train
 
+def increment_num_of_clusters():
+    global num_of_clusters
+    num_of_clusters += 1
+
+def decrement_num_of_clusters():
+    global num_of_clusters
+    num_of_clusters -= 1
+
 def get_num_of_subclusters():
     """ only temporary, needs implementation """
     return num_of_clusters

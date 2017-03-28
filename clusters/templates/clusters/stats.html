@@ -1,0 +1,17 @@
+{% extends "clusters/base.html" %}
+
+
+{% block content %}
+
+Number of clusters: {{ num_of_clusters }}
+<ul>
+{% for population in subcluster_values %}
+  <li><a href="">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
+{% endfor %}
+</ul>
+
+<button class="btn"><a href="{% url 'clusters:increase' cluster_id %}"><span class="glyphicon glyphicon-arrow-up"></span></a></button>
+{{ num_of_clusters }} clusters
+<button class="btn"><a href="{% url 'clusters:decrease' cluster_id %}"><span class="glyphicon glyphicon-arrow-down"></span></a></button>
+
+{% endblock %}

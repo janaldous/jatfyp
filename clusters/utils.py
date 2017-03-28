@@ -3,6 +3,8 @@ import os
 from django.conf import settings
 import pandas as pd
 
+import readcsv as rc
+
 """ dictionary of ward id and name """
 WARD = {}
 NUM_OF_WARDS = 22
@@ -25,3 +27,8 @@ def get_whole_survey():
             SURVEY16 = pd.read_csv(f)
         print "utils called ------"
     return SURVEY16
+
+def get_cluster_from_whole_survey(cluster):
+    df = get_whole_survey()
+    df_filtered = rc.filter_by_cluster_only(df, cluster)
+    return df_filtered

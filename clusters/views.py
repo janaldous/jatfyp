@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
 
@@ -146,6 +146,21 @@ def jsoncompare(request, question_id, choice_id):
 
     return JsonResponse(output, safe=False)
 
+def stats(request, cluster_id):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    cluster_df = utils.get_cluster_from_whole_survey(cluster)
+    clusters_dict = clustering.get_subclusters(cluster_df)
+
+    subcluster_values = list(clusters_dict.values())
+
+    context = {
+        'cluster_id': cluster_id,
+        'subcluster_values': subcluster_values,
+        'num_of_clusters': len(subcluster_values),
+    }
+
+    return render(request, 'clusters/stats.html', context)
+
 def group_compare(request):
     cluster = get_object_or_404(Cluster, pk=3)
     #load csv into pandas.DataFrame
@@ -246,6 +261,16 @@ def compare(request, cluster_id):
     }
     return render(request, 'clusters/detail.html', context)
 
+def increase_num_of_clusters(request, cluster_id):
+    clustering.increment_num_of_clusters()
+    print "increase_num_of_clusters"
+    return redirect('/clusters/'+cluster_id+'/stats')
+
+def decrease_num_of_clusters(request, cluster_id):
+    clustering.decrement_num_of_clusters()
+    print "decrease_num_of_clusters"
+    return redirect('/clusters/'+cluster_id+'/stats')
+
 def create_cluster(request):
     # if this is a POST request we need to process the form data
     if request.method == 'POST':
@@ -256,7 +281,7 @@ def create_cluster(request):
             # process the data in form.cleaned_data as required
             # ...
             # redirect to a new URL:
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('clusters/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
