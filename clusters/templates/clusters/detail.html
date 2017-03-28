@@ -151,6 +151,7 @@ function redrawWardChart(cluster_id, question, choice) {
   $(function () {
     $("#all-button").click(function () {
         loadCensusData("/clusters/json/"+cluster_id);
+        drawChartWard();
     });
   });
 
