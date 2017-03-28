@@ -13,7 +13,8 @@
 <a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
 {% endif %}
 <a class="btn btn-primary" id="all-button" href="#" role="button">See all on map</a>
-<a class="btn btn-primary" id="stats-button" href="{% url 'clusters:stats' cluster.id %}" role="button">Stats</a>
+<a class="btn btn-primary" href="{% url 'clusters:stats' cluster.id %}" role="button">Stats</a>
+<a class="btn btn-primary" href="{% url 'clusters:groupcompare' %}" role="button">Compare with all</a>
 {% endblock %}
 
 {% block about %}

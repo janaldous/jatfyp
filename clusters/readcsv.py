@@ -51,10 +51,10 @@ def get_data_for_question(df, question_obj):
     return {'data':data, 'question':question_str}
 
 def get_data_for_pie_charts(df, question_obj):
-    '''
+    """
         Creates data list in the form for stacked barcharts
         Choices are dependent on if choice exists in spss.csv
-    '''
+    """
     question_base = question_obj.question_no
     v_counts = df[question_base].value_counts()
     choices = question_obj.choices
@@ -89,10 +89,10 @@ def get_data_for_pie_charts(df, question_obj):
     return {'data':data, 'question':question_str}
 
 def get_data_for_stacked_bar_charts(df, question_obj):
-    '''
+    """
         Creates data list in the form for stacked barcharts
         Choices are dependent on if choice exists in spss.csv
-    '''
+    """
     question_base = question_obj.question_no
     v_counts = df[question_base].value_counts()
     choices = question_obj.choices
@@ -129,11 +129,11 @@ def get_data_for_stacked_bar_charts(df, question_obj):
     return {'data':[indexes, values, ward_ids], 'question':question_str}
 
 def get_data_for_bar_charts(df, question_obj):
-    '''
+    """
         Creates data lists in the form for bar charts
         Choices are dependent on whether it exists in XXXquestionchoices.txt
         and data is from spss.csv
-    '''
+    """
     question_base = question_obj.question_no
     choices = question_obj.choices
 
@@ -156,22 +156,14 @@ def get_data_for_bar_charts(df, question_obj):
             continue
         data.append([question_text, value, key])
 
-    """#sort data fron greatest to least
-    sorted_data = sorted(data.items(), key=operator.itemgetter(1), reverse=True)
-
-    #put sorted data into list
-    data = [['question', '#rows = 1']]
-    for d in sorted_data:
-        data.append([d[0], d[1]])"""
-
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     return {'data':data, 'question':question_str}
 
 def get_data_for_column_chart(df, question_obj):
-    '''
+    """
         Creates data lists in the form for column charts
-    '''
+    """
     data = [['question', 'Strongly Agree', 'Agree', 'Neither agree nor disagree', 'Disagree', 'Strongly disagree', 'Don\'t know']]
     choices = question_obj.choices
     for i in range(1,9):
@@ -193,7 +185,7 @@ def get_data_for_column_chart(df, question_obj):
     return {'data':data, 'question':question_str}
 
 def filter_by_cluster(df3, cluster):
-    ''' DOES NOT INCLUDE FACTOR2 YET '''
+    """ DOES NOT INCLUDE FACTOR2 YET """
     orig_size = len(df3.index)
     if cluster.factor1 != '-':
         df3 = df3[(df3.Q43 == float(cluster.factor1))]
@@ -209,7 +201,7 @@ def filter_by_cluster(df3, cluster):
     return {'orig_size': orig_size, 'df': df3}
 
 def filter_by_cluster_only(df3, cluster):
-    ''' DOES NOT INCLUDE FACTOR2 YET '''
+    """ DOES NOT INCLUDE FACTOR2 YET """
     orig_size = len(df3.index)
     if cluster.factor1 != '-':
         df3 = df3[(df3.Q43 == float(cluster.factor1))]

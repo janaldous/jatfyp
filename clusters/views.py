@@ -70,7 +70,7 @@ def subcluster_detail(request, cluster_id, subcluster_id):
         'questions_strs': questions_strs,
         'about': about,
         'subcluster_values': list(clusters_dict.values()),
-        'num_of_clusters': clustering.num_of_clusters,
+        'num_of_clusters': cluster.num_of_clusters,
     }
     return render(request, 'clusters/detail.html', context)
 
@@ -149,7 +149,7 @@ def jsoncompare(request, question_id, choice_id):
 def stats(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     cluster_df = utils.get_cluster_from_whole_survey(cluster)
-    clusters_dict = clustering.get_subclusters(cluster, cluster_df)
+    clusters_dict = clustering.get_subclusters_length(cluster, cluster_df)
 
     subcluster_values = list(clusters_dict.values())
 
@@ -167,7 +167,7 @@ def group_compare(request):
     dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
-    clusters_dict = clustering.get_subclusters(cluster, dic['df'])
+    clusters_dict = clustering.get_subclusters_length(cluster, dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
@@ -190,7 +190,7 @@ def group_compare(request):
         'questions_strs': questions_strs,
         'about': about,
         'subcluster_values': list(clusters_dict.values()),
-        'num_of_clusters': clustering.num_of_clusters,
+        'num_of_clusters': cluster.num_of_clusters,
         'compare': False,
     }
     return render(request, 'clusters/group_compare.html', context)
@@ -236,7 +236,7 @@ def compare(request, cluster_id):
     dic = rc.filter_by_cluster(dicAll['df'], cluster)
     df = dic['df']
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
-    clusters_dict = clustering.get_subclusters(cluster, dic['df'])
+    clusters_dict = clustering.get_subclusters_length(cluster, dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
@@ -247,7 +247,7 @@ def compare(request, cluster_id):
     questions_strs = get_questions_as_str(questions_txt)
 
     #get charts
-    charts = get_charts_compare(df, dicAll['df'], questions_txt)
+    charts = get_charts_compare(df, dicAll['df'], questions_txt, cluster)
 
     context = {
         'cluster': cluster,
@@ -256,7 +256,7 @@ def compare(request, cluster_id):
         'questions_strs': questions_strs,
         'about': about,
         'subcluster_values': list(clusters_dict.values()),
-        'num_of_clusters': clustering.num_of_clusters,
+        'num_of_clusters': cluster.num_of_clusters,
         'compare': True,
     }
     return render(request, 'clusters/detail.html', context)
@@ -402,14 +402,14 @@ def get_charts(df, questions_txt):
 
     return charts
 
-def get_charts_compare(df, dfAll, questions_txt):
+def get_charts_compare(df, dfAll, questions_txt, cluster):
     charts = []
 
     #Single code quesitions
     questions_to_show = ['WARD','Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34']
 
     for question in questions_to_show:
-        dic =  rc2.get_data_for_stacked_bar_charts2(df, dfAll, questions_txt[question])
+        dic =  rc2.get_data_for_stacked_bar_charts2(df, dfAll, questions_txt[question], cluster)
         data = dic['data']
         question = dic['question']
         options = {

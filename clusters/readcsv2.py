@@ -13,9 +13,37 @@ from .models import Cluster
 import string
 import clustering
 
+""" This class is to get data for subgroup comparison
 """
-    This class is to get data for subgroup comparison
-"""
+
+def get_data_for_bar_charts(df, question_obj):
+    """ Creates data lists in the form for bar charts
+        Choices are dependent on whether it exists in XXXquestionchoices.txt
+        and data is from spss.csv
+    """
+    question_base = question_obj.question_no
+    choices = question_obj.choices
+
+    data = [['question_text', '#rows = 1', 'question_letter']]
+    #append data to list
+    for key in choices.keys():
+        subquestion = question_base+key
+
+        try:
+            question_text = choices[key]
+            value = df[subquestion].value_counts()[1]
+        except KeyError:
+            #print 'key error at readcsv.get_data2; subquestion: %s' % subquestion
+            continue
+        except IndexError:
+            #means that all rows = 0, no rows = 1
+            value = 0
+            continue
+        data.append([question_text, value, key])
+
+    question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
+
+    return {'data':data, 'question':question_str}
 
 def get_data_for_group_compare(question, choice):
     """ outputs list for Group Compare view
@@ -60,9 +88,8 @@ def get_data_for_group_compare(question, choice):
     return output
 
 def get_data_for_map4(df, question_base, choice):
-    """
-    outputs opposite of get_data_for_map2 (swapped columns) for column data chart format
-    for views.json4
+    """ outputs opposite of get_data_for_map2 (swapped columns) for column data chart format
+        for views.json4
     """
     output = []
     cluster_rows = df
@@ -167,19 +194,21 @@ def get_data_for_mapv2(df, question_obj):
 
     return output
 
-def get_data_for_stacked_bar_charts2(df, dfAll, question_obj):
-    '''
-        Creates data list in the form for stacked barcharts
+def get_data_for_stacked_bar_charts2(df, dfAll, question_obj, cluster):
+    """ Creates data list in the form for stacked barcharts
         Choices are dependent on if choice exists in spss.csv
-    '''
+    """
     question_base = question_obj.question_no
     choices = question_obj.choices
 
     v_counts = df[question_base].value_counts()
 
     indexes = ['Questions']
+    indexes_int = ['choice_id']
+
     for i in v_counts.index.tolist():
         indexes.append(str(int(i)))
+
 
     #get this cluster
     values = ['Cluster']
@@ -188,9 +217,10 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj):
 
     #get subclusters
     valueslist = []
-    for i in range(clustering.get_num_of_subclusters()):
+    subclusters_dict = clustering.get_subclusters(cluster, df)
+    for i in range(len(subclusters_dict)):
         values2 = ['Cluster '+str(i)]
-        dfclus = clustering.filter_by_subcluster(df, i)
+        dfclus = subclusters_dict[i]
 
         v_counts = dfclus[question_base].value_counts()
         for i in indexes[1:]:
@@ -206,7 +236,6 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj):
     for i in indexes[1:]:
         valuesAll.append(v_countsAll[float(i)])
 
-    question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     #change indexes from float to string description
     for idx,item in enumerate(indexes[1:]):
@@ -215,20 +244,27 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj):
         except KeyError:
             c = item
             print 'key error AT readcsv.get_data; subquestion: %d' % (int(float(item)))
-        indexes[idx] = c
+        indexes[idx+1] = c
+        indexes_int.append(int(item))
 
     data = [indexes, values, valuesAll]
     for i in valueslist:
         data.append(i)
+    data.append(indexes_int)
+
+    print data
+
+    #title for chart
+    question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
+
 
     return {'data':data, 'question':question_str}
 
 def get_data_for_bar_charts2(df, dfAll, question_obj):
-    '''
-        Creates data lists in the form for bar charts
+    """ Creates data lists in the form for bar charts
         Choices are dependent on whether it exists in XXXquestionchoices.txt
         and data is from spss.csv
-    '''
+    """
     question_base = question_obj.question_no
     choices = question_obj.choices
     #ratio to make proportionate dfAll
@@ -256,9 +292,8 @@ def get_data_for_bar_charts2(df, dfAll, question_obj):
     return {'data':data, 'question':question_str}
 
 def get_data_for_column_chart2(df, question_obj):
-    '''
-        Creates data lists in the form for column charts
-    '''
+    """ Creates data lists in the form for column charts
+    """
     data = [['question', 'Strongly Agree', 'Agree', 'Neither agree nor disagree', 'Disagree', 'Strongly disagree', 'Don\'t know']]
     choices = question_obj.choices
     for i in range(1,9):

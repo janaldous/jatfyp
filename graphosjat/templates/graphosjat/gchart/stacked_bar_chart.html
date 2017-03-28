@@ -2,14 +2,15 @@
 
 {% block create_chart %}
   //hides real question choice index
-  view.hideRows(1,1);
+  var hiddenrow = view.getNumberOfRows()-1;
+  view.hideRows([hiddenrow]);
 
   var chart = new google.visualization.BarChart(document.getElementById('{{ chart.get_html_id }}'));
 
   google.visualization.events.addListener(chart, 'select', function() {
     var selectedItem = chart.getSelection()[0];
     if (selectedItem) {
-      var choice = data.getValue(1, selectedItem.column);
+      var choice = data.getValue(hiddenrow, selectedItem.column);
       var question = options['title'].match(/\w+/i)[0];
 
       var url = "/clusters/json2/"+cluster_id+"/"+ question +"/"+choice;

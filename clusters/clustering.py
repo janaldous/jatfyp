@@ -12,7 +12,7 @@ from sklearn.cluster import KMeans
 """
     @data pandas.DataFrame object
 """
-def get_subcluster_list(data):
+def get_subcluster_list(num_of_clusters, data):
 
 
 
@@ -76,7 +76,7 @@ def get_subcluster_list(data):
     plt.title('Selecting k with the Elbow Method')
     plt.show()
     """
-    model5 = KMeans(n_clusters=3)
+    model5 = KMeans(n_clusters=num_of_clusters)
     model5.fit(clus_train)
     clussassign=model5.predict(clus_train)
 
@@ -116,10 +116,29 @@ def get_subcluster_list(data):
     #print clustergrp
     return merged_train
 
-def get_num_of_subclusters():
-    """ only temporary, needs implementation """
-    return num_of_clusters
+"""
+    @param cluster: models.cluster object
+    @param data: pandas.DataFrame object, filtered by cluster already
+    @return dicitonary{subcluster_id: length of df of subcluster}
+"""
+def get_subclusters_length(cluster, data):
+    # check if cluster.num_of_clusters == 0, set default to 3
+    if cluster.num_of_clusters == 0:
+        cluster.num_of_clusters = 3
+        cluster.save()
 
+    num_of_clusters = cluster.num_of_clusters
+    d = {}
+    data = get_subcluster_list(num_of_clusters, data)
+    for i in range(num_of_clusters):
+        d[i] = len(filter_by_subcluster(data, i).index)
+    return d
+
+"""
+    @param cluster: models.Cluster object
+    @param data: pandas.DataFrame filtered by cluster already
+    @return dictionary{subcluster_id: df(in the form of pandas.DataFrame)}
+"""
 def get_subclusters(cluster, data):
     # check if cluster.num_of_clusters == 0, set default to 3
     if cluster.num_of_clusters == 0:
@@ -128,9 +147,9 @@ def get_subclusters(cluster, data):
 
     num_of_clusters = cluster.num_of_clusters
     d = {}
-    data = get_subcluster_list(data)
+    data = get_subcluster_list(num_of_clusters, data)
     for i in range(num_of_clusters):
-        d[str(i)] = len(filter_by_subcluster(data, i).index)
+        d[i] = filter_by_subcluster(data, i)
     return d
 
 
