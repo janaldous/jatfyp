@@ -252,8 +252,6 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj, cluster):
         data.append(i)
     data.append(indexes_int)
 
-    print data
-
     #title for chart
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
