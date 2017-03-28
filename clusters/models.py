@@ -67,5 +67,7 @@ class Cluster(models.Model):
     factor3 = models.CharField(max_length=1, choices=ACTIVITY)
     factor4 = models.CharField(max_length=1, choices=LLW)
     factor5 = models.CharField(max_length=1, choices=HOUSING)
+    num_of_clusters = models.PositiveIntegerField()
+
     def __str__(self):
-        return '%s' % (self.name)
+        return '%s noc: %d' % (self.name, self.num_of_clusters)

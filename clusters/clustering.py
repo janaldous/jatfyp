@@ -9,9 +9,13 @@ from sklearn.cluster import KMeans
 # from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-1
 #from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-2
 
-num_of_clusters = 3
+"""
+    @data pandas.DataFrame object
+"""
+def get_subcluster_list(data):
 
-def get_cluster_list(data):
+
+
     """
         Data Management
     """
@@ -112,26 +116,24 @@ def get_cluster_list(data):
     #print clustergrp
     return merged_train
 
-def increment_num_of_clusters():
-    global num_of_clusters
-    num_of_clusters += 1
-
-def decrement_num_of_clusters():
-    global num_of_clusters
-    num_of_clusters -= 1
-
 def get_num_of_subclusters():
     """ only temporary, needs implementation """
     return num_of_clusters
 
-def get_subclusters(data):
+def get_subclusters(cluster, data):
+    # check if cluster.num_of_clusters == 0, set default to 3
+    if cluster.num_of_clusters == 0:
+        cluster.num_of_clusters = 3
+        cluster.save()
+
+    num_of_clusters = cluster.num_of_clusters
     d = {}
+    data = get_subcluster_list(data)
     for i in range(num_of_clusters):
         d[str(i)] = len(filter_by_subcluster(data, i).index)
     return d
 
 
 def filter_by_subcluster(data, subcluster_id):
-    df = get_cluster_list(data)
-    df = df[(df.cluster == float(subcluster_id))]
-    return df
+    data = data[(data.cluster == float(subcluster_id))]
+    return data

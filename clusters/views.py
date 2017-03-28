@@ -149,14 +149,14 @@ def jsoncompare(request, question_id, choice_id):
 def stats(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     cluster_df = utils.get_cluster_from_whole_survey(cluster)
-    clusters_dict = clustering.get_subclusters(cluster_df)
+    clusters_dict = clustering.get_subclusters(cluster, cluster_df)
 
     subcluster_values = list(clusters_dict.values())
 
     context = {
         'cluster_id': cluster_id,
         'subcluster_values': subcluster_values,
-        'num_of_clusters': len(subcluster_values),
+        'num_of_clusters': cluster.num_of_clusters,
     }
 
     return render(request, 'clusters/stats.html', context)
@@ -262,13 +262,18 @@ def compare(request, cluster_id):
     return render(request, 'clusters/detail.html', context)
 
 def increase_num_of_clusters(request, cluster_id):
-    clustering.increment_num_of_clusters()
-    print "increase_num_of_clusters"
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    cluster.num_of_clusters += 1
+    cluster.save()
+    #clustering.increment_num_of_clusters()
+    print "increased_num_of_clusters"
     return redirect('/clusters/'+cluster_id+'/stats')
 
 def decrease_num_of_clusters(request, cluster_id):
-    clustering.decrement_num_of_clusters()
-    print "decrease_num_of_clusters"
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    cluster.num_of_clusters -= 1
+    cluster.save()
+    print "decreased_num_of_clusters"
     return redirect('/clusters/'+cluster_id+'/stats')
 
 def create_cluster(request):
