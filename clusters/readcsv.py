@@ -88,7 +88,7 @@ def get_data_for_pie_charts(df, question_obj):
 
     return {'data':data, 'question':question_str}
 
-def get_data_for_stacked_bar_charts(df, question_obj):
+def get_data_for_stacked_bar_charts(df, question_obj, cluster):
     """
         Creates data list in the form for stacked barcharts
         Choices are dependent on if choice exists in spss.csv
@@ -123,6 +123,11 @@ def get_data_for_stacked_bar_charts(df, question_obj):
         indexes.append(c)
         values.append(v_counts[i])
         ward_ids.append(i)
+
+    #append cluster/subcluster str as last column
+    indexes.append('subcluster_id')
+    values.append(str(cluster.id)+'/a')#all of this cluster
+    ward_ids.append('NA')#not applicable
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 

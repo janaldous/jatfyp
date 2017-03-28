@@ -223,11 +223,13 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj, cluster):
         dfclus = subclusters_dict[i]
 
         v_counts = dfclus[question_base].value_counts()
-        for i in indexes[1:]:
+        for j in indexes[1:]:
             try:
-                values2.append(v_counts[float(i)])
+                values2.append(v_counts[float(j)])
             except KeyError:
                 values2.append(0)
+        #append subcluster id to last column in this row
+        values2.append(str(cluster.id)+"/"+str(i))
         valueslist.append(values2)
 
     #get all pop
@@ -252,9 +254,14 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj, cluster):
         data.append(i)
     data.append(indexes_int)
 
+    #append subcluster id to last column in row
+    indexes.append('subcluster_id')
+    values.append(str(cluster.id)+'/a')#all of this cluster
+    valuesAll.append('3/a')#all of all cluster #TODO MAKE 3 INTO GENERAL ALL CLUSTER
+    indexes_int.append('NA')#not applicable
+
     #title for chart
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
-
 
     return {'data':data, 'question':question_str}
 

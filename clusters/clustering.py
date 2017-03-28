@@ -134,12 +134,13 @@ def get_subclusters_length(cluster, data):
         d[i] = len(filter_by_subcluster(data, i).index)
     return d
 
-"""
-    @param cluster: models.Cluster object
-    @param data: pandas.DataFrame filtered by cluster already
-    @return dictionary{subcluster_id: df(in the form of pandas.DataFrame)}
-"""
+
 def get_subclusters(cluster, data):
+    """
+        @param cluster: models.Cluster object
+        @param data: pandas.DataFrame filtered by cluster already
+        @return dictionary{subcluster_id: df(in the form of pandas.DataFrame)}
+    """
     # check if cluster.num_of_clusters == 0, set default to 3
     if cluster.num_of_clusters == 0:
         cluster.num_of_clusters = 3
@@ -154,5 +155,7 @@ def get_subclusters(cluster, data):
 
 
 def filter_by_subcluster(data, subcluster_id):
+    """assumes @param data: has gone through get_cluster_list() (has a subcluster column already)
+    """
     data = data[(data.cluster == float(subcluster_id))]
     return data

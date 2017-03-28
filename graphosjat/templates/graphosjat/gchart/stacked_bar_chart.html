@@ -3,7 +3,9 @@
 {% block create_chart %}
   //hides real question choice index
   var hiddenrow = view.getNumberOfRows()-1;
+  var hiddencolumn = view.getNumberOfColumns()-1;
   view.hideRows([hiddenrow]);
+  view.hideColumns([hiddencolumn]);
 
   var chart = new google.visualization.BarChart(document.getElementById('{{ chart.get_html_id }}'));
 
@@ -12,11 +14,15 @@
     if (selectedItem) {
       var choice = data.getValue(hiddenrow, selectedItem.column);
       var question = options['title'].match(/\w+/i)[0];
+      var id = data.getValue(selectedItem.row, hiddencolumn).split('/');//'cluster_id/subcluster_id'
+      var cluster_id = id[0];
+      var subcluster_id = id[1];
+      console.log(subcluster_id);
 
-      var url = "/clusters/json2/"+cluster_id+"/"+ question +"/"+choice;
+      var url = "/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+ question +"/"+choice;
 
       loadCensusData(url, question, choice);
-      redrawWardChart(cluster_id, question, choice);
+      redrawWardChart(cluster_id, subcluster_id, question, choice);
 
     }
   });

@@ -120,13 +120,13 @@ function drawChartWard() {
   chartGIwoVrxfEw = chart;
 }
 
-function redrawWardChart(cluster_id, question, choice) {
+function redrawWardChart(cluster_id, subcluster_id, question, choice) {
   var json = (function () {
       var json = null;
       $.ajax({
           'async': false,
           'global': false,
-          'url': "../json4/" + cluster_id + "/" + question + "/" + choice,
+          'url': "../json4/" + cluster_id + "/" + subcluster_id + "/" + question + "/" + choice,
           'dataType': "json",
           'success': function (data) {
               json = data;

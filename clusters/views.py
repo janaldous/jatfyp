@@ -61,7 +61,7 @@ def subcluster_detail(request, cluster_id, subcluster_id):
     questions_strs = get_questions_as_str(questions_txt)
 
     #get charts
-    charts = get_charts(df, questions_txt)
+    charts = get_charts(df, questions_txt, cluster)
 
     context = {
         'cluster': cluster,
@@ -110,12 +110,19 @@ def jsonv2(request, cluster_id):
 
     return JsonResponse(output, safe=False)
 
-def json2(request, cluster_id, question_id, choice_id):
+def json2(request, cluster_id, subcluster_id, question_id, choice_id):
+    """ creates json for map change
+    """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
     file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
     dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
     df = dic['df']
+
+    if subcluster_id != 'a': #if is subcluster, then filter subcluster
+        #TODO need to make permanent, subcluster id on df
+        tempdf = clustering.get_subcluster_list(cluster.num_of_clusters, df)
+        df = clustering.filter_by_subcluster(tempdf, subcluster_id)
 
     output = rc2.get_data_for_map2(df, question_id, choice_id)
 
@@ -132,10 +139,17 @@ def json3(request, cluster_id, question_id):
 
     return JsonResponse(output, safe=False)
 
-def json4(request, cluster_id, question_id, choice_id):
+def json4(request, cluster_id, subcluster_id, question_id, choice_id):
+    """for ward chart change
+    """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
     df = rc.filter_by_cluster_only(utils.get_whole_survey(), cluster)
+
+    if subcluster_id != 'a': #if is subcluster, then filter subcluster
+        #TODO need to make permanent, subcluster id on df
+        tempdf = clustering.get_subcluster_list(cluster.num_of_clusters, df)
+        df = clustering.filter_by_subcluster(tempdf, subcluster_id)
 
     output = rc2.get_data_for_map4(df, question_id, choice_id)
 
@@ -179,7 +193,7 @@ def group_compare(request):
     questions_strs = get_questions_as_str(questions_txt)
 
     #get charts
-    charts = get_charts(df, questions_txt)
+    charts = get_charts(df, questions_txt, cluster)
 
 
     context = {
@@ -213,7 +227,7 @@ def detail(request, cluster_id):
     questions_strs = get_questions_as_str(questions_txt)
 
     #get charts
-    charts = get_charts(df, questions_txt)
+    charts = get_charts(df, questions_txt, cluster)
 
     context = {
         'cluster': cluster,
@@ -348,7 +362,7 @@ def get_questions_as_str(questions_txt):
         questions_strs.append(qstr)
     return questions_strs
 
-def get_charts(df, questions_txt):
+def get_charts(df, questions_txt, cluster):
     charts = []
 
     questions_to_show = ['WARD']
@@ -366,7 +380,7 @@ def get_charts(df, questions_txt):
     questions_to_show = ['Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34', 'Q35', 'Q43', 'Q46', 'Q47']
 
     for question in questions_to_show:
-        dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question])
+        dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question], cluster)
         data = dic['data']
         question = dic['question']
         options={
