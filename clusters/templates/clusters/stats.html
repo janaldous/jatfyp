@@ -3,6 +3,8 @@
 
 {% block content %}
 
+<h1>Stats</h1>
+
 Number of clusters: {{ num_of_clusters }}
 <br>
 Total group pop: {{ total_group_pop }}
@@ -15,5 +17,15 @@ Total group pop: {{ total_group_pop }}
 <button class="btn"><a href="{% url 'clusters:increase' cluster_id %}"><span class="glyphicon glyphicon-arrow-up"></span></a></button>
 {{ num_of_clusters }} clusters
 <button class="btn"><a href="{% url 'clusters:decrease' cluster_id %}"><span class="glyphicon glyphicon-arrow-down"></span></a></button>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+</script>
+
+{{ elbow_chart.as_html }}
+
+{{ scatter_chart.as_html }}
+
 
 {% endblock %}

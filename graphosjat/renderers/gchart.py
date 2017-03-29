@@ -9,6 +9,10 @@ class JatGChart(BaseChart):
     def get_html_template(self):
         return "graphosjat/gchart/html_percent.html"
 
+class ScatterChart(BaseGChart):
+    def get_js_template(self):
+        return "graphos/gchart/scatter_chart.html"
+
 class LineChart(BaseGChart):
     def get_js_template(self):
         return "graphos/gchart/line_chart.html"

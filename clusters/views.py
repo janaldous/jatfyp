@@ -6,7 +6,8 @@ from .forms import ClusterForm
 from .models import Cluster
 
 from graphosjat.sources.simple import SimpleDataSource
-from graphosjat.renderers.gchart import BarChart, ColumnChart, StackedBarChart, PieChart
+from graphosjat.renderers.gchart import BarChart, ColumnChart, StackedBarChart, \
+PieChart, LineChart, ScatterChart
 
 from random import randint
 
@@ -165,6 +166,12 @@ def stats(request, cluster_id):
     cluster_df = utils.get_cluster_from_whole_survey(cluster)
     clusters_dict = clustering.get_subclusters_length(cluster, cluster_df)
 
+    elbow_data = clustering.get_elbow_chart_data(cluster_df)
+    elbow_chart = LineChart(SimpleDataSource(data=elbow_data))
+
+    scatter_data = clustering.get_clustering_chart_data(cluster_df)
+    scatter_chart = ScatterChart(SimpleDataSource(data=scatter_data))
+
     subcluster_values = list(clusters_dict.values())
 
     context = {
@@ -172,6 +179,8 @@ def stats(request, cluster_id):
         'subcluster_values': subcluster_values,
         'num_of_clusters': cluster.num_of_clusters,
         'total_group_pop': cluster_df.shape[0],
+        'elbow_chart': elbow_chart,
+        'scatter_chart': scatter_chart,
     }
 
     return render(request, 'clusters/stats.html', context)
