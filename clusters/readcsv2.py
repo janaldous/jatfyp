@@ -13,7 +13,7 @@ from .models import Cluster
 import string
 import clustering
 
-""" This class is to get data for subgroup comparison
+""" This module is to get data for subgroup comparison
 """
 
 def get_data_for_bar_charts(df, question_obj):
