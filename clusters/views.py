@@ -390,7 +390,6 @@ def get_charts(df, questions_txt, cluster, subcluster_id):
         try:
             dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question], cluster, subcluster_id)
         except KeyError:
-            print dic['data']
             continue
         data = dic['data']
         question = dic['question']

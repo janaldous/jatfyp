@@ -296,7 +296,6 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
     for i in range(len(subclusters_dict)):
         values2 = ['Cluster '+str(i)]
         dfclus = subclusters_dict[i]
-        #print dfclus.shape
         try:
             v_counts = dfclus[question_base].value_counts()
             for j in indexes[1:]:
@@ -339,8 +338,6 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
     #title for chart
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
-    print data
-
     return {'data':data, 'question':question_str}
 
 def get_data_for_bar_charts2(df, dfAll, question_obj, cluster):
@@ -363,7 +360,6 @@ def get_data_for_bar_charts2(df, dfAll, question_obj, cluster):
         except KeyError:
             v = 0
         except IndexError:
-            print v_counts
             v = 0
         try:
             v_countsAll = dfAll[subquestion].value_counts()
@@ -371,7 +367,6 @@ def get_data_for_bar_charts2(df, dfAll, question_obj, cluster):
         except KeyError:
             vAll = 0
         except IndexError:
-            print v_counts
             v = 0
         choice_str = choices[key]
         data.append([choice_str, v, vAll, key])
