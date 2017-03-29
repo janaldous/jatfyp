@@ -50,7 +50,7 @@ def get_data_for_question(df, question_obj):
 
     return {'data':data, 'question':question_str}
 
-def get_data_for_pie_charts(df, question_obj):
+def get_data_for_pie_charts(df, question_obj, cluster):
     """
         Creates data list in the form for stacked barcharts
         Choices are dependent on if choice exists in spss.csv
@@ -59,7 +59,7 @@ def get_data_for_pie_charts(df, question_obj):
     v_counts = df[question_base].value_counts()
     choices = question_obj.choices
 
-    data = [['Ward', 'Value', 'Ward id']]
+    data = [['Ward', 'Value', 'Ward id', 'subcluster_id']]
 
     indexes = [question_base]
 
@@ -71,14 +71,14 @@ def get_data_for_pie_charts(df, question_obj):
     #ward_ids = ['Ward id']
     for i in l:
         try:
-            c = choices[str(int(i))]
+            c = choices[str(int(float(i)))]
         except KeyError:
             c = str(int(i))
             print 'key error AT readcsv.get_data; subquestion: %s' % (int(i))
         #indexes.append(c)
         #values.append(v_counts[i])
         #ward_ids.append()
-        data.append([c, v_counts[i], int(i)])
+        data.append([c, v_counts[i], int(float(i)), str(cluster.id)+'/a'])
 
     #data = [indexes, values, ward_ids]
 
@@ -167,11 +167,11 @@ def get_data_for_bar_charts(df, question_obj, cluster):
 
     return {'data':data, 'question':question_str}
 
-def get_data_for_column_chart(df, question_obj):
+def get_data_for_column_chart(df, question_obj, cluster):
     """
         Creates data lists in the form for column charts
     """
-    data = [['question', 'Strongly Agree', 'Agree', 'Neither agree nor disagree', 'Disagree', 'Strongly disagree', 'Don\'t know']]
+    data = [['question', 'Strongly Agree', 'Agree', 'Neither agree nor disagree', 'Disagree', 'Strongly disagree', 'Don\'t know', 'subcluster_id']]
     choices = question_obj.choices
     for i in range(1,9):
         data_ = []
@@ -185,6 +185,7 @@ def get_data_for_column_chart(df, question_obj):
                 data_.append(0)
                 #print 'key error at readcsv.get_data_for_column_chart; subquestion: %s' % subquestion
                 continue
+        data_.append(str(cluster.id)+'/a')
         data.append(data_)
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
