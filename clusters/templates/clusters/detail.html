@@ -80,6 +80,7 @@
 
 {% block scripts %}
 <script>cluster_id = "{{ cluster.id }}"</script>
+<script>subcluster_id = "{{ subcluster_id }}"</script>
 <script src='{% static "clusters/map.js" %}'></script>
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbcM5AOjEOn5tp18yfzV2jep_1gCdtmgo&callback=initMap"></script>
@@ -90,13 +91,16 @@ function drawChartWard() {
   /**
   * this function draws the Ward bar chart for the first time
   **/
-
+  var url =  "../jsonv2/"+cluster_id;
+  if (subcluster_id != 'a') {
+    url = "../"+url;
+  }
   var json = (function () {
       var json = null;
       $.ajax({
           'async': false,
           'global': false,
-          'url': "../jsonv2/"+cluster_id,
+          'url': url,
           'dataType': "json",
           'success': function (data) {
               json = data;
@@ -121,12 +125,16 @@ function drawChartWard() {
 }
 
 function redrawWardChart(cluster_id, subcluster_id, question, choice) {
+  var url =  "../json4/" + cluster_id + "/" + subcluster_id + "/" + question + "/" + choice;
+  if (subcluster_id != 'a') {
+    url = "../"+url;
+  }
   var json = (function () {
       var json = null;
       $.ajax({
           'async': false,
           'global': false,
-          'url': "../json4/" + cluster_id + "/" + subcluster_id + "/" + question + "/" + choice,
+          'url': url,
           'dataType': "json",
           'success': function (data) {
               json = data;
@@ -135,12 +143,16 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
       return json;
   })();
 
+  console.log(url);
+
   var data = google.visualization.arrayToDataTable(json);
 
   //swaps first and second column, to show properly on bar chart
   var view = new google.visualization.DataView(data);
   view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
   view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
+
+  chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
 
   var options = {"title": "Ward breakdown", bar: { groupWidth: "95%" }}
   chart.draw(view, options);

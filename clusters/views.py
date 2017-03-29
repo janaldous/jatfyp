@@ -47,9 +47,10 @@ def subcluster_detail(request, cluster_id, subcluster_id):
     #load csv into pandas.DataFrame
     dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
-    df = clustering.filter_by_subcluster(df, subcluster_id)
+    df = clustering.get_subclusters(cluster, df)[0]#dicitonary
+
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
-    clusters_dict = clustering.get_subclusters(cluster, dic['df'])
+    clusters_dict = clustering.get_subclusters_length(cluster, dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
@@ -61,10 +62,11 @@ def subcluster_detail(request, cluster_id, subcluster_id):
     questions_strs = get_questions_as_str(questions_txt)
 
     #get charts
-    charts = get_charts(df, questions_txt, cluster)
+    charts = get_charts(df, questions_txt, cluster, subcluster_id)
 
     context = {
         'cluster': cluster,
+        'subcluster_id': subcluster_id,
         'charts': charts,
         'df_size': size_str,#no of rows in df
         'questions_strs': questions_strs,
@@ -191,7 +193,7 @@ def group_compare(request):
     questions_strs = get_questions_as_str(questions_txt)
 
     #get charts
-    charts = get_charts(df, questions_txt, cluster)
+    charts = get_charts(df, questions_txt, cluster, 'a')
 
 
     context = {
@@ -225,11 +227,12 @@ def detail(request, cluster_id):
     questions_strs = get_questions_as_str(questions_txt)
 
     #get charts
-    charts = get_charts(df, questions_txt, cluster)
+    charts = get_charts(df, questions_txt, cluster, 'a')
 
 
     context = {
         'cluster': cluster,
+        'subcluster_id': 'a',
         'charts': charts,
         'df_size': size_str,#no of rows in df
         'questions_strs': questions_strs,
@@ -361,12 +364,15 @@ def get_questions_as_str(questions_txt):
         questions_strs.append(qstr)
     return questions_strs
 
-def get_charts(df, questions_txt, cluster):
+def get_charts(df, questions_txt, cluster, subcluster_id):
     charts = []
 
     questions_to_show = ['WARD', 'Q11', 'QGEN', 'QAGEBND', 'Q34', 'Q43', 'Q46', 'Q47']
     for question in questions_to_show:
-        dic =  rc.get_data_for_pie_charts(df, questions_txt[question], cluster)
+        try:
+            dic =  rc.get_data_for_pie_charts(df, questions_txt[question], cluster, subcluster_id)
+        except KeyError:
+            continue
         data = dic['data']
         question = dic['question']
         options={
@@ -376,42 +382,43 @@ def get_charts(df, questions_txt, cluster):
         charts.append(PieChart(SimpleDataSource(data=data), options=options))
 
     #Single code quesitions
-    questions_to_show = ['QETH', 'Q35', ]
+    questions_to_show = ['QETH', 'Q35']
 
     for question in questions_to_show:
-        dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question], cluster)
+        try:
+            dic =  rc.get_data_for_stacked_bar_charts(df, questions_txt[question], cluster, subcluster_id)
+        except KeyError:
+            print dic['data']
+            continue
         data = dic['data']
         question = dic['question']
         options={
             'title': question,
             'isStacked': 'percent',
-            #'legend': { 'position': 'bottom', 'maxLines': '3' },
-            #'width': 500,
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
     #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q45', 'Q50']
     for question in questions_to_show:
-        dic =  rc.get_data_for_bar_charts(df, questions_txt[question], cluster)
+        try:
+            dic =  rc.get_data_for_bar_charts(df, questions_txt[question], cluster, subcluster_id)
+        except KeyError:
+            continue
         data = dic['data']
         question = dic['question']
         options={
             'title': question,
-            #'legend': { 'position': 'bottom', 'maxLines': '3' }
         }
         charts.append(BarChart(SimpleDataSource(data=data), options=options))
 
-    dic =  rc.get_data_for_column_chart(df, questions_txt['Q13'], cluster)
+    dic =  rc.get_data_for_column_chart(df, questions_txt['Q13'], cluster, subcluster_id)
     data = dic['data']
     question = dic['question']
     options={
         'title': question,
-        #'legend': { 'position': 'bottom', 'maxLines': '3' }
     }
     charts.append(ColumnChart(SimpleDataSource(data=data), options=options))
-
-
 
     return charts
 

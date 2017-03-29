@@ -121,8 +121,6 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
   var data = google.visualization.arrayToDataTable(json);
 
   var view = new google.visualization.DataView(data);
-  //view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
-  //view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
   view.setColumns([0, 3]);
   var options = {"title": "Ward"}
 

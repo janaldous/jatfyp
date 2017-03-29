@@ -50,13 +50,17 @@ def get_data_for_question(df, question_obj):
 
     return {'data':data, 'question':question_str}
 
-def get_data_for_pie_charts(df, question_obj, cluster):
+def get_data_for_pie_charts(df, question_obj, cluster, subcluster_id):
     """
         Creates data list in the form for stacked barcharts
         Choices are dependent on if choice exists in spss.csv
     """
     question_base = question_obj.question_no
-    v_counts = df[question_base].value_counts()
+    try:
+        v_counts = df[question_base].value_counts()
+    except KeyError:
+        #question does not exist in df
+        raise
     choices = question_obj.choices
 
     data = [['Ward', 'Value', 'Ward id', 'subcluster_id']]
@@ -78,7 +82,7 @@ def get_data_for_pie_charts(df, question_obj, cluster):
         #indexes.append(c)
         #values.append(v_counts[i])
         #ward_ids.append()
-        data.append([c, v_counts[i], int(float(i)), str(cluster.id)+'/a'])
+        data.append([c, v_counts[i], int(float(i)), str(cluster.id)+"/"+subcluster_id])
 
     #data = [indexes, values, ward_ids]
 
@@ -88,13 +92,16 @@ def get_data_for_pie_charts(df, question_obj, cluster):
 
     return {'data':data, 'question':question_str}
 
-def get_data_for_stacked_bar_charts(df, question_obj, cluster):
+def get_data_for_stacked_bar_charts(df, question_obj, cluster, subcluster_id):
     """
         Creates data list in the form for stacked barcharts
         Choices are dependent on if choice exists in spss.csv
     """
     question_base = question_obj.question_no
-    v_counts = df[question_base].value_counts()
+    try:
+        v_counts = df[question_base].value_counts()
+    except KeyError:
+        raise
     choices = question_obj.choices
 
     indexes = [question_base]
@@ -129,14 +136,14 @@ def get_data_for_stacked_bar_charts(df, question_obj, cluster):
 
     #append cluster/subcluster str as last column
     indexes.append('subcluster_id')
-    values.append(str(cluster.id)+'/a')#all of this cluster
+    values.append(str(cluster.id)+'/'+subcluster_id)#all of this cluster
     ward_ids.append('NA')#not applicable
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     return {'data':[indexes, values, ward_ids], 'question':question_str}
 
-def get_data_for_bar_charts(df, question_obj, cluster):
+def get_data_for_bar_charts(df, question_obj, cluster, subcluster_id):
     """Creates data lists in the form for bar charts
         Choices are dependent on whether it exists in XXXquestionchoices.txt
         and data is from spss.csv
@@ -154,20 +161,20 @@ def get_data_for_bar_charts(df, question_obj, cluster):
             value = df[subquestion].value_counts()[1]
         except KeyError:
             #print 'key error at readcsv.get_data2; subquestion: %s' % subquestion
-            continue
+            raise
         except IndexError:
             '''
                 means that all rows = 0, no rows = 1
             '''
             value = 0
             continue
-        data.append([question_text, value, key, str(cluster.id)+'/a'])
+        data.append([question_text, value, key, str(cluster.id)+'/'+subcluster_id])
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
     return {'data':data, 'question':question_str}
 
-def get_data_for_column_chart(df, question_obj, cluster):
+def get_data_for_column_chart(df, question_obj, cluster, subcluster_id):
     """
         Creates data lists in the form for column charts
     """
@@ -185,7 +192,7 @@ def get_data_for_column_chart(df, question_obj, cluster):
                 data_.append(0)
                 #print 'key error at readcsv.get_data_for_column_chart; subquestion: %s' % subquestion
                 continue
-        data_.append(str(cluster.id)+'/a')
+        data_.append(str(cluster.id)+'/'+subcluster_id)
         data.append(data_)
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
