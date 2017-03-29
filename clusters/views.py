@@ -175,7 +175,7 @@ def stats(request, cluster_id):
     subcluster_values = list(clusters_dict.values())
 
     context = {
-        'cluster_id': cluster_id,
+        'cluster': cluster,
         'subcluster_values': subcluster_values,
         'num_of_clusters': cluster.num_of_clusters,
         'total_group_pop': cluster_df.shape[0],
