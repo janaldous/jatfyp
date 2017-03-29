@@ -103,7 +103,7 @@
 <script type="text/javascript">cluster_id = "{{ cluster.id }}"</script>
 <script src='{% static "clusters/groupcompare.js" %}'></script>
 <script type="text/javascript">
-function redrawWardChart(cluster_id, question, choice) {
+function redrawWardChart(cluster_id, subcluster_id, question, choice) {
   var json = (function () {
       var json = null;
       $.ajax({
