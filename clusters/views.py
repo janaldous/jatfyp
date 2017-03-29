@@ -171,6 +171,7 @@ def stats(request, cluster_id):
         'cluster_id': cluster_id,
         'subcluster_values': subcluster_values,
         'num_of_clusters': cluster.num_of_clusters,
+        'total_group_pop': cluster_df.shape[0],
     }
 
     return render(request, 'clusters/stats.html', context)
@@ -267,6 +268,7 @@ def compare(request, cluster_id):
 
     context = {
         'cluster': cluster,
+        'subcluster_id': 'a',
         'charts': charts,
         'df_size': size_str,#no of rows in df
         'questions_strs': questions_strs,
@@ -438,6 +440,7 @@ def get_charts_compare(df, dfAll, questions_txt, cluster):
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
+    """
     #Multi code questions
     questions_to_show = ['Q26,A']
 
@@ -451,6 +454,7 @@ def get_charts_compare(df, dfAll, questions_txt, cluster):
             'isStacked': 'percent',
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
+        """
 
     #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']

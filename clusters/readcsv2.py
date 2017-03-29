@@ -362,11 +362,17 @@ def get_data_for_bar_charts2(df, dfAll, question_obj, cluster):
             v = v_counts[1]
         except KeyError:
             v = 0
+        except IndexError:
+            print v_counts
+            v = 0
         try:
             v_countsAll = dfAll[subquestion].value_counts()
             vAll = v_countsAll[1]/ratio
         except KeyError:
             vAll = 0
+        except IndexError:
+            print v_counts
+            v = 0
         choice_str = choices[key]
         data.append([choice_str, v, vAll, key])
 
