@@ -265,7 +265,85 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj, cluster):
 
     return {'data':data, 'question':question_str}
 
-def get_data_for_bar_charts2(df, dfAll, question_obj):
+def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
+    """ adapted for multicode quesitons
+        @param letter is question letter
+        Creates data lists in the form for bar charts
+        Choices are dependent on whether it exists in XXXquestionchoices.txt
+        and data is from spss.csv
+    """
+    question_base = question_obj.question_no+letter
+    #choices = question_obj.choices
+
+    v_counts = df[question_base].value_counts()
+
+    indexes = ['Questions']
+    indexes_int = ['choice_id']
+
+    for i in v_counts.index.tolist():
+        if not pd.isnull(i):
+            indexes.append(str(int(float(i))))
+
+
+    #get this cluster
+    values = ['Cluster']
+    for i in v_counts.values.tolist():
+        values.append(i)
+
+    #get subclusters
+    valueslist = []
+    subclusters_dict = clustering.get_subclusters(cluster, df)
+    for i in range(len(subclusters_dict)):
+        values2 = ['Cluster '+str(i)]
+        dfclus = subclusters_dict[i]
+        #print dfclus.shape
+        try:
+            v_counts = dfclus[question_base].value_counts()
+            for j in indexes[1:]:
+                try:
+                    values2.append(v_counts[float(j)])
+                except KeyError:
+                    values2.append(0)
+        except KeyError:
+            for j in indexes[1:]:
+                values2.append(0)
+
+        #append subcluster id to last column in this row
+        values2.append(str(cluster.id)+"/"+str(i))
+        valueslist.append(values2)
+
+    #get all pop
+    valuesAll = ['All']
+    v_countsAll = dfAll[question_base].value_counts()
+    for i in indexes[1:]:
+        valuesAll.append(v_countsAll[i])
+
+
+    #change indexes from float to string description
+    for idx,item in enumerate(indexes[1:]):
+        c = item
+        indexes[idx+1] = c
+        indexes_int.append(int(item))
+
+    data = [indexes, values, valuesAll]
+    for i in valueslist:
+        data.append(i)
+    data.append(indexes_int)
+
+    #append subcluster id to last column in row
+    indexes.append('subcluster_id')
+    values.append(str(cluster.id)+'/a')#all of this cluster
+    valuesAll.append('3/a')#all of all cluster #TODO MAKE 3 INTO GENERAL ALL CLUSTER
+    indexes_int.append('NA')#not applicable
+
+    #title for chart
+    question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
+
+    print data
+
+    return {'data':data, 'question':question_str}
+
+def get_data_for_bar_charts2(df, dfAll, question_obj, cluster):
     """ Creates data lists in the form for bar charts
         Choices are dependent on whether it exists in XXXquestionchoices.txt
         and data is from spss.csv

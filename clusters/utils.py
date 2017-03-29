@@ -2,6 +2,7 @@ import readtxt as rt
 import os
 from django.conf import settings
 import pandas as pd
+import numpy as np
 
 import readcsv as rc
 
@@ -25,6 +26,8 @@ def get_whole_survey():
     if SURVEY16 is None:
         with open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv')) as f:
             SURVEY16 = pd.read_csv(f)
+            #clean: #NULL! into np.nan
+            SURVEY16 = SURVEY16.replace('#NULL!', np.nan)
         print "utils called ------"
     return SURVEY16
 

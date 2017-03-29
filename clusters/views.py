@@ -45,8 +45,7 @@ def subclusters_list(request, cluster_id):
 def subcluster_detail(request, cluster_id, subcluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
     df = clustering.filter_by_subcluster(df, subcluster_id)
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
@@ -56,6 +55,7 @@ def subcluster_detail(request, cluster_id, subcluster_id):
     dic_source = rt.read(file2_)
     about = dic_source['about']
     questions_txt = dic_source['questions']
+    file2_.close()
 
     #get cluster questions as strings
     questions_strs = get_questions_as_str(questions_txt)
@@ -78,8 +78,7 @@ def json(request, cluster_id):
     """ used for map """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
 
     #load questions textfile into list
@@ -87,6 +86,7 @@ def json(request, cluster_id):
     dic_source = rt.read(file2_)
     about = dic_source['about']
     questions_txt = dic_source['questions']
+    file2_.close()
 
     output = rc2.get_data_for_map(df, questions_txt['WARD'])
 
@@ -96,8 +96,7 @@ def jsonv2(request, cluster_id):
     """ used for Ward chart """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
 
     #load questions textfile into list
@@ -105,6 +104,7 @@ def jsonv2(request, cluster_id):
     dic_source = rt.read(file2_)
     about = dic_source['about']
     questions_txt = dic_source['questions']
+    file2_.close()
 
     output = rc2.get_data_for_mapv2(df, questions_txt['WARD'])
 
@@ -115,8 +115,7 @@ def json2(request, cluster_id, subcluster_id, question_id, choice_id):
     """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
 
     if subcluster_id != 'a': #if is subcluster, then filter subcluster
@@ -131,8 +130,7 @@ def json2(request, cluster_id, subcluster_id, question_id, choice_id):
 def json3(request, cluster_id, question_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
 
     output = rc2.get_data_for_map3(df, question_id)
@@ -212,14 +210,14 @@ def group_compare(request):
 def detail(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    dic = rc.filter_by_cluster(pd.read_csv(file_), cluster)
+    dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
     clusters_dict = clustering.get_subclusters(cluster, dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
+    file2_.close()
     about = dic_source['about']
     questions_txt = dic_source['questions']
 
@@ -228,6 +226,7 @@ def detail(request, cluster_id):
 
     #get charts
     charts = get_charts(df, questions_txt, cluster)
+
 
     context = {
         'cluster': cluster,
@@ -245,8 +244,7 @@ def compare(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     clusterAll = get_object_or_404(Cluster, pk=3)
     #load csv into pandas.DataFrame
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    dicAll = rc.filter_by_cluster(pd.read_csv(file_), clusterAll)
+    dicAll = rc.filter_by_cluster(utils.get_whole_survey(), clusterAll)
     dic = rc.filter_by_cluster(dicAll['df'], cluster)
     df = dic['df']
     size_str = "%d / %d" % (len(df.index), dic['orig_size'])
@@ -254,6 +252,7 @@ def compare(request, cluster_id):
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
+    file2_.close()
     about = dic_source['about']
     questions_txt = dic_source['questions']
 
@@ -310,13 +309,13 @@ def create_cluster(request):
 
 def survey_questions(request):
     #load csv
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    df = pd.read_csv(file_)
+    df = utils.get_whole_survey()
     #load questionchoices txt
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
     about = dic_source['about']
     questions_txt = dic_source['questions']
+    file2_.close()
 
     context = {
         'questions': questions_txt.values(),
@@ -326,13 +325,13 @@ def survey_questions(request):
 
 def see_question_answers(request, question):
     #load csv
-    file_ = open(os.path.join(settings.BASE_DIR, 'clusters/spss.csv'))
-    df = pd.read_csv(file_)
+    df = utils.get_whole_survey()
     #load questionchoices txt
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
     dic_source = rt.read(file2_)
     about = dic_source['about']
     questions_txt = dic_source['questions']
+    file2_.close()
 
     chart = get_question_chart(df, questions_txt[question])
 
@@ -394,7 +393,7 @@ def get_charts(df, questions_txt, cluster):
     #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q45', 'Q50']
     for question in questions_to_show:
-        dic =  rc.get_data_for_bar_charts(df, questions_txt[question])
+        dic =  rc.get_data_for_bar_charts(df, questions_txt[question], cluster)
         data = dic['data']
         question = dic['question']
         options={
@@ -432,11 +431,24 @@ def get_charts_compare(df, dfAll, questions_txt, cluster):
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
+    #Multi code questions
+    questions_to_show = ['Q26,A']
+
+    for question in questions_to_show:
+        q = question.split(',')
+        dic =  rc2.get_data_for_bar_charts_adapted2(df, dfAll, questions_txt[q[0]], q[1], cluster)
+        data = dic['data']
+        question = dic['question']
+        options = {
+            'title': question,
+            'isStacked': 'percent',
+        }
+        charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
     #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
     for question in questions_to_show:
-        dic =  rc2.get_data_for_bar_charts2(df, dfAll, questions_txt[question])
+        dic =  rc2.get_data_for_bar_charts2(df, dfAll, questions_txt[question], cluster)
         data = dic['data']
         question = dic['question']
         options={

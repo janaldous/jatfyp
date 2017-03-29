@@ -17,7 +17,6 @@
       var id = data.getValue(selectedItem.row, hiddencolumn).split('/');//'cluster_id/subcluster_id'
       var cluster_id = id[0];
       var subcluster_id = id[1];
-      console.log(subcluster_id);
 
       var url = "/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+ question +"/"+choice;
 

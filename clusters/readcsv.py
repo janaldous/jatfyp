@@ -121,7 +121,10 @@ def get_data_for_stacked_bar_charts(df, question_obj, cluster):
             c = choices[str(int(i))]
 
         indexes.append(c)
-        values.append(v_counts[i])
+        try:
+            values.append(v_counts[i])
+        except IndexError:
+            values.append(0)
         ward_ids.append(i)
 
     #append cluster/subcluster str as last column
@@ -133,16 +136,15 @@ def get_data_for_stacked_bar_charts(df, question_obj, cluster):
 
     return {'data':[indexes, values, ward_ids], 'question':question_str}
 
-def get_data_for_bar_charts(df, question_obj):
-    """
-        Creates data lists in the form for bar charts
+def get_data_for_bar_charts(df, question_obj, cluster):
+    """Creates data lists in the form for bar charts
         Choices are dependent on whether it exists in XXXquestionchoices.txt
         and data is from spss.csv
     """
     question_base = question_obj.question_no
     choices = question_obj.choices
 
-    data = [['question_text', '#rows = 1', 'question_letter']]
+    data = [['question_text', '#rows = 1', 'question_letter', 'subcluster_id']]
     #append data to list
     for key in choices.keys():
         subquestion = question_base+key
@@ -159,7 +161,7 @@ def get_data_for_bar_charts(df, question_obj):
             '''
             value = 0
             continue
-        data.append([question_text, value, key])
+        data.append([question_text, value, key, str(cluster.id)+'/a'])
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 

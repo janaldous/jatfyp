@@ -2,7 +2,8 @@
 
 {% block create_chart %}
   //hides real question choice index
-  view.hideColumns([2]);//hide question letter column
+  var hiddencolumn = view.getNumberOfColumns()-1;
+  view.hideColumns([2, hiddencolumn]);//hide question letter column and subcluster_id column
   data.sort({column: 1, desc: true});//sort original data
   view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
 
@@ -17,14 +18,17 @@
 
       var question_letter = data.getValue(selectedItem.row, 2);
 
+      var id = data.getValue(selectedItem.row, hiddencolumn).split('/');//'cluster_id/subcluster_id'
+      var cluster_id = id[0];
+      var subcluster_id = id[1];
 
 
       var question = options['title'].match(/\w+/i)[0] + question_letter;
 
-      console.log("/clusters/json2/"+cluster_id+"/"+ question + "/1");
+      console.log("/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+ question + "/1");
 
-      loadCensusData("/clusters/json2/"+cluster_id+"/"+ question + "/1", question, value);
-      redrawWardChart(cluster_id, question, 1);
+      loadCensusData("/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+question + "/1", question, value);
+      redrawWardChart(cluster_id, subcluster_id, question, 1);
 
 
     }
