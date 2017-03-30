@@ -19,6 +19,7 @@
 {% for population in subcluster_values %}
   <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a>
 {% endfor %}
+<a class="btn btn-primary" href="{% url 'clusters:correlations' %}" role="button">Correlations</a>
 
 {% endblock %}
 
