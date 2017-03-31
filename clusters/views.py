@@ -317,13 +317,14 @@ def create_cluster(request):
         form = ClusterForm(request.POST)
         # check whether it's valid:
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # ...
+            form.save()
             # redirect to a new URL:
-            return HttpResponseRedirect('clusters/')
+            print 'sucess'
+            return HttpResponseRedirect('/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
+        print "fail"
         form = ClusterForm()
 
     return render(request, 'clusters/form.html', {'form': form})

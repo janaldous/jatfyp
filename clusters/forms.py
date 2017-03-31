@@ -1,5 +1,7 @@
-from django import forms
-
+#from django import forms
+from django.forms import ModelForm
+from clusters.models import Cluster
+"""
 class ClusterForm(forms.Form):
     #Q43
     DISABILITY = (
@@ -63,4 +65,9 @@ class ClusterForm(forms.Form):
     factor2 = forms.ChoiceField(choices=BENEFITS, label='Benefits')
     factor3 = forms.ChoiceField(choices=ACTIVITY, label='Activity')
     factor4 = forms.ChoiceField(choices=LLW, label='LLW')
-    factor5 = forms.ChoiceField(choices=HOUSING, label='Housing tenure')
+    factor5 = forms.ChoiceField(choices=HOUSING, label='Housing tenure')"""
+
+class ClusterForm(ModelForm):
+    class Meta:
+        model = Cluster
+        fields = ['name', 'factor1', 'factor2', 'factor3', 'factor4', 'factor5']
