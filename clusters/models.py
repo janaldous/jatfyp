@@ -71,3 +71,13 @@ class Cluster(models.Model):
 
     def __str__(self):
         return '%s noc: %d' % (self.name, self.num_of_clusters)
+
+class Subcluster(models.Model):
+    #SERIAL field in spss 2016
+    serial = models.CharField(max_length=8)
+    #aka Cluster id
+    group = models.ForeignKey(Cluster, on_delete=models.CASCADE)
+    subcluster = models.IntegerField()
+
+    def __str__(self):
+        return '%s %d' % (self.serial, self.group.id)

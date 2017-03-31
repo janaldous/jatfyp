@@ -9,6 +9,7 @@ from sklearn.cluster import KMeans
 from scipy.spatial.distance import cdist
 from sklearn.decomposition import PCA
 
+from .models import Subcluster
 
 # from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-1
 #from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-2
@@ -16,7 +17,7 @@ from sklearn.decomposition import PCA
 def get_elbow_chart_data(data):
     """clus_train must go through get_data() first
     """
-    clus_train = _get_clus_train(data)
+    clus_train, serials = _get_clus_train(data)
 
     clusters=range(1,10)
     meandist=[]
@@ -74,12 +75,11 @@ def _get_clus_train(data):
     clustervar['QETH']=preprocessing.scale(clustervar['QETH'].astype('float64'))
     """
 
-    clus_train, clus_test = train_test_split(clustervar, test_size=.3, random_state=123)
-
-    return clus_train
+    #clus_train, clus_test = train_test_split(clustervar, test_size=.3, random_state=123)
+    return clustervar, data.SERIAL
 
 def get_clustering_chart_data(data):
-    clus_train = _get_clus_train(data)
+    clus_train, serials = _get_clus_train(data)
 
     pca_2 = PCA(2)
 
@@ -100,12 +100,31 @@ def get_clustering_chart_data(data):
 
     return output
 
-def get_subcluster_list(num_of_clusters, data):
+def get_subcluster_list(cluster, data):
     """
         @data pandas.DataFrame object
     """
 
-    clus_train = _get_clus_train(data)
+    num_of_clusters = cluster.num_of_clusters
+
+    clus_train, serials  = _get_clus_train(data)
+
+    if Subcluster.objects.filter(group=cluster).exists():
+        #make dataframe from db
+        query_results = Subcluster.objects.filter(group=cluster)
+        serials = []
+        subclusters = []
+        for row in query_results:
+            serials.append(float(row.serial))
+            subclusters.append(row.subcluster)
+        df = pd.DataFrame(
+            {'SERIAL': serials,
+             'cluster': subclusters,
+            })
+
+        data = data[data['SERIAL'].isin(df.SERIAL.tolist())]
+        merged_db = pd.merge(df, data, on='SERIAL')
+        return merged_db
 
     model5 = KMeans(n_clusters=num_of_clusters)
     model5.fit(clus_train)
@@ -133,7 +152,14 @@ def get_subcluster_list(num_of_clusters, data):
 
     #merged_train.cluster.value_counts()
 
-    clustergrp=merged_train.groupby('cluster').mean()
+    merged_serial = pd.merge(merged_train, serials.to_frame().reset_index(), on='index')
+
+    for i in range(merged_serial.shape[0]):
+        row = merged_serial.iloc[i]
+        s = Subcluster(serial=row.SERIAL, group=cluster, subcluster=row.cluster)
+        s.save()
+
+    #clustergrp=merged_train.groupby('cluster').mean()
     #print "clustering variable means by cluster"
     #print clustergrp
     return merged_train
@@ -147,12 +173,12 @@ def get_subclusters_length(cluster, data):
     """
     # check if cluster.num_of_clusters == 0, set default to 3
     if cluster.num_of_clusters == 0:
-        cluster.num_of_clusters = 3
+        cluster.num_of_clusters = 1
         cluster.save()
 
     num_of_clusters = cluster.num_of_clusters
     d = {}
-    data = get_subcluster_list(num_of_clusters, data)
+    data = get_subcluster_list(cluster, data)
     for i in range(num_of_clusters):
         d[i] = len(filter_by_subcluster(data, i).index)
     return d
@@ -164,14 +190,14 @@ def get_subclusters(cluster, data):
         @param data: pandas.DataFrame filtered by cluster already
         @return dictionary{subcluster_id: df(in the form of pandas.DataFrame)}
     """
-    # check if cluster.num_of_clusters == 0, set default to 3
+    # check if cluster.num_of_clusters == 0, set default to 1
     if cluster.num_of_clusters == 0:
-        cluster.num_of_clusters = 3
+        cluster.num_of_clusters = 1
         cluster.save()
 
     num_of_clusters = cluster.num_of_clusters
     d = {}
-    data = get_subcluster_list(num_of_clusters, data)
+    data = get_subcluster_list(cluster, data)
     for i in range(num_of_clusters):
         d[i] = filter_by_subcluster(data, i)
     return d
