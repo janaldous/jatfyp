@@ -1,4 +1,4 @@
-{% extends "clusters/base2.html" %}
+{% extends "clusters/base_split.html" %}
 {% load static %}
 
 {% block stylesheets %}
@@ -6,12 +6,7 @@
 {% endblock %}
 
 {% block group_name %}
-<h1>{{ cluster.name }}</h1>
-{% if compare %}
-<a class="btn btn-primary" href="{% url 'clusters:detail' cluster.id %}" role="button">Don't compare</a>
-{% else %}
-<a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare</a>
-{% endif %}
+<h1>Compare groups</h1>
 <a class="btn btn-primary" id="all-button" href="#" role="button">See all on map</a>
 {% endblock %}
 

@@ -1,0 +1,54 @@
+{% extends "clusters/superbase.html" %}
+
+{% block superstylesheets %}
+    {% block stylesheets %}{% endblock %}
+    <style>
+    /*this ccs is from  http://jsfiddle.net/Shreerang/Pp8gT/*/
+    .container {
+      width: 100%;
+      display: flex;
+    }
+    #map-canvas-left, #map-canvas-right {
+    	height: 250px;
+      width: 550px;
+    }
+    #iw_container .iw_title {
+    	font-size: 16px;
+    	font-weight: bold;
+    }
+    .iw_content {
+    	padding: 15px 15px 15px 0;
+    }
+    </style>
+{% endblock %}
+
+
+{% block supercontent %}
+    <h1 align="center">Correlations</h1>
+    {% block content %}{% endblock %}
+    <div id="map_canvas" style="top: 10px; left: 25px; width:410px; height:420px; float: left"></div>
+    <div id="map_canvas_2" style="top: 10px; left: 75px; width:410px; height:420px"></div>
+{% endblock %}
+
+
+{% block superscripts %}
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+    {% block scripts %}
+    {% endblock %}
+    <script>
+    (function ($) {
+      $(document).ready(function(){
+      // fade out .navbar when #remove-button is clicked
+    	$(function () {
+    		$("#remove-button").click(function () {
+            $('.navbar').fadeOut();
+            $("#left").css({ top: '0px' });
+            $(".right").css({ top: '0px' });
+            $("#scrollable").css({ top: '100px' });
+    		});
+    	});
+    });
+    }(jQuery));
+    </script>
+{% endblock %}
