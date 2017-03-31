@@ -11,6 +11,8 @@ function initMap() {
     draggable: true,
   });
 
+  console.log(cluster_id);
+
   // NOTE: This uses cross-domain XHR, and may not work on older browsers.
   //map.data.loadGeoJson(
   //    'https://www.lambeth.gov.uk/sites/default/files/LambethWards_0.json');
