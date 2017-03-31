@@ -27,8 +27,8 @@ def index(request):
     context = {'clusters': clusters}
     return render(request, 'clusters/index.html', context)
 
-def correlations(request):
-    return render(request, 'clusters/correlations.html')
+def compare_maps(request):
+    return render(request, 'clusters/compare_maps.html')
 
 def map(request):
     return render(request, 'clusters/map.html')
