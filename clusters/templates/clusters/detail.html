@@ -2,9 +2,7 @@
 {% load static %}
 
 {% block stylesheets %}
-
 <link rel="stylesheet" type="text/css" href="{% static 'clusters/css/map.css' %}">
-
 {% endblock %}
 
 {% block group_name %}
@@ -23,8 +21,8 @@
 {% endblock %}
 
 
-{% block about %}
-  <h3>Group factors</h3>
+{% block modal %}
+  <h4>Group factors</h4>
   <ul>
     <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
     <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
@@ -35,11 +33,9 @@
 
   <div class="panel panel-default">
     <div class="panel-body">
-      Number of rows: {{ df_size }}
-      <br>
-      Source: {{ about }}
-      <br>
-      Number of clusters: {{ num_of_clusters }}
+      <p>Number of rows: {{ df_size }}</p>
+      <p>Source: {{ about }}</p>
+      <p>Number of clusters: {{ num_of_clusters }}</p>
       <ul>
       {% for population in subcluster_values %}
         <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
@@ -51,10 +47,6 @@
 {% endblock %}
 
 {% block content %}
-
-
-
-
 {% if df_size == 0 %}
   There are no rows for this cluster
 {% else %}

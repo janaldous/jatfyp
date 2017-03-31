@@ -170,12 +170,15 @@ def stats(request, cluster_id):
     clusters_dict = clustering.get_subclusters_length(cluster, cluster_df)
 
     elbow_data = clustering.get_elbow_chart_data(cluster_df)
-    elbow_chart = LineChart(SimpleDataSource(data=elbow_data))
+    elbow_chart = LineChart(SimpleDataSource(data=elbow_data), options={'width':420, 'title': 'Elbow chart', 'legend': {'position': 'bottom'}})
 
     scatter_data = clustering.get_clustering_chart_data(cluster_df)
-    scatter_chart = ScatterChart(SimpleDataSource(data=scatter_data))
+    scatter_chart = ScatterChart(SimpleDataSource(data=scatter_data), options={'width':420, 'title': '2d representation of data', 'legend': {'position': 'none'}})
 
     subcluster_values = list(clusters_dict.values())
+
+    total_pop = utils.get_survey_num_of_rows()
+    percentage = (float(cluster_df.shape[0])/float(total_pop))*100
 
     context = {
         'cluster': cluster,
@@ -184,6 +187,7 @@ def stats(request, cluster_id):
         'total_group_pop': cluster_df.shape[0],
         'elbow_chart': elbow_chart,
         'scatter_chart': scatter_chart,
+        'total_pop': total_pop,
     }
 
     return render(request, 'clusters/stats.html', context)

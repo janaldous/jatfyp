@@ -35,3 +35,6 @@ def get_cluster_from_whole_survey(cluster):
     df = get_whole_survey()
     df_filtered = rc.filter_by_cluster_only(df, cluster)
     return df_filtered
+
+def get_survey_num_of_rows():
+    return SURVEY16.shape[0]
