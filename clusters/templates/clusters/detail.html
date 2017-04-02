@@ -65,6 +65,7 @@
   <div style="padding:5px;">
       <b>Question: </b><span id="showing-question"></span>
       <br><b>Choice: </b><span id="showing-choice"></span>
+      {% if compare %}<br><b>Cluster: </b><span id="showing-cluster"></span>{% endif %}
   </div>
   <p id="showing-choice"></p>
   <div id="legend">
@@ -78,7 +79,7 @@
   </div>
   <div id="map" style="height:60%;"></div>
 
-  <div id="Ward" style="width: 100%; height: 25%;"></div>
+  <div id="Ward" style="width: 100%; height: 24%;"></div>
 {% endblock %}
 
 {% block scripts %}

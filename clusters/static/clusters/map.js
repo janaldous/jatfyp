@@ -89,9 +89,11 @@ function loadCensusData(variable, question, value) {
   if (question || value) {
     document.getElementById("showing-question").innerHTML = truncate(question);
     document.getElementById("showing-choice").innerHTML = truncate(value);
+    document.getElementById("showing-cluster").innerHTML = variable.split("/")[4];
   } else {
     document.getElementById("showing-question").innerHTML = "Showing all of group";
     document.getElementById("showing-choice").innerHTML = "";
+    document.getElementById("showing-cluster").innerHTML = "";
   }
 
 }

@@ -125,8 +125,7 @@ def json2(request, cluster_id, subcluster_id, question_id, choice_id):
     df = dic['df']
 
     if subcluster_id != 'a': #if is subcluster, then filter subcluster
-        #TODO need to make permanent, subcluster id on df
-        tempdf = clustering.get_subcluster_list(cluster.num_of_clusters, df)
+        tempdf = clustering.get_subcluster_list(cluster, df)
         df = clustering.filter_by_subcluster(tempdf, subcluster_id)
 
     output = rc2.get_data_for_map2(df, question_id, choice_id)
@@ -152,7 +151,7 @@ def json4(request, cluster_id, subcluster_id, question_id, choice_id):
 
     if subcluster_id != 'a': #if is subcluster, then filter subcluster
         #TODO need to make permanent, subcluster id on df
-        tempdf = clustering.get_subcluster_list(cluster.num_of_clusters, df)
+        tempdf = clustering.get_subcluster_list(cluster, df)
         df = clustering.filter_by_subcluster(tempdf, subcluster_id)
 
     output = rc2.get_data_for_map4(df, question_id, choice_id)
@@ -288,7 +287,8 @@ def compare(request, cluster_id):
         'cluster': cluster,
         'subcluster_id': 'a',
         'charts': charts,
-        'df_size': size_str,#no of rows in df
+        'group_size': len(df.index),#no of rows in df
+        'survey_size': dic['orig_size'],
         'questions_strs': questions_strs,
         'about': about,
         'subcluster_values': list(clusters_dict.values()),

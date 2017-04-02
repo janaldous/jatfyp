@@ -102,6 +102,7 @@ def get_clustering_chart_data(data):
 
 def get_subcluster_list(cluster, data):
     """
+        @cluster Cluster model
         @data pandas.DataFrame object
     """
 

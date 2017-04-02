@@ -24,7 +24,7 @@ def get_data_for_bar_charts(df, question_obj):
     question_base = question_obj.question_no
     choices = question_obj.choices
 
-    data = [['question_text', '#rows = 1', 'question_letter']]
+    data = [[question_base, '#rows = 1', 'question_letter']]
     #append data to list
     for key in choices.keys():
         subquestion = question_base+key
@@ -203,7 +203,7 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj, cluster):
 
     v_counts = df[question_base].value_counts()
 
-    indexes = ['Questions']
+    indexes = [question_base]
     indexes_int = ['choice_id']
 
     for i in v_counts.index.tolist():
@@ -211,7 +211,7 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj, cluster):
 
 
     #get this cluster
-    values = ['Cluster']
+    values = ['This group']
     for i in v_counts.values.tolist():
         values.append(i)
 
@@ -277,7 +277,7 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
 
     v_counts = df[question_base].value_counts()
 
-    indexes = ['Questions']
+    indexes = [question_base]
     indexes_int = ['choice_id']
 
     for i in v_counts.index.tolist():
@@ -350,7 +350,7 @@ def get_data_for_bar_charts2(df, dfAll, question_obj, cluster):
     #ratio to make proportionate dfAll
     ratio = len(dfAll.index)/len(df.index)
 
-    data = [['question', 'This cluster', 'Lambeth', 'question letter']]
+    data = [[question_base, 'This cluster', 'Lambeth', 'question letter']]
     #append data to list
     for key in choices.keys():
         subquestion = question_base+key
