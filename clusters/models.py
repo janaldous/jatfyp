@@ -72,6 +72,10 @@ class Cluster(models.Model):
     def __str__(self):
         return '%s noc: %d' % (self.name, self.num_of_clusters)
 
+    @staticmethod
+    def get_factor_lists():
+        return [Cluster.DISABILITY, Cluster.BENEFITS, Cluster.ACTIVITY, Cluster.LLW, Cluster.HOUSING]
+
 class Subcluster(models.Model):
     #SERIAL field in spss 2016
     serial = models.CharField(max_length=8)

@@ -50,7 +50,8 @@
           <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a>
         {% endfor %}
         {% endblock %}
-        <span id="about-icon" class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="modal" data-target="#myModal"></span>
+        <a class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">About group</a>
+        <span id="about-icon" class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="modal" data-target="#instructions"></span>
         <div class="right" id="scrollable" style="padding:10px;">
           <div id="about-group">
 
@@ -63,8 +64,8 @@
 
 
 {% block superscripts %}
-    <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <!-- Info Modal -->
+    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -73,6 +74,24 @@
           </div>
           <div class="modal-body">
             {% block modal %}{% endblock %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Info Modal -->
+    <div class="modal fade" id="instructions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Instructions</h4>
+          </div>
+          <div class="modal-body">
+            {% block instructions %}{% endblock %}
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

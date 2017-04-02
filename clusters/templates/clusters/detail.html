@@ -1,5 +1,6 @@
 {% extends "clusters/base_split.html" %}
 {% load static %}
+{% load clusters_extras %}
 
 {% block stylesheets %}
 <link rel="stylesheet" type="text/css" href="{% static 'clusters/css/map.css' %}">
@@ -24,16 +25,16 @@
 {% block modal %}
   <h4>Group factors</h4>
   <ul>
-    <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
-    <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
-    <li>Q46 : {{ questions_strs.2 }} <span class="badge">{{ cluster.factor3 }}</span></li>
-    <li>Q47 : {{ questions_strs.3 }} <span class="badge">{{ cluster.factor4 }}</span></li>
-    <li>Q35 : {{ questions_strs.4 }} <span class="badge">{{ cluster.factor5 }}</span></li>
+    <li>Q43 : {{ questions_strs.0 }} <span class="badge">{% choice_as_str 1 cluster.factor1 %}</span></li>
+    <li>Q45 : {{ questions_strs.1 }} <span class="badge">{% choice_as_str 2 cluster.factor2 %}</span></li>
+    <li>Q46 : {{ questions_strs.2 }} <span class="badge">{% choice_as_str 3 cluster.factor3 %}</span></li>
+    <li>Q47 : {{ questions_strs.3 }} <span class="badge">{% choice_as_str 4 cluster.factor4 %}</span></li>
+    <li>Q35 : {{ questions_strs.4 }} <span class="badge">{% choice_as_str 5 cluster.factor5 %}</span></li>
   </ul>
 
   <div class="panel panel-default">
     <div class="panel-body">
-      <p>Number of rows: {{ df_size }}</p>
+      <p>Number of rows: {{ group_size }}/{{ survey_size }}  ({% percent group_size survey_size %}%)</p>
       <p>Source: {{ about }}</p>
       <p>Number of clusters: {{ num_of_clusters }}</p>
       <ul>
@@ -61,7 +62,11 @@
 {% endblock %}
 
 {% block map %}
-  Showing:<p id="showing"></p>
+  <div style="padding:5px;">
+      <b>Question: </b><span id="showing-question"></span>
+      <br><b>Choice: </b><span id="showing-choice"></span>
+  </div>
+  <p id="showing-choice"></p>
   <div id="legend">
     <div id="census-min">min</div>
     <div class="color-key"><span id="data-caret">&#x25c6;</span></div>
@@ -71,9 +76,9 @@
     <label id="data-label" for="data-value"></label>
     <span id="data-value"></span>
   </div>
-  <div id="map"></div>
+  <div id="map" style="height:60%;"></div>
 
-  <div id="Ward" style="width: 100%; height: 20%;"></div>
+  <div id="Ward" style="width: 100%; height: 25%;"></div>
 {% endblock %}
 
 {% block scripts %}
@@ -122,7 +127,7 @@ function drawChartWard() {
   view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
   view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
 
-  var options = {"title": "Ward breakdown", bar: { groupWidth: "95%" }}
+  var options = {"title": "Ward breakdown", bar: { groupWidth: "100%" }, legend: "none"};
 
   chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
 
@@ -160,7 +165,7 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
 
   chart = new google.visualization.ColumnChart(document.getElementById('Ward'));
 
-  var options = {"title": "Ward breakdown", bar: { groupWidth: "95%" }}
+  var options = {"title": "Ward breakdown", bar: { groupWidth: "100%" }, legend: "none"};
   chart.draw(view, options);
 
 }
@@ -177,4 +182,13 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
 }(jQuery));
 
 </script>
+{% endblock %}
+
+{% block instructions %}
+<ul>
+  <li>
+    Click on a chart on the right hand side of the screen and it will display
+    the data on the map and Ward breakdown chart on the right hand side of the screen.
+  </li>
+</ul>
 {% endblock %}

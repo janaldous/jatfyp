@@ -12,3 +12,10 @@ def cluster_list():
 def percent(x, y):
     p = (float(x)/float(y))*100
     return "%.1f" % p
+
+@register.simple_tag(name='choice_as_str')
+def choice_as_str(factor, x):
+    """ let x = Cluster choice """
+    factor = int(factor)-1
+    d = dict(Cluster.get_factor_lists()[factor])
+    return d[x]

@@ -151,7 +151,7 @@ def get_data_for_bar_charts(df, question_obj, cluster, subcluster_id):
     question_base = question_obj.question_no
     choices = question_obj.choices
 
-    data = [['question_text', '#rows = 1', 'question_letter', 'subcluster_id']]
+    data = [[question_base, '# of residents', 'question_letter', 'subcluster_id']]
     #append data to list
     for key in choices.keys():
         subquestion = question_base+key

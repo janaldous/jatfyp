@@ -1,3 +1,4 @@
+// TODO cite Google maps tutorial
 var map;
 var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
 
@@ -41,17 +42,13 @@ function initMap() {
   map.data.setStyle(styleFeature);
   map.data.addListener('mouseover', mouseInToRegion);
   map.data.addListener('mouseout', mouseOutOfRegion);
-  // When the user clicks, set 'isColorful', changing the color of the letters.
-  /*map.data.addListener('click', function(event) {
-    document.getElementById('data-label').textContent =
-      event.feature.getProperty('NAME') + " " + event.feature.getId();
-      //console.log(event.feature.getProperty('OBJECTID'));
 
-  });*/
 }
 
 function loadCensusData(variable, question, value) {
   // load the requested variable from the census API (using local copies)
+  censusMin = Number.MAX_VALUE;
+  censusMax = -Number.MAX_VALUE;
   var xhr = new XMLHttpRequest();
   xhr.open('GET', variable);
   xhr.onload = function() {
@@ -90,9 +87,11 @@ function loadCensusData(variable, question, value) {
 
   //change text of showing element
   if (question || value) {
-    document.getElementById("showing").innerHTML = question + "/" + value;
+    document.getElementById("showing-question").innerHTML = truncate(question);
+    document.getElementById("showing-choice").innerHTML = truncate(value);
   } else {
-    document.getElementById("showing").innerHTML = "Showing all of group";
+    document.getElementById("showing-question").innerHTML = "Showing all of group";
+    document.getElementById("showing-choice").innerHTML = "";
   }
 
 }
@@ -164,3 +163,12 @@ function mouseOutOfRegion(e) {
   // reset the hover state, returning the border to normal
   e.feature.setProperty('state', 'normal');
 }
+
+/** adapted from http://stackoverflow.com/questions/4700226/i-want-to-truncate-a-text-or-line-with-ellipsis-using-javascript **/
+function truncate(string){
+  var len = 50;
+   if (string.length > len)
+      return string.substring(0,len)+'...';
+   else
+      return string;
+};

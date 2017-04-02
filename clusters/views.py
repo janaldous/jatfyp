@@ -231,7 +231,8 @@ def detail(request, cluster_id):
     #load csv into pandas.DataFrame
     dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
-    size_str = "%d / %d" % (len(df.index), dic['orig_size'])
+    group_size = len(df.index)
+    survey_size = dic['orig_size']
     clusters_dict = clustering.get_subclusters_length(cluster, dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
@@ -251,7 +252,8 @@ def detail(request, cluster_id):
         'cluster': cluster,
         'subcluster_id': 'a',
         'charts': charts,
-        'df_size': size_str,#no of rows in df
+        'group_size': group_size,#no of rows in df
+        'survey_size': survey_size,
         'questions_strs': questions_strs,
         'about': about,
         'subcluster_values': list(clusters_dict.values()),
@@ -435,6 +437,7 @@ def get_charts(df, questions_txt, cluster, subcluster_id):
     question = dic['question']
     options={
         'title': question,
+        'legend':{'position': 'bottom'},
     }
     charts.append(ColumnChart(SimpleDataSource(data=data), options=options))
 

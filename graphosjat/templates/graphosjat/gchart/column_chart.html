@@ -10,14 +10,16 @@
     var selectedItem = chart.getSelection()[0];
     if (selectedItem) {
       var value = selectedItem.column;
+      var choice_str = data.getColumnLabel(selectedItem.column);
 
       var question = options['title'].match(/\w+/i)[0] + "_R" + (selectedItem.row+1);
+      var question_str = options['title'];
 
       var id = data.getValue(selectedItem.row, hiddencolumn).split('/');//'cluster_id/subcluster_id'
       var cluster_id = id[0];
       var subcluster_id = id[1];
 
-      loadCensusData("/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+ question + "/" + value, question, value);
+      loadCensusData("/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+ question + "/" + value, question_str, choice_str);
       redrawWardChart(cluster_id, subcluster_id, question, value);
 
     }

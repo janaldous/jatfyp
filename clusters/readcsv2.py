@@ -93,7 +93,7 @@ def get_data_for_map4(df, question_base, choice):
     """
     output = []
     cluster_rows = df
-    output.append(["value", "Ward"])
+    output.append(["# of residents", "Ward"])
     #for each ward get number of people who chose choice
     # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
     # int(choice) == 1.0
@@ -161,7 +161,7 @@ def get_data_for_map(df, question_obj):
     output = []
     v_counts = df[question_base].value_counts()
 
-    output.append(["value", "Ward"])
+    output.append(["# of Residents", "Ward"])
     for i in range(1,utils.NUM_OF_WARDS):
         try:
             value = v_counts[i]
@@ -182,7 +182,7 @@ def get_data_for_mapv2(df, question_obj):
     output = []
     v_counts = df[question_base].value_counts()
 
-    output.append(["value", "Ward"])
+    output.append(["# of Residents", "Ward"])
 
     for i in range(1,utils.NUM_OF_WARDS):
         try:

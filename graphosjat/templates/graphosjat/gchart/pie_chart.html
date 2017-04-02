@@ -11,7 +11,10 @@
     var selectedItem = chart.getSelection()[0];
     if (selectedItem) {
       var choice = data.getValue(selectedItem.row, 2);
+      var choice_str = data.getValue(selectedItem.row, 0);
+      
       var question = options['title'].match(/\w+/i)[0];
+      var question_str = options['title'];
 
       var id = data.getValue(selectedItem.row, hiddencolumn).split('/');//'cluster_id/subcluster_id'
       var cluster_id = id[0];
@@ -19,7 +22,7 @@
 
       var url = "/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+ question +"/"+choice;
 
-      loadCensusData(url, question, choice);
+      loadCensusData(url, question_str, choice_str);
       redrawWardChart(cluster_id, subcluster_id, question, choice);
 
     }
