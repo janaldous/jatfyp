@@ -19,7 +19,7 @@
   <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a>
 {% endfor %}
 <a class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">About group</a>
-
+<a class="btn btn-primary" href="{% url 'clusters:edit' cluster.id %}">Edit group</a>
 
 {% endblock %}
 
@@ -46,6 +46,9 @@
       </ul>
     </div>
   </div>
+  {% if cluster.id != 3 %}
+  <a class="btn btn-danger" href="{% url 'clusters:delete' cluster.id %}">Delete group</a>
+  {% endif %}
 
 {% endblock %}
 

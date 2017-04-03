@@ -1,9 +1,9 @@
 {% extends "clusters/base.html" %}
 
 {% block content %}
-<h1>Create group</h1>
+<h1>{{title}}</h1>
 <br>
-<form action="{% url 'clusters:new' %}" method="post" class="form-horizontal">
+<form action="{{ url }}" method="post" class="form-horizontal">
   {% csrf_token %}
   {{ form.as_p }}
   <input type="submit" value="Submit" class="btn btn-default" />

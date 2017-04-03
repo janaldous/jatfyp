@@ -1,4 +1,4 @@
-title: Residential Survey 2016 for Lambeth Council, date: August 2016, conducted by: BMG Research, link: https://www.lambeth.gov.uk/sites/default/files/Lambeth%20Council%20Residents's%20Survey%202016%20PDF_0.pdf
+title: Residential Survey 2016 for Lambeth Council, date: August 2016, conducted by: BMG Research
 $
 WARD|Ward|Ward
 SINGLE

@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
+from django.urls import reverse
 
 from .forms import ClusterForm
 from .models import Cluster
@@ -329,16 +330,42 @@ def create_cluster(request):
         # check whether it's valid:
         if form.is_valid():
             form.save()
-            # redirect to a new URL:
-            print 'sucess'
             return HttpResponseRedirect('/')
 
     # if a GET (or any other method) we'll create a blank form
     else:
-        print "fail"
         form = ClusterForm()
 
-    return render(request, 'clusters/form.html', {'form': form})
+    context = {
+        'title': 'Create group',
+        'form': form,
+        'url': reverse('clusters:new')
+        }
+
+    return render(request, 'clusters/form.html', context)
+
+def edit(request, cluster_id=None):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+
+    form = ClusterForm(request.POST or None, instance=cluster)
+    if request.POST and form.is_valid():
+        form.save()
+
+        return redirect('/')
+
+    context = {
+        'title': 'Edit group',
+        'form': form,
+        'url': reverse('clusters:edit', kwargs={'cluster_id':cluster_id})
+        }
+
+    return render(request, 'clusters/form.html', context)
+
+def delete(request, cluster_id=None):
+    cluster = get_object_or_404(Cluster, pk=cluster_id)
+    if (cluster.id != 3):
+        cluster.delete()
+    return redirect('/')
 
 def survey_questions(request):
     #load csv
