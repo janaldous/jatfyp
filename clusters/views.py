@@ -239,7 +239,7 @@ def detail(request, cluster_id):
     survey_size = dic['orig_size']
 
     if group_size == 0:
-        return render(request, 'clusters/emptygroup.html')
+        return render(request, 'clusters/emptygroup.html', {'cluster': cluster})
 
     clusters_dict = clustering.get_subclusters_length(cluster, dic['df'])
     #load questions textfile into list
