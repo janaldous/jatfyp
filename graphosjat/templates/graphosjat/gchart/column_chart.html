@@ -13,7 +13,7 @@
       var choice_str = data.getColumnLabel(selectedItem.column);
 
       var question = options['title'].match(/\w+/i)[0] + "_R" + (selectedItem.row+1);
-      var question_str = options['title'];
+      var question_str = question + " " + data.getValue(selectedItem.row, 0);
 
       var id = data.getValue(selectedItem.row, hiddencolumn).split('/');//'cluster_id/subcluster_id'
       var cluster_id = id[0];

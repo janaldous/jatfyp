@@ -24,10 +24,12 @@
 
 
       var question = options['title'].match(/\w+/i)[0] + question_letter;
+      var question_str = question + " - " + data.getValue(selectedItem.row, 0);
+
 
       console.log("/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+ question + "/1");
 
-      loadCensusData("/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+question + "/1", question, value);
+      loadCensusData("/clusters/json2/"+cluster_id+"/"+subcluster_id+"/"+question + "/1", question_str, value);
       redrawWardChart(cluster_id, subcluster_id, question, 1);
 
 
