@@ -11,8 +11,12 @@ from sklearn.decomposition import PCA
 
 from .models import Subcluster
 
+from kmodes import kmodes
+
 # from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-1
 #from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-2
+
+columns = ['WARD', 'Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34']
 
 def get_elbow_chart_data(data):
     """clus_train must go through get_data() first
@@ -50,7 +54,7 @@ def get_elbow_chart_data(data):
     return output
 
 def _get_clus_train(data):
-
+    global columns
     columns = ['WARD', 'Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34']
     for i in range(1,9):
         columns.append('Q13_R'+str(i))
@@ -100,17 +104,38 @@ def get_clustering_chart_data(data):
 
     return output
 
-def get_subcluster_list(cluster, data):
+def get_table_data(cluster, data):
+    query_results = Subcluster.objects.filter(group=cluster)
+    serials = []
+    subclusters = []
+    for row in query_results:
+        serials.append(float(row.serial))
+        subclusters.append(row.subcluster)
+    df = pd.DataFrame(
+        {'SERIAL': serials,
+         'cluster': subclusters,
+        })
+
+    data = data[data['SERIAL'].isin(df.SERIAL.tolist())]
+    merged_db = pd.merge(df, data, on='SERIAL')
+
+    merged_db = merged_db[columns+['cluster']]
+
+    return merged_db.groupby('cluster').mean()
+
+def get_subcluster_list(cluster, data, norefresh=True):
     """
         @cluster Cluster model
         @data pandas.DataFrame object
+
+        from https://github.com/nicodv/kmodes/blob/master/examples/soybean.py
     """
 
     num_of_clusters = cluster.num_of_clusters
 
     clus_train, serials  = _get_clus_train(data)
 
-    if Subcluster.objects.filter(group=cluster).exists():
+    if Subcluster.objects.filter(group=cluster).exists() and norefresh:
         #make dataframe from db
         query_results = Subcluster.objects.filter(group=cluster)
         serials = []
@@ -125,45 +150,28 @@ def get_subcluster_list(cluster, data):
 
         data = data[data['SERIAL'].isin(df.SERIAL.tolist())]
         merged_db = pd.merge(df, data, on='SERIAL')
+
         return merged_db
 
-    model5 = KMeans(n_clusters=num_of_clusters)
-    model5.fit(clus_train)
-    clussassign=model5.predict(clus_train)
+    Subcluster.objects.filter(group=cluster).delete()
 
+    x = clus_train.as_matrix()
 
-    """
-    BEGIN multiple steps to merge assignment with clustering variables to examine cluster variable means by cluster
-    """
-    clus_train.reset_index(level=0, inplace=True)
-    cluslist=list(clus_train['index'])
-    labels=list(model5.labels_)
-    newlist=dict(zip(cluslist, labels))
-    #newlist
+    kmodes_huang = kmodes.KModes(n_clusters=num_of_clusters, init='Huang', verbose=1)
+    kmodes_huang.fit(x)
 
-    newclus=DataFrame.from_dict(newlist, orient='index')
-    #newclus
+    labels = kmodes_huang.labels_
 
-    newclus.columns=['cluster']
+    clus_train['cluster'] = labels
 
-    newclus.reset_index(level=0, inplace=True)
+    clus_train['SERIAL'] = serials
 
-    merged_train=pd.merge(clus_train, newclus, on='index')
-    #merged_train.head(n=100)
-
-    #merged_train.cluster.value_counts()
-
-    merged_serial = pd.merge(merged_train, serials.to_frame().reset_index(), on='index')
-
-    for i in range(merged_serial.shape[0]):
-        row = merged_serial.iloc[i]
+    for i in range(clus_train.shape[0]):
+        row = clus_train.iloc[i]
         s = Subcluster(serial=row.SERIAL, group=cluster, subcluster=row.cluster)
         s.save()
 
-    #clustergrp=merged_train.groupby('cluster').mean()
-    #print "clustering variable means by cluster"
-    #print clustergrp
-    return merged_train
+    return clus_train
 
 
 def get_subclusters_length(cluster, data):
@@ -185,7 +193,7 @@ def get_subclusters_length(cluster, data):
     return d
 
 
-def get_subclusters(cluster, data):
+def get_subclusters(cluster, data, refresh=False):
     """
         @param cluster: models.Cluster object
         @param data: pandas.DataFrame filtered by cluster already
@@ -198,11 +206,10 @@ def get_subclusters(cluster, data):
 
     num_of_clusters = cluster.num_of_clusters
     d = {}
-    data = get_subcluster_list(cluster, data)
+    data = get_subcluster_list(cluster, data, norefresh=(not refresh))
     for i in range(num_of_clusters):
         d[i] = filter_by_subcluster(data, i)
     return d
-
 
 def filter_by_subcluster(data, subcluster_id):
     """assumes @param data: has gone through get_cluster_list() (has a subcluster column already)

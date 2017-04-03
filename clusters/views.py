@@ -4,7 +4,7 @@ from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
 from django.urls import reverse
 
 from .forms import ClusterForm
-from .models import Cluster
+from .models import Cluster, Subcluster
 
 from graphosjat.sources.simple import SimpleDataSource
 from graphosjat.renderers.gchart import BarChart, ColumnChart, StackedBarChart, \
@@ -183,6 +183,12 @@ def stats(request, cluster_id):
 
     group_size = len(cluster_df.index)
 
+    m_orig =  clustering.get_table_data(cluster, cluster_df)
+
+    m = m_orig.as_matrix().tolist()
+
+    table_header = list(m_orig)
+
     context = {
         'cluster': cluster,
         'subcluster_values': subcluster_values,
@@ -192,6 +198,8 @@ def stats(request, cluster_id):
         'elbow_chart': elbow_chart,
         'scatter_chart': scatter_chart,
         'total_pop': total_pop,
+        'table_header': table_header,
+        'rows': m,
     }
 
     return render(request, 'clusters/stats.html', context)
@@ -311,14 +319,23 @@ def increase_num_of_clusters(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     cluster.num_of_clusters += 1
     cluster.save()
-    #clustering.increment_num_of_clusters()
+
+    dic = rc.filter_by_cluster(dataframeAll, cluster)
+    clustering.get_subclusters(cluster, dic['df'], refresh=True)
+
     print "increased_num_of_clusters"
     return redirect('/clusters/'+cluster_id+'/stats')
 
 def decrease_num_of_clusters(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     cluster.num_of_clusters -= 1
+    if cluster.num_of_clusters < 1:
+        cluster.num_of_clusters = 1
     cluster.save()
+
+    dic = rc.filter_by_cluster(dataframeAll, cluster)
+    clustering.get_subclusters(cluster, dic['df'], refresh=True)
+
     print "decreased_num_of_clusters"
     return redirect('/clusters/'+cluster_id+'/stats')
 

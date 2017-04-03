@@ -38,14 +38,25 @@
     google.load("visualization", "1", {packages:["corechart"]});
 </script>
 
-<div class="container">
-  <!-- putting 2 divs next to each other from: http://jsfiddle.net/dimitrios_87/b9hXU/ -->
-  <div style="display: inline-block;width:402px;">
-  {{ elbow_chart.as_html }}
-  </div>
-  <div style="display: inline-block;width:402px;vertical-align:top;">
-  {{ scatter_chart.as_html }}
-  </div>
+<div class="table-responsive">
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        {% for cell in table_header %}
+        <td>{{cell}}</td>
+        {% endfor %}
+      </tr>
+    </thead>
+      {% for row in rows %}
+      <tr>
+        {% for cell in row %}
+        <td>{{cell}}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}
 
