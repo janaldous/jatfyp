@@ -10,13 +10,13 @@
 
 <h1>{{ cluster.name }}</h1>
 <a class="btn btn-info" id="all-button" href="#" role="button">Refresh map</a>
-{% if compare %}
+{% if compare or issubcluster %}
 <a class="btn btn-primary" href="{% url 'clusters:detail' cluster.id %}" role="button">See this group</a>
 {% endif %}
 <a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare clusters</a>
 <a class="btn btn-primary" href="{% url 'clusters:stats' cluster.id %}" role="button">Stats</a>
 {% for population in subcluster_values %}
-  <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a>
+  <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Cluster {{ forloop.counter0 }}</a>
 {% endfor %}
 <a class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">About group</a>
 <a class="btn btn-primary" href="{% url 'clusters:edit' cluster.id %}">Edit group</a>
@@ -41,7 +41,7 @@
       <p>Number of clusters: {{ num_of_clusters }}</p>
       <ul>
       {% for population in subcluster_values %}
-        <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
+        <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Cluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
       {% endfor %}
       </ul>
     </div>
@@ -107,7 +107,7 @@ function drawChartWard() {
   /**
   * this function draws the Ward bar chart for the first time
   **/
-  var url =  "../jsonv2/"+cluster_id;
+  var url =  "../jsonv2/"+cluster_id+"/"+subcluster_id;
   if (subcluster_id != 'a') {
     url = "../"+url;
   }
@@ -181,7 +181,7 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
 (function ($) {
   $(function () {
     $("#all-button").click(function () {
-        loadCensusData("/clusters/json/"+cluster_id);
+        loadCensusData("/clusters/json/"+cluster_id+"/"+subcluster_id);
         drawChartWard();
     });
   });
@@ -196,6 +196,9 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
   <li>
     Click on a chart on the right hand side of the screen and it will display
     the data on the map and Ward breakdown chart on the right hand side of the screen.
+  </li>
+  <li>
+    Please note that the range on the map changes when a new variable is clicked.
   </li>
 
 {% if compare %}

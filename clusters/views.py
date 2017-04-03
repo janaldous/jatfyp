@@ -8,7 +8,7 @@ from .models import Cluster, Subcluster
 
 from graphosjat.sources.simple import SimpleDataSource
 from graphosjat.renderers.gchart import BarChart, ColumnChart, StackedBarChart, \
-PieChart, LineChart, ScatterChart
+PieChart, LineChart, ScatterChart, NormalStackedBarChart
 
 from random import randint
 
@@ -79,15 +79,18 @@ def subcluster_detail(request, cluster_id, subcluster_id):
         'about': about,
         'subcluster_values': list(clusters_dict.values()),
         'num_of_clusters': cluster.num_of_clusters,
+        'issubcluster': True,
     }
     return render(request, 'clusters/detail.html', context)
 
-def json(request, cluster_id):
+def json(request, cluster_id, subcluster_id):
     """ used for map """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
     dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
+    if subcluster_id != 'a':
+        df = clustering.get_subclusters(cluster, df)[int(subcluster_id)]
 
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
@@ -100,12 +103,14 @@ def json(request, cluster_id):
 
     return JsonResponse(output, safe=False)
 
-def jsonv2(request, cluster_id):
+def jsonv2(request, cluster_id, subcluster_id):
     """ used for Ward chart """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
     dic = rc.filter_by_cluster(utils.get_whole_survey(), cluster)
     df = dic['df']
+    if subcluster_id != 'a':
+        df = clustering.get_subclusters(cluster, df)[int(subcluster_id)]
 
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
@@ -410,22 +415,38 @@ def see_question_answers(request, question):
     questions_txt = dic_source['questions']
     file2_.close()
 
-    chart = get_question_chart(df, questions_txt[question])
+
+    charts = []
+    try:
+        chart = get_question_chart(df, questions_txt[question])
+        charts.append(chart)
+    except KeyError:
+        question_obj = questions_txt[question]
+        choices = question_obj.choices
+        letters = choices.keys()
+        for letter in letters:
+            try:
+                chart = get_question_chart(df, question_obj, letter=letter, choice=choices[letter])
+                charts.append(chart)
+            except KeyError:
+                continue
 
     context = {
-        'chart': chart,
+        'charts': charts,
         'question': question,
         'about': about,
     }
     return render(request, 'clusters/question.html', context)
 
-def get_question_chart(df, question_obj):
-    dic = rc.get_data_for_question(df, question_obj)
+def get_question_chart(df, question_obj, letter=None, choice=None):
+    dic = rc.get_data_for_question(df, question_obj, letter=letter)
     data = dic['data']
     question = dic['question']
-    chart = BarChart(SimpleDataSource(data=data), options={'title': question, 'isStacked': 'percent'})
+    title = question
+    if letter != None:
+        title = question + " - " + choice
+    chart = NormalStackedBarChart(SimpleDataSource(data=data), options={'title': title, 'isStacked': 'percent'})
     return chart
-
 
 def get_questions_as_str(questions_txt):
     '''

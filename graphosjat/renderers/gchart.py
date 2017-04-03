@@ -39,6 +39,10 @@ class StackedBarChart(JatGChart):
             options['vAxis'] = {'title': vaxis}
         return options
 
+class NormalStackedBarChart(StackedBarChart):
+    def get_js_template(self):
+        return "graphosjat/gchart/stacked_bar_chart_normal.html"
+
 class BarChart(JatGChart):
     def get_js_template(self):
         return "graphosjat/gchart/bar_chart.html"

@@ -12,15 +12,17 @@ def start():
     #print "adfadf"
     #print get_data2(df, 'Q5')
 
-def get_data_for_question(df, question_obj):
+def get_data_for_question(df, question_obj, letter=None):
     question_base = question_obj.question_no
+    if letter != None:
+        question_base = question_base + letter
     v_counts = df[question_base].value_counts()
     choices = question_obj.choices
     indexes = ['Cluster']
     index_ = []
 
     iterate = question_obj.choices
-    if question_obj.choices == {}:
+    if question_obj.choices == {} or letter != None:
         iterate = v_counts.index.tolist()
     for i in iterate:
         index_.append(i)
@@ -44,9 +46,13 @@ def get_data_for_question(df, question_obj):
                 values.append(v_counts[int(i)])
             except KeyError:
                 values.append(0)
+            except IndexError:
+                values.append(0)
         data.append(values)
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
+
+    print data
 
     return {'data':data, 'question':question_str}
 

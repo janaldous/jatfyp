@@ -51,13 +51,21 @@ def get_data_for_group_compare(question, choice):
         Value = value of group filtered by question and choice
         output = [[Group, Value], ...,  ...]
     """
-
-    df = utils.get_whole_survey()
-
     output = []
 
     #column names
     output.append(['Group', 'Orig Value', 'Percent', '% Diff from Avg'])
+
+    if question == '0' and choice == '0':
+
+        cluster_models = Cluster.objects.all()
+        for cluster in cluster_models:
+            output.append([cluster.name, 0, 0, 0])
+
+        return output
+
+    df = utils.get_whole_survey()
+
 
     """
     for each cluster

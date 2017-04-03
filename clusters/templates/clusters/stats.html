@@ -8,7 +8,7 @@
 <a class="btn btn-primary" href="{% url 'clusters:compare' cluster.id %}" role="button">Compare clusters</a>
 <a class="btn btn-primary" href="{% url 'clusters:stats' cluster.id %}" role="button">Stats</a>
 {% for population in subcluster_values %}
-  <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a>
+  <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Cluster {{ forloop.counter0 }}</a>
 {% endfor %}
 <a class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">About group</a>
 <span id="about-icon" class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="modal" data-target="#instructions"></span>
@@ -25,7 +25,7 @@
     Total group population: {{ total_group_pop }} / {{ total_pop }}  ({% percent total_group_pop total_pop %}%)
     <ul>
     {% for population in subcluster_values %}
-      <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}/{{ total_group_pop }}] ({% percent population total_group_pop %}%)</li>
+      <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Cluster {{ forloop.counter0 }}</a> [{{ population }}/{{ total_group_pop }}] ({% percent population total_group_pop %}%)</li>
     {% endfor %}
     </ul>
   </div>
@@ -86,7 +86,7 @@
             <p>Number of clusters: {{ num_of_clusters }}</p>
             <ul>
             {% for population in subcluster_values %}
-              <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
+              <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Cluster {{ forloop.counter0 }}</a> [{{ population }}]</li>
             {% endfor %}
             </ul>
           </div>

@@ -9,6 +9,7 @@ about: {{ about }}
 <script type="text/javascript">
     google.load("visualization", "1", {packages:["corechart"]});
 </script>
+{% for chart in charts %}
 {{ chart.as_html }}
-
+{% endfor %}
 {% endblock %}

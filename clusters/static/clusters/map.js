@@ -36,7 +36,7 @@ function initMap() {
     map.data.revertStyle();
     map.data.overrideStyle(event.feature, {strokeWeight: 8});
   });
-  loadCensusData("/clusters/json/"+cluster_id);
+  loadCensusData("/clusters/json/"+cluster_id+"/"+subcluster_id);
 
   // Set the stroke width, and fill color for each polygon
   map.data.setStyle(styleFeature);
