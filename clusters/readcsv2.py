@@ -323,12 +323,14 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
         except KeyError:
             valuesAll.append(0)
 
-
+    q13 = ['Strongly Agree', 'Agree', 'Neither agree nor disagree', 'Disagree', 'Strongly disagree', 'Don\'t know']
 
     #change indexes from float to string description
     for idx,item in enumerate(indexes[1:]):
         c = item
         indexes[idx+1] = c
+        if question_base.startswith('Q13'):
+            indexes[idx+1] = q13[int(c)-1]
         indexes_int.append(int(item))
 
     data = [indexes, values, valuesAll]

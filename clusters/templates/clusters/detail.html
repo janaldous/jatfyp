@@ -197,5 +197,10 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
     Click on a chart on the right hand side of the screen and it will display
     the data on the map and Ward breakdown chart on the right hand side of the screen.
   </li>
+
+{% if compare %}
+  <li>Charts with legen 0 or 1: 0 - # of residents who did not chose this choice;
+    1 - # of resdients who chose this choice. </li>
+{% endif %}
 </ul>
 {% endblock %}
