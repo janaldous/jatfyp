@@ -10,6 +10,7 @@ import readcsv as rc
 WARD = {}
 NUM_OF_WARDS = 22
 SURVEY16 = None
+SURVEYTXT = None
 
 def get_wards():
     """ follows singleton design pattern, loads from file only if WARD is empty """
@@ -30,6 +31,18 @@ def get_whole_survey():
             SURVEY16 = SURVEY16.replace('#NULL!', np.nan)
         print "utils called ------"
     return SURVEY16
+
+def get_questions_txt():
+    global SURVEYTXT
+    if SURVEYTXT is None:
+        with open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt')) as f:
+            SURVEYTXT = rt.read(f)
+    return SURVEYTXT
+
+def get_questions_only():
+    if SURVEYTXT is None:
+        SURVEYTXT = get_questions_txt()
+    return SURVEYTXT['questions']
 
 def get_cluster_from_whole_survey(cluster):
     df = get_whole_survey()

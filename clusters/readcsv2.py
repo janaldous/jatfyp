@@ -275,6 +275,7 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
     question_base = question_obj.question_no+letter
     #choices = question_obj.choices
 
+
     v_counts = df[question_base].value_counts()
 
     indexes = [question_base]
@@ -285,10 +286,8 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
             indexes.append(str(int(float(i))))
 
 
-    #get this cluster
-    values = ['Cluster']
-    for i in v_counts.values.tolist():
-        values.append(i)
+    #get this group
+    values = ['This group'] + v_counts.values.tolist()
 
     #get subclusters
     valueslist = []
@@ -298,10 +297,13 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
         dfclus = subclusters_dict[i]
         try:
             v_counts = dfclus[question_base].value_counts()
+
             for j in indexes[1:]:
                 try:
-                    values2.append(v_counts[float(j)])
+                    values2.append(v_counts[int(j)])
                 except KeyError:
+                    values2.append(0)
+                except IndexError:
                     values2.append(0)
         except KeyError:
             for j in indexes[1:]:
@@ -314,8 +316,13 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
     #get all pop
     valuesAll = ['All']
     v_countsAll = dfAll[question_base].value_counts()
+
     for i in indexes[1:]:
-        valuesAll.append(v_countsAll[i])
+        try:
+            valuesAll.append(v_countsAll[int(i)])
+        except KeyError:
+            valuesAll.append(0)
+
 
 
     #change indexes from float to string description

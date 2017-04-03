@@ -459,22 +459,42 @@ def get_charts_compare(df, dfAll, questions_txt, cluster):
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
 
-    """
-    #Multi code questions
-    questions_to_show = ['Q26,A']
+
+    #Multi code questions, Stacked bar chart adapted
+    question_bases = ['Q5']
+    questions_txt = utils.get_questions_txt()['questions']
+    questions_to_show = ['Q13,_R1']
+
+    for q in question_bases:
+        keys = questions_txt[q].choices.keys()
+        for key in keys:
+            questions_to_show.append(q+","+key)
+
+    questions_to_show = questions_to_show + ['Q13,_R'+str(i) for i in range(1,9)]
 
     for question in questions_to_show:
         q = question.split(',')
-        dic =  rc2.get_data_for_bar_charts_adapted2(df, dfAll, questions_txt[q[0]], q[1], cluster)
+        letter = q[1]
+        try:
+            dic =  rc2.get_data_for_bar_charts_adapted2(df, dfAll, questions_txt[q[0]], letter, cluster)
+        except KeyError:
+            continue
         data = dic['data']
         question = dic['question']
+
+        index = question.index(')')
+        q_str = question[0:index] + letter + question[index:]
+        if q[0] != "Q13":
+            q_str += " - " + questions_txt[q[0]].choices[letter]
+        elif q[0] == "Q13":
+            q_str += " - " + questions_txt[q[0]].choices[letter[-1:]]
         options = {
-            'title': question,
+            'title': q_str,
             'isStacked': 'percent',
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
-        """
 
+    """
     #multicode questions
     questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
     for question in questions_to_show:
@@ -486,9 +506,11 @@ def get_charts_compare(df, dfAll, questions_txt, cluster):
         }
         charts.append(BarChart(SimpleDataSource(data=data), options=options))
 
+
     dic =  rc2.get_data_for_column_chart2(df, questions_txt['Q13'])
     data = dic['data']
     question = dic['question']
     charts.append(ColumnChart(SimpleDataSource(data=data), options={'title': question}))
+    """
 
     return charts
