@@ -236,6 +236,10 @@ def detail(request, cluster_id):
     df = dic['df']
     group_size = len(df.index)
     survey_size = dic['orig_size']
+
+    if group_size == 0:
+        return render(request, 'clusters/emptygroup.html')
+
     clusters_dict = clustering.get_subclusters_length(cluster, dic['df'])
     #load questions textfile into list
     file2_ = open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt'))
@@ -249,6 +253,7 @@ def detail(request, cluster_id):
 
     #get charts
     charts = get_charts(df, questions_txt, cluster, 'a')
+
 
 
     context = {

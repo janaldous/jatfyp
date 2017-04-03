@@ -53,7 +53,7 @@ class Cluster(models.Model):
         ('1', 'Owner occupier - Lambeth leaseholder'),
         ('2', 'Owner occupier - private'),
         ('3', 'Rented from Housing Association'),
-        ('4', 'Rengint from Lambeth Council'),
+        ('4', 'Renting from Lambeth Council'),
         ('5', 'Rent from private landlord'),
         ('6', 'Shared ownership'),
         ('7', 'A residential home'),
@@ -61,12 +61,12 @@ class Cluster(models.Model):
         ('98', 'Refused'),
         ('-', 'Any of the above'),
     )
-    name = models.CharField(max_length=200)
-    factor1 = models.CharField(max_length=1, choices=DISABILITY)
-    factor2 = models.CharField(max_length=1, choices=BENEFITS)
-    factor3 = models.CharField(max_length=1, choices=ACTIVITY)
-    factor4 = models.CharField(max_length=1, choices=LLW)
-    factor5 = models.CharField(max_length=1, choices=HOUSING)
+    name = models.CharField(max_length=200, unique=True)
+    factor1 = models.CharField(max_length=2, choices=DISABILITY)
+    factor2 = models.CharField(max_length=2, choices=BENEFITS)
+    factor3 = models.CharField(max_length=2, choices=ACTIVITY)
+    factor4 = models.CharField(max_length=2, choices=LLW)
+    factor5 = models.CharField(max_length=2, choices=HOUSING)
     num_of_clusters = models.PositiveIntegerField(default=1)
 
     def __str__(self):
