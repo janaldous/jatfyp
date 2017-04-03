@@ -50,7 +50,6 @@
           <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a>
         {% endfor %}
         {% endblock %}
-        <a class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">About group</a>
         <span id="about-icon" class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="modal" data-target="#instructions"></span>
         <div class="right" id="scrollable" style="padding:10px;">
           <div id="about-group">

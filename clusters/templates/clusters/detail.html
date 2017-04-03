@@ -18,6 +18,8 @@
 {% for population in subcluster_values %}
   <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a>
 {% endfor %}
+<a class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">About group</a>
+
 
 {% endblock %}
 
@@ -91,6 +93,7 @@
 <script>var compare = false;</script>
 {% endif %}
 
+<script src='{% static "clusters/changetext.js" %}'></script>
 <script src='{% static "clusters/map.js" %}'></script>
 <script async defer
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbcM5AOjEOn5tp18yfzV2jep_1gCdtmgo&callback=initMap"></script>

@@ -7,7 +7,6 @@
 
 {% block group_name %}
 <h1>Compare groups</h1>
-<a class="btn btn-primary" id="all-button" href="#" role="button">See all on map</a>
 {% endblock %}
 
 {% block about %}
@@ -53,13 +52,17 @@
 {% endblock %}
 
 {% block map %}
-  Showing:<p id="showing"></p>
+  <div style="padding:5px;">
+      <b>Question: </b><span id="showing-question">Group population</span>
+      <br><b>Choice: </b><span id="showing-choice"></span>
+      {% if compare %}<br><b>Cluster: </b><span id="showing-cluster"></span>{% endif %}
+  </div>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
   <script type="text/javascript">
         google.load("visualization", "1", {packages:["corechart"]});
     </script>
   <body>
-    <div id="compare-chart" style="padding:5px; height: 100%;"></div>
+    <div id="compare-chart" style="padding:5px; height: 90%;"></div>
     <script type="text/javascript">
     google.setOnLoadCallback(drawChartWard);
     function drawChartWard() {
@@ -84,7 +87,7 @@
       //view.setColumns([1, 0]); //before [value, Ward], after [Ward, value]
       //view.setRows(view.getSortedRows({column:1, desc:true}));//sorts rows in desc value
       view.setColumns([0, 3]);
-      var options = {"title": "Ward"}
+      var options = {"title": "Groups", legend: {position:"bottom"}};
 
       var chart = new google.visualization.BarChart(document.getElementById('compare-chart'));
 
@@ -96,6 +99,7 @@
 
 {% block scripts %}
 <script type="text/javascript">cluster_id = "{{ cluster.id }}"</script>
+<script src='{% static "clusters/changetext.js" %}'></script>
 <script src='{% static "clusters/groupcompare.js" %}'></script>
 <script type="text/javascript">
 function redrawWardChart(cluster_id, subcluster_id, question, choice) {
@@ -117,7 +121,7 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
 
   var view = new google.visualization.DataView(data);
   view.setColumns([0, 3]);
-  var options = {"title": "Ward"}
+  var options = {"title": "Groups", legend: {position:"bottom"}};
 
   var chart = new google.visualization.BarChart(document.getElementById('compare-chart'));
 
@@ -125,4 +129,13 @@ function redrawWardChart(cluster_id, subcluster_id, question, choice) {
 
 }
 </script>
+{% endblock %}
+
+{% block instructions %}
+Click on the charts on the right and compare the results for all groups on the
+Groups chart.
+<br><br>The percent difference is calculated as follows:
+<br><br>(proportion of the residents in selected
+group who chose the choice to the group population - proportion of residents
+in the whole population who chose the choice to the whole population)*100.
 {% endblock %}

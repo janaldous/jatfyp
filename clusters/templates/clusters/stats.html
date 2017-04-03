@@ -11,7 +11,8 @@
 {% for population in subcluster_values %}
   <a class="btn btn-primary" href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Subcluster {{ forloop.counter0 }}</a>
 {% endfor %}
-<span id="about-icon" class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="modal" data-target="#myModal"></span>
+<a class="btn btn-primary" data-toggle="modal" data-target="#aboutModal">About group</a>
+<span id="about-icon" class="glyphicon glyphicon glyphicon-info-sign" aria-hidden="true" data-toggle="modal" data-target="#instructions"></span>
 
 <br>
 <br>
@@ -51,7 +52,7 @@
 
 {% block scripts %}
 <!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -61,16 +62,16 @@
       <div class="modal-body">
         <h4>Group factors</h4>
         <ul>
-          <li>Q43 : {{ questions_strs.0 }} <span class="badge">{{ cluster.factor1 }}</span></li>
-          <li>Q45 : {{ questions_strs.1 }} <span class="badge">{{ cluster.factor2 }}</span></li>
-          <li>Q46 : {{ questions_strs.2 }} <span class="badge">{{ cluster.factor3 }}</span></li>
-          <li>Q47 : {{ questions_strs.3 }} <span class="badge">{{ cluster.factor4 }}</span></li>
-          <li>Q35 : {{ questions_strs.4 }} <span class="badge">{{ cluster.factor5 }}</span></li>
+          <li>Q43 : {{ questions_strs.0 }} <span class="badge">{% choice_as_str 1 cluster.factor1 %}</span></li>
+          <li>Q45 : {{ questions_strs.1 }} <span class="badge">{% choice_as_str 2 cluster.factor2 %}</span></li>
+          <li>Q46 : {{ questions_strs.2 }} <span class="badge">{% choice_as_str 3 cluster.factor3 %}</span></li>
+          <li>Q47 : {{ questions_strs.3 }} <span class="badge">{% choice_as_str 4 cluster.factor4 %}</span></li>
+          <li>Q35 : {{ questions_strs.4 }} <span class="badge">{% choice_as_str 5 cluster.factor5 %}</span></li>
         </ul>
 
         <div class="panel panel-default">
           <div class="panel-body">
-            <p>Number of rows: {{ df_size }}</p>
+            <p>Number of rows: {{ group_size }}/{{ total_group_pop }}  ({% percent group_size total_group_pop %}%)</p>
             <p>Source: {{ about }}</p>
             <p>Number of clusters: {{ num_of_clusters }}</p>
             <ul>

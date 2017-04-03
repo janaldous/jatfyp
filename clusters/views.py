@@ -72,7 +72,8 @@ def subcluster_detail(request, cluster_id, subcluster_id):
         'cluster': cluster,
         'subcluster_id': subcluster_id,
         'charts': charts,
-        'df_size': size_str,#no of rows in df
+        'group_size': len(df.index),#no of rows in df
+        'survey_size': dic['orig_size'],
         'questions_strs': questions_strs,
         'about': about,
         'subcluster_values': list(clusters_dict.values()),
@@ -179,11 +180,14 @@ def stats(request, cluster_id):
     total_pop = utils.get_survey_num_of_rows()
     percentage = (float(cluster_df.shape[0])/float(total_pop))*100
 
+    group_size = len(cluster_df.index)
+
     context = {
         'cluster': cluster,
         'subcluster_values': subcluster_values,
         'num_of_clusters': cluster.num_of_clusters,
         'total_group_pop': cluster_df.shape[0],
+        'group_size': group_size,
         'elbow_chart': elbow_chart,
         'scatter_chart': scatter_chart,
         'total_pop': total_pop,

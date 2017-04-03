@@ -57,7 +57,7 @@ def get_data_for_group_compare(question, choice):
     output = []
 
     #column names
-    output.append(['Group', 'Orig Value', 'Percent', 'Diff from Avg'])
+    output.append(['Group', 'Orig Value', 'Percent', '% Diff from Avg'])
 
     """
     for each cluster
@@ -82,7 +82,7 @@ def get_data_for_group_compare(question, choice):
             """ when value_counts only gives #NULL! """
             value = 0
             percent = 0
-        diff_from_avg = percent-average
+        diff_from_avg = (percent-average)*100
         output.append([cluster.name, value, percent, diff_from_avg])
 
     return output
