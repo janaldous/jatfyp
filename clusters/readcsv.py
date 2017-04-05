@@ -18,7 +18,7 @@ def get_data_for_question(df, question_obj, letter=None):
         question_base = question_base + letter
     v_counts = df[question_base].value_counts()
     choices = question_obj.choices
-    indexes = ['Cluster']
+    indexes = ['Group']
     index_ = []
 
     iterate = question_obj.choices
