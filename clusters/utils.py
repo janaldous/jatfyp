@@ -40,6 +40,7 @@ def get_questions_txt():
     return SURVEYTXT
 
 def get_questions_only():
+    global SURVEYTXT
     if SURVEYTXT is None:
         SURVEYTXT = get_questions_txt()
     return SURVEYTXT['questions']
@@ -51,3 +52,16 @@ def get_cluster_from_whole_survey(cluster):
 
 def get_survey_num_of_rows():
     return SURVEY16.shape[0]
+
+def get_dict_of_questions():
+    d = get_questions_only()
+    output = {}
+    for key, value in d.items():
+         question, choices, choices_str = d[key].get_question_and_choices()
+         output[key] = {
+            'question_no': key,
+            'question_str': question,
+            'choices': choices,
+            'choices_str': choices_str,
+        }
+    return output

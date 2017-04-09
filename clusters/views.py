@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.conf import settings
 from django.http import HttpResponseRedirect,HttpResponse,JsonResponse
 from django.urls import reverse
+import json
 
 from .forms import ClusterForm
 from .models import Cluster, Subcluster
@@ -83,7 +84,7 @@ def subcluster_detail(request, cluster_id, subcluster_id):
     }
     return render(request, 'clusters/detail.html', context)
 
-def json(request, cluster_id, subcluster_id):
+def json1(request, cluster_id, subcluster_id):
     """ used for map """
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     #load csv into pandas.DataFrame
@@ -192,7 +193,16 @@ def stats(request, cluster_id):
 
     m = m_orig.as_matrix().tolist()
 
-    table_header = list(m_orig)
+    rows = []
+    for i, row in enumerate(m):
+        r = ["Cluster " + str(i)] + row
+        rows.append(r)
+
+    table_header = ["Cluster"] + list(m_orig)
+
+    questions_dict = utils.get_dict_of_questions();
+
+    js_data = json.dumps(questions_dict)
 
     context = {
         'cluster': cluster,
@@ -204,7 +214,8 @@ def stats(request, cluster_id):
         'scatter_chart': scatter_chart,
         'total_pop': total_pop,
         'table_header': table_header,
-        'rows': m,
+        'rows': rows,
+        'js_data': js_data,
     }
 
     return render(request, 'clusters/stats.html', context)

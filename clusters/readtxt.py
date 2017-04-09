@@ -1,14 +1,24 @@
 import string
 import sys
+import collections
 
 class Question(object):
     def __init__(self, question_no, question_short, question_long, choices):
-        #question_no = 'Q'+number
-        self.question_no = question_no
+        self.question_no = question_no#question_no = 'Q'+number
         self.question_short = question_short
-        #original form of question
-        self.question = question_long
+        self.question = question_long#original form of question
         self.choices = choices
+
+    def get_question_and_choices(self):
+        output = {}
+        return self.question, self.choices, self._get_formated_choices()
+
+    def _get_formated_choices(self):
+        output = ""
+        for key in sorted(self.choices):
+            output += "%s - %s<br>" % (key, self.choices[key])
+        return output
+
 
 def read(file_):
     source = {}

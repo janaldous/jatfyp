@@ -15,23 +15,33 @@
 
 <br>
 <br>
-<div class="panel panel-default">
-  <div class="panel-body">
-    <a class="btn" href="{% url 'clusters:increase' cluster.id %}" data-toggle="tooltip" data-placement="top" title="Click to increment number of clusters"><span class="glyphicon glyphicon-arrow-up"></span></a>
-    {{ num_of_clusters }} clusters
-    <a class="btn" href="{% url 'clusters:decrease' cluster.id %}" data-toggle="tooltip" data-placement="top" title="Click to decrement number of clusters"><span class="glyphicon glyphicon-arrow-down"></span></a>
-    <br>
-    <br>
-    Total group population: {{ total_group_pop }} / {{ total_pop }}  ({% percent total_group_pop total_pop %}%)
-    <ul>
-    {% for population in subcluster_values %}
-      <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Cluster {{ forloop.counter0 }}</a> [{{ population }}/{{ total_group_pop }}] ({% percent population total_group_pop %}%)</li>
-    {% endfor %}
-    </ul>
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-body">
+
+      <a class="btn" href="{% url 'clusters:increase' cluster.id %}" data-toggle="tooltip" data-placement="top" title="Click to increment number of clusters"><span class="glyphicon glyphicon-arrow-up"></span></a>
+      {{ num_of_clusters }} clusters
+      <a class="btn" href="{% url 'clusters:decrease' cluster.id %}" data-toggle="tooltip" data-placement="top" title="Click to decrement number of clusters"><span class="glyphicon glyphicon-arrow-down"></span></a>
+      <br>
+      <br>
+      Total group population: {{ total_group_pop }} / {{ total_pop }}  ({% percent total_group_pop total_pop %}%)
+      <ul>
+      {% for population in subcluster_values %}
+        <li><a href="{% url 'clusters:subcluster_detail' cluster.id forloop.counter0 %}">Cluster {{ forloop.counter0 }}</a> [{{ population }}/{{ total_group_pop }}] ({% percent population total_group_pop %}%)</li>
+      {% endfor %}
+      </ul>
+    </div>
   </div>
 </div>
-
-
+<div class="row">
+  <div class="panel panel-default">
+    <div class="panel-body">
+      <p id="question_no"></p>
+      <p id="question_str"></p>
+      <p id="choices"></p>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript">
@@ -44,7 +54,7 @@
     <thead>
       <tr>
         {% for cell in table_header %}
-        <td>{{cell}}</td>
+        <td class="show-text">{{cell}}</td>
         {% endfor %}
       </tr>
     </thead>
@@ -58,6 +68,7 @@
     </tbody>
   </table>
 </div>
+
 {% endblock %}
 
 {% block scripts %}
@@ -100,8 +111,44 @@
 </div>
 
 <script>
+var d = {{ js_data|safe }};
+var patt = new RegExp("Q[0-9]{1,2}");
+var patt1 = new RegExp("Q[0-9]{1,2}[A-Z]{1,2}");
+var patt2 = new RegExp("[A-Z]{1,2}$");
+
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
+    $('.show-text').mouseover(function() {
+      dict = get_text(this.innerHTML);
+      $('#question_no').text("Question code: " + dict['question_no']);
+      $('#question_str').html("Survey question:<br>" + dict['question_str']);
+      $('#choices').html("Choices:<br>" + dict['choices_str']);
+    });
 });
+
+function get_text(question_code) {
+  if (question_code.includes("_")) {
+    qc = "Q13";
+    number = question_code.slice(-1);
+    output = {
+      'question_no': question_code,
+      'question_str': d[qc]['choices'][number],
+      'choices': {'1': 'Strongly Agree'},
+      'choices_str': "1 Strongly Agree<br>2 Agree<br>3 Neither agree nor disagree<br>4 Disagree<br>5 Strongly disagree",
+    };
+    return output;
+  } else if (patt1.test(question_code)) {
+    qc = patt.exec(question_code);
+    number = question_code.match(patt2);
+    output = {
+      'question_no': question_code,
+      'question_str': d[qc]['question_str'] + " " + d[qc]['choices'][number],
+      'choices': {'0': 'No', '1': 'Yes'},
+      'choices_str': "0 No <br>1 Yes"
+    };
+    return output;
+  }
+  return d[question_code];
+}
 </script>
 {% endblock %}

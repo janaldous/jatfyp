@@ -1,4 +1,3 @@
-#import csv
 import pandas as pd
 
 import os
@@ -6,11 +5,6 @@ import operator
 from django.conf import settings
 from models import Cluster
 import string
-
-def start():
-    df = pd.read_csv('spss.csv')
-    #print "adfadf"
-    #print get_data2(df, 'Q5')
 
 def get_data_for_question(df, question_obj, letter=None):
     question_base = question_obj.question_no
