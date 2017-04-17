@@ -3,9 +3,13 @@
 {% block content %}
 <h1>List of groups</h1>
 
+{% if clusters %}
 <ul class="list-group">
 {% for cluster in clusters %}
   <li class="list-group-item"><a href="{% url 'clusters:detail' cluster.id %}">{{ cluster.name }}</a></li>
 {% endfor %}
 </ul>
+{% else %}
+There are currently no clusters.
+{% endif %}
 {% endblock %}

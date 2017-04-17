@@ -177,7 +177,7 @@ def stats(request, cluster_id):
     clusters_dict = clustering.get_subclusters_length(cluster, cluster_df)
 
     elbow_data = clustering.get_elbow_chart_data(cluster_df)
-    elbow_chart = LineChart(SimpleDataSource(data=elbow_data), options={'width':420, 'title': 'Elbow chart', 'legend': {'position': 'bottom'}})
+    elbow_chart = LineChart(SimpleDataSource(data=elbow_data), options={'width':420, 'title': 'Elbow chart', 'legend': {'position': 'none'}})
 
     scatter_data = clustering.get_clustering_chart_data(cluster_df)
     scatter_chart = ScatterChart(SimpleDataSource(data=scatter_data), options={'width':420, 'title': '2d representation of data', 'legend': {'position': 'none'}})
@@ -195,6 +195,8 @@ def stats(request, cluster_id):
 
     rows = []
     for i, row in enumerate(m):
+        for j, item in enumerate(row):
+            row[j] = "{0:.2f}".format(item)
         r = ["Cluster " + str(i)] + row
         rows.append(r)
 

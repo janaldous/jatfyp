@@ -46,8 +46,6 @@ def get_data_for_question(df, question_obj, letter=None):
 
     question_str = "(%s) %s" % (question_obj.question_no, question_obj.question)
 
-    print data
-
     return {'data':data, 'question':question_str}
 
 def get_data_for_pie_charts(df, question_obj, cluster, subcluster_id):

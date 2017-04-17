@@ -33,6 +33,14 @@
     </div>
   </div>
 </div>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+    google.load("visualization", "1", {packages:["corechart"]});
+</script>
+
+{{ elbow_chart.as_html }}
+
 <div class="row">
   <div class="panel panel-default">
     <div class="panel-body">
@@ -43,13 +51,8 @@
   </div>
 </div>
 
-<script type="text/javascript" src="https://www.google.com/jsapi"></script>
-<script type="text/javascript">
-    google.load("visualization", "1", {packages:["corechart"]});
-</script>
-
+<h3>Table of the mean values</h3>
 <div class="table-responsive">
-
   <table class="table table-hover">
     <thead>
       <tr>
@@ -151,4 +154,17 @@ function get_text(question_code) {
   return d[question_code];
 }
 </script>
+{% endblock %}
+
+{% block instructions %}
+<ul>
+  <li>
+    The Elbow chart aids the user in finding the optimal number of clusters using the elbow method.
+    The most biggest bend in the graph gives the optimal number of clusters.
+  </li>
+  <li>
+    Below the chart is the Table of mean values. The columns are the questions and the rows are the clusters.
+    Therefore, values indicate the mean value for a question and cluster. This enables the user to identify differences between each cluster.
+  </li>
+</ul>
 {% endblock %}
