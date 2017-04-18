@@ -1,0 +1,11 @@
+The requirements are in the requirements.txt and runtime.txt files.
+
+Open terminal, go to the appropriate directory and enter the following command:
+
+python manage.py runserver
+
+Then open a browser and enter the following url:
+
+http://localhost:8000
+
+The Home page should appear and you are ready to use the application.
