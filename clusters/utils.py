@@ -19,7 +19,6 @@ def get_wards():
         with open(os.path.join(settings.BASE_DIR, 'clusters/RSQquestionchoices.txt')) as f:
             dic_source = rt.read(f)
             WARD = dic_source['questions']['WARD'].choices
-        #print "utils called ------"
     return WARD
 
 def get_whole_survey():

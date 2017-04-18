@@ -29,15 +29,6 @@ def index(request):
     context = {'clusters': clusters}
     return render(request, 'clusters/index.html', context)
 
-def compare_maps(request):
-    return render(request, 'clusters/compare_maps.html')
-
-def map(request):
-    return render(request, 'clusters/map.html')
-
-def test(request):
-    return render(request, 'clusters/tests/test.html')
-
 def subclusters_list(request, cluster_id):
     cluster = get_object_or_404(Cluster, pk=cluster_id)
     dic = rc.filter_by_cluster(dataframeAll, cluster)
@@ -410,6 +401,7 @@ def survey_questions(request):
     dic_source = rt.read(file2_)
     about = dic_source['about']
     questions_txt = dic_source['questions']
+    del questions_txt['Q13']
     file2_.close()
 
     context = {
@@ -580,24 +572,5 @@ def get_charts_compare(df, dfAll, questions_txt, cluster):
             'isStacked': 'percent',
         }
         charts.append(StackedBarChart(SimpleDataSource(data=data), options=options))
-
-    """
-    #multicode questions
-    questions_to_show = ['Q5', 'Q26', 'Q29', 'Q39', 'Q50']
-    for question in questions_to_show:
-        dic =  rc2.get_data_for_bar_charts2(df, dfAll, questions_txt[question], cluster)
-        data = dic['data']
-        question = dic['question']
-        options={
-            'title': question,
-        }
-        charts.append(BarChart(SimpleDataSource(data=data), options=options))
-
-
-    dic =  rc2.get_data_for_column_chart2(df, questions_txt['Q13'])
-    data = dic['data']
-    question = dic['question']
-    charts.append(ColumnChart(SimpleDataSource(data=data), options={'title': question}))
-    """
 
     return charts

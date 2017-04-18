@@ -1,4 +1,4 @@
-// TODO cite Google maps tutorial
+// map implementation adapted from Google Maps tutorial https://developers.google.com/maps/documentation/javascript/combining-data
 var map;
 var censusMin = Number.MAX_VALUE, censusMax = -Number.MAX_VALUE;
 
@@ -12,7 +12,7 @@ function initMap() {
     draggable: true,
   });
 
-  // wards data from 'https://www.lambeth.gov.uk/sites/default/files/LambethWards_0.json');
+  // wards data from 'https://www.lambeth.gov.uk/sites/default/files/LambethWards_0.json'
   var url = "/static/clusters/data/wards.json";
   var json = (function () {
       var json = null;

@@ -1,0 +1,6 @@
+I verify that I am the sole author of the programs contained in this folder,
+except where explicitly stated to the contrary. Some code have been adapted
+from online sources and have been acknowledged in the code as a comment.
+
+Jan Aldous Torres
+April 2017

@@ -12,8 +12,6 @@ function changeText(variable, question, value) {
 
 }
 
-
-/** adapted from http://stackoverflow.com/questions/4700226/i-want-to-truncate-a-text-or-line-with-ellipsis-using-javascript **/
 function truncate(string){
   var len = 50;
    if (string.length > len)

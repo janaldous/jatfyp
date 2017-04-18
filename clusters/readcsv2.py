@@ -1,4 +1,3 @@
-#import csv
 import pandas as pd
 
 import utils
@@ -72,7 +71,6 @@ def get_data_for_group_compare(question, choice):
         v = get value(c)
         output.append(c, v)
     """
-    #TODO need to implement general method to get cluster_all, not just from pk=3
     cluster_all = Cluster.objects.get(pk=3)
     value = df[question].value_counts()[int(choice)]
     average = float(value)/df.shape[0]
@@ -102,9 +100,7 @@ def get_data_for_map4(df, question_base, choice):
     output = []
     cluster_rows = df
     output.append(["# of residents", "Ward"])
-    #for each ward get number of people who chose choice
-    # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
-    # int(choice) == 1.0
+
     for i in range(1,22): #WARD IS STATIC
         ward_rows = cluster_rows.loc[cluster_rows['WARD'] == i]
         v_counts = ward_rows[question_base].value_counts()
@@ -125,9 +121,7 @@ def get_data_for_map3(df, question_base):
     output = []
     cluster_rows = df
     output.append(["Max choice", "Ward"])
-    #for each ward get number of people who chose choice
-    # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
-    # int(choice) == 1.0
+
     for i in range(1,22): #WARD IS STATIC
         ward_rows = cluster_rows.loc[cluster_rows['WARD'] == i]
         value = int(ward_rows[question_base].value_counts().index[0])
@@ -140,9 +134,7 @@ def get_data_for_map2(df, question_base, choice):
     output = []
     cluster_rows = df
     output.append(["Population", "Ward"])
-    #for each ward get number of people who chose choice
-    # cluster_rows.loc[cluster_rows['WARD'] == 2]['Q11'].value_counts()[1.0]
-    # int(choice) == 1.0
+
     for i in range(1,utils.NUM_OF_WARDS): #WARD IS STATIC
         ward_rows = cluster_rows.loc[cluster_rows['WARD'] == i]
         v_counts = ward_rows[question_base].value_counts()
@@ -265,7 +257,7 @@ def get_data_for_stacked_bar_charts2(df, dfAll, question_obj, cluster):
     #append subcluster id to last column in row
     indexes.append('subcluster_id')
     values.append(str(cluster.id)+'/a')#all of this cluster
-    valuesAll.append('3/a')#all of all cluster #TODO MAKE 3 INTO GENERAL ALL CLUSTER
+    valuesAll.append('3/a')#all of all cluster
     indexes_int.append('NA')#not applicable
 
     #title for chart
@@ -281,8 +273,6 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
         and data is from spss.csv
     """
     question_base = question_obj.question_no+letter
-    #choices = question_obj.choices
-
 
     v_counts = df[question_base].value_counts()
 
@@ -292,7 +282,6 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
     for i in v_counts.index.tolist():
         if not pd.isnull(i):
             indexes.append(str(int(float(i))))
-
 
     #get this group
     values = ['This group'] + v_counts.values.tolist()
@@ -349,7 +338,7 @@ def get_data_for_bar_charts_adapted2(df, dfAll, question_obj, letter, cluster):
     #append subcluster id to last column in row
     indexes.append('subcluster_id')
     values.append(str(cluster.id)+'/a')#all of this cluster
-    valuesAll.append('3/a')#all of all cluster #TODO MAKE 3 INTO GENERAL ALL CLUSTER
+    valuesAll.append('3/a')#all of all cluster
     indexes_int.append('NA')#not applicable
 
     #title for chart

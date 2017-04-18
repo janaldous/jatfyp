@@ -13,14 +13,13 @@ from .models import Subcluster
 
 from kmodes import kmodes
 
-# from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-1
-#from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-2
-
 columns = ['WARD', 'Q11', 'QGEN', 'QAGEBND', 'QETH', 'Q34']
 
 def get_elbow_chart_data(data):
     """clus_train must go through get_data() first
     """
+    # adapted from https://www.coursera.org/learn/machine-learning-data-analysis/lecture/XJJz2/running-a-k-means-cluster-analysis-in-python-pt-1
+
     clus_train, serials = _get_clus_train(data)
 
     clusters=range(1,10)
@@ -33,18 +32,6 @@ def get_elbow_chart_data(data):
         clusassign=model.predict(clus_train)
         meandist.append(sum(np.min(cdist(clus_train, model.cluster_centers_, 'euclidean'), axis=1))
         /clus_train.shape[0])
-
-    '''
-    print meandist
-    print clusters
-
-    '''
-    """
-    plt.plot(clusters, meandist)
-    plt.xlabel('Number of clusters')
-    plt.ylabel('Average distance')
-    plt.title('Selecting k with the Elbow Method')
-    plt.show()"""
 
     #format the output for google charts LineCharts
     output = [["clusters", "meandist"]]
@@ -69,17 +56,8 @@ def _get_clus_train(data):
             break
 
     cluster=data[columns]
-    #cluster.describe()
-
     clustervar = cluster.copy()
-    """
-    clustervar['Q11']=preprocessing.scale(clustervar['Q11'].astype('float64'))
-    clustervar['QGEN']=preprocessing.scale(clustervar['QGEN'].astype('float64'))
-    clustervar['QAGEBND']=preprocessing.scale(clustervar['QAGEBND'].astype('float64'))
-    clustervar['QETH']=preprocessing.scale(clustervar['QETH'].astype('float64'))
-    """
 
-    #clus_train, clus_test = train_test_split(clustervar, test_size=.3, random_state=123)
     return clustervar, data.SERIAL
 
 def get_clustering_chart_data(data):
@@ -88,15 +66,9 @@ def get_clustering_chart_data(data):
     pca_2 = PCA(2)
 
     plot_columns = pca_2.fit_transform(clus_train)
-    """plt.scatter(x=plot_columns[:,0], y=plot_columns[:,1], c=model5.labels_)
-    plt.xlabel('canonical variable 1')
-    plt.ylabel('canonical variable 2')
-    plt.title('asdf')
-    plt.show()"""
 
     x = plot_columns[:,0]
     y = plot_columns[:,1]
-    #c = model5.labels_
 
     output = [["x", "y"]]
     for i in range(len(x)):
@@ -128,7 +100,7 @@ def get_subcluster_list(cluster, data, norefresh=True):
         @cluster Cluster model
         @data pandas.DataFrame object
 
-        from https://github.com/nicodv/kmodes/blob/master/examples/soybean.py
+        adapted from https://github.com/nicodv/kmodes/blob/master/examples/soybean.py
     """
 
     num_of_clusters = cluster.num_of_clusters
